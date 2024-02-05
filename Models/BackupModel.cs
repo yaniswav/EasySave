@@ -18,14 +18,4 @@ namespace EasySaveConsole
         }
     }
 
-    public class Logging
-    {
-
-        private string logPath;
-
-        public void Write()
-        {
-            //TODO
-        }
-    }
 }
