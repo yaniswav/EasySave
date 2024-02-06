@@ -26,29 +26,87 @@ namespace EasySaveConsole
         }
     }
 
+    public class CompleteBackup : BackupJob
+    {
+        private const int MaxBufferSize = 1024 * 1024; // 1 MB
+
+        public CompleteBackup(string name, string sourceDir, string destinationDir)
+            : base(name, sourceDir, destinationDir, "Complete")
+        {
+        }
+
+        public override void Start()
+        {
+            base.Start();
+            try
+            {
+                CopyDirectory(SourceDir, DestinationDir);
+                Console.WriteLine("Complete backup completed.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during backup: {ex.Message}");
+            }
+        }
+
+        private void CopyDirectory(string sourceDir, string destinationDir)
+        {
+            if (!Directory.Exists(destinationDir))
+                Directory.CreateDirectory(destinationDir);
+
+            foreach (var file in Directory.GetFiles(sourceDir))
+            {
+                var destFile = Path.Combine(destinationDir, Path.GetFileName(file));
+                CopyFileWithBuffer(file, destFile);
+            }
+
+            foreach (var directory in Directory.GetDirectories(sourceDir))
+            {
+                var destDir = Path.Combine(destinationDir, Path.GetFileName(directory));
+                CopyDirectory(directory, destDir);
+            }
+        }
+
+        private void CopyFileWithBuffer(string sourceFile, string destinationFile)
+        {
+            long fileSize = new FileInfo(sourceFile).Length;
+            int bufferSize = DetermineBufferSize(fileSize);
+
+            using (FileStream sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read))
+            {
+                using (FileStream destStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
+                {
+                    byte[] buffer = new byte[bufferSize];
+                    int bytesRead;
+                    while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        destStream.Write(buffer, 0, bytesRead);
+                    }
+                }
+            }
+        }
+
+        private int DetermineBufferSize(long fileSize)
+        {
+            if (fileSize <= MaxBufferSize)
+                return (int)fileSize;
+            else
+                return MaxBufferSize;
+        }
+    }
+
     public class DifferentialBackup : BackupJob
     {
         public DifferentialBackup(string name, string sourceDir, string destinationDir)
-            : base(name, sourceDir, destinationDir, "Differential") { }
+            : base(name, sourceDir, destinationDir, "Differential")
+        {
+        }
 
         public override void Start()
         {
             base.Start();
             // Implement differential backup logic here
             Console.WriteLine("Differential backup completed.");
-        }
-    }
-
-    public class CompleteBackup : BackupJob
-    {
-        public CompleteBackup(string name, string sourceDir, string destinationDir)
-            : base(name, sourceDir, destinationDir, "Complete") { }
-
-        public override void Start()
-        {
-            base.Start();
-            // Implement complete backup logic here
-            Console.WriteLine("Complete backup completed.");
         }
     }
 
