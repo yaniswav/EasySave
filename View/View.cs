@@ -1,26 +1,40 @@
 ﻿using System;
 using EasySaveConsole; // Assurez-vous que cet espace de noms correspond à celui de votre projet.
+using System.Globalization;
+using System.Resources;
 
 public class View
 {
     private ConfigModel _configModel;
+    private ResourceManager _resourceManager;
 
     public View(ConfigModel configModel)
     {
         _configModel = configModel;
+        SelectLanguage();
     }
 
+    private void SelectLanguage()
+    {
+        Console.WriteLine("Choose your language (en/fr):");
+        string language = Console.ReadLine();
+        CultureInfo culture = language == "fr" ? new CultureInfo("fr-FR") : new CultureInfo("en-US");
+        CultureInfo.CurrentUICulture = culture;
+        _resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
+
+    }
     public void DisplayMenu()
     {
         bool exit = false;
         while (!exit)
         {
-            Console.WriteLine("Choisissez une option :");
-            Console.WriteLine("1. Lister les sauvegardes");
-            Console.WriteLine("2. Créer une sauvegarde");
-            Console.WriteLine("3. Modifier une sauvegarde (non implémenté dans ConfigModel)");
-            Console.WriteLine("4. Supprimer une sauvegarde (non implémenté dans ConfigModel)");
-            Console.WriteLine("5. Quitter");
+            Console.WriteLine(_resourceManager.GetString("WelcomeMessage"));
+            Console.WriteLine(_resourceManager.GetString("ChooseOption"));
+            Console.WriteLine(_resourceManager.GetString("BackupList"));
+            Console.WriteLine(_resourceManager.GetString("CreateBackup"));
+            Console.WriteLine(_resourceManager.GetString("EditBackup"));
+            Console.WriteLine(_resourceManager.GetString("DeleteBackup"));
+            Console.WriteLine(_resourceManager.GetString("ExitMessage"));
 
             string choice = Console.ReadLine();
             switch (choice)
