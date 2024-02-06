@@ -113,30 +113,49 @@ namespace EasySaveConsole
     public class BackupManager
     {
         private List<BackupJob> _backupJobs = new List<BackupJob>();
+        private ConfigModel _configModel = new ConfigModel();
 
-        public void AddBackupJob(BackupJob job)
+        public void LoadBackupJobs()
         {
-            _backupJobs.Add(job);
+            var jobConfigs = _configModel.LoadBackupJobs();
+            foreach (var jobConfig in jobConfigs)
+            {
+                AddBackupJobBasedOnType(jobConfig);
+            }
         }
 
-        public void RemoveBackupJob(string jobName)
+        private void AddBackupJobBasedOnType(dynamic job)
         {
-            _backupJobs.RemoveAll(job => job.Name == jobName);
+            string type = job.Type;
+            string name = job.Name;
+            string sourceDir = job.SourceDir;
+            string destinationDir = job.DestinationDir;
+
+            switch (type)
+            {
+                case "Complete":
+                    _backupJobs.Add(new CompleteBackup(name, sourceDir, destinationDir));
+                    break;
+                case "Differential":
+                    _backupJobs.Add(new DifferentialBackup(name, sourceDir, destinationDir));
+                    break;
+                default:
+                    throw new InvalidOperationException("Unknown backup type");
+            }
         }
 
-        public void ExecuteAllJobs()
+        public void ExecuteJob(string jobName)
         {
             foreach (var job in _backupJobs)
             {
-                try
+                if (job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase))
                 {
                     job.Start();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error executing job {job.Name}: {ex.Message}");
+                    break;
                 }
             }
         }
+
+        // Add other BackupManager methods
     }
 }
