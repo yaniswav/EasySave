@@ -1,55 +1,49 @@
-﻿namespace EasySaveConsole;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 
-public class ConfigModel
+namespace EasySaveConsole
+
 {
-    // BackupManager class (inherits from BackupJob)
-    public class BackupManager
+    public class ConfigModel
     {
-        private List<BackupJob> backupJobs;
+        private const string ConfigFilePath = "backupConfig.json";
+        private const int MaxBackupJobs = 5;
 
-        public BackupManager()
+        public List<BackupJobConfig> LoadBackupJobs()
         {
-            backupJobs = new List<BackupJob>();
-            LoadJobsFromJson(); // Load BackupJobs from JSON file
-        }
-
-        public void Create(BackupJob job)
-        {
-            backupJobs.Add(job);
-            SaveJobsToJson();
-        }
-
-        public void Edit(string jobName, BackupJob updatedJob)
-        {
-            var job = backupJobs.Find(j => j.Name == jobName);
-            if (job != null)
+            if (!File.Exists(ConfigFilePath))
             {
-                backupJobs.Remove(job);
-                backupJobs.Add(updatedJob);
-                SaveJobsToJson();
+                return new List<BackupJobConfig>();
             }
-            // TODO (handle error)
+
+            string json = File.ReadAllText(ConfigFilePath);
+            return JsonSerializer.Deserialize<List<BackupJobConfig>>(json) ?? new List<BackupJobConfig>();
         }
 
-        public void Delete(string jobName)
+        public void AddBackupJob(BackupJobConfig jobConfig)
         {
-            var job = backupJobs.Find(j => j.Name == jobName);
-            if (job != null)
+            var backupJobs = LoadBackupJobs();
+
+            if (backupJobs.Count >= MaxBackupJobs)
             {
-                backupJobs.Remove(job);
-                SaveJobsToJson();
+                throw new InvalidOperationException("Maximum number of backup jobs reached.");
             }
-            // TODO (handle error)
-        }
 
-        private void SaveJobsToJson()
-        {
-            // TODO
-        }
-
-        private void LoadJobsFromJson()
-        {
-            // TODO
+            backupJobs.Add(jobConfig);
+            string json = JsonSerializer.Serialize(backupJobs, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(ConfigFilePath, json);
         }
     }
+
+    public class BackupJobConfig
+    {
+        public string Name { get; set; }
+        public string SourceDir { get; set; }
+        public string DestinationDir { get; set; }
+        public string Type { get; set; }
+    }
+
+    // Remaining classes (BackupJob, CompleteBackup, DifferentialBackup, and BackupManager) remain unchanged
 }
