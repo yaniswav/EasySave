@@ -1,9 +1,10 @@
 ﻿{
-  "available_locales": ["fr-FR", "en-US"],
+  "available_locales": [
+    "fr-FR",
+    "en-US"
+  ],
   "default_locale": "en-US",
-  
   "current_locale": "fr-FR",
-  
   "locales": {
     "fr-FR": {
       "name": "Français",
