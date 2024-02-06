@@ -23,7 +23,7 @@ namespace EasySaveConsole
             return JsonSerializer.Deserialize<List<BackupJobConfig>>(json) ?? new List<BackupJobConfig>();
         }
 
-        public void LoadLanguage()
+        public void LoadCurrentLanguage()
         {
             if (!File.Exists(LanguageConfigFilePath))
             {
