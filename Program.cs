@@ -6,12 +6,10 @@ namespace EasySaveConsole
     {
         public static void Main(string[] args)
         {
-            
             View view = new View();
-            
+
             // starting our app
             view.StartInterface();
         }
     }
-
 }

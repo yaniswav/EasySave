@@ -2,7 +2,6 @@
 
 public class ConfigModel
 {
- 
     // BackupManager class (inherits from BackupJob)
     public class BackupManager
     {
@@ -53,5 +52,4 @@ public class ConfigModel
             // TODO
         }
     }
-    
 }

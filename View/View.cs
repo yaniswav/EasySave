@@ -5,7 +5,6 @@ namespace EasySaveConsole
 {
     public class View
     {
-
         public void StartInterface()
         {
             bool continueRunning = true;

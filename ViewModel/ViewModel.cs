@@ -6,7 +6,6 @@
         {
             // Analyse user commands
             // Example : "1-3" to execute saves 1 to 3
-            
         }
 
         public void ExecuteSave(int saveIndex)
