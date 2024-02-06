@@ -1,18 +1,18 @@
 ﻿{
-  "available_locales": [
+  "AvailableLocales": [
     "fr-FR",
     "en-US"
   ],
-  "default_locale": "en-US",
-  "current_locale": "fr-FR",
-  "locales": {
-    "fr-FR": {
-      "name": "Français",
-      "flag": "🇫🇷"
+  "DefaultLocale": "en-US",
+  "CurrentLocale": "fr-FR",
+  "Locales": {
+    "frFR": {
+      "Name": "Français",
+      "Flag": "🇫🇷"
     },
-    "en-US": {
-      "name": "English",
-      "flag": "🇺🇸"
+    "enUS": {
+      "Name": "English",
+      "Flag": "🇺🇸"
     }
   }
 }

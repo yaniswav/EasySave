@@ -40,4 +40,7 @@
     <data name="ExitMessage" xml:space="preserve">
         <value>5. Exit</value>
     </data>
+    <data name="SelectLocale" xml:space="preserve">
+        <value>Which language do you want to switch to? </value>
+    </data>
 </root>

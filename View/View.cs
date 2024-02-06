@@ -11,17 +11,8 @@ public class View
     public View(ConfigModel configModel)
     {
         _configModel = configModel;
-        _configModel.LoadCurrentLanguage();
+        _configModel.LoadCurrentLocale();
         _resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
-        SelectLanguage();
-    }
-
-    private void SelectLanguage()
-    {
-        string currentLanguage = _configModel.Language;
-        CultureInfo culture = currentLanguage == "fr" ? new CultureInfo("fr-FR") : new CultureInfo("en-US");
-        CultureInfo.CurrentUICulture = culture;
-        DisplayMessage("SelectLanguage");
     }
 
     private void DisplayMessage(string resourceKey)
@@ -42,6 +33,7 @@ public class View
             DisplayMessage("DeleteBackup");
             DisplayMessage("ExitMessage");
 
+            Console.WriteLine("6. Exécuter des travaux de sauvegarde");
             string choice = Console.ReadLine();
             switch (choice)
             {
@@ -60,6 +52,7 @@ public class View
                 case "5":
                     exit = true;
                     break;
+                
                 default:
                     DisplayMessage("InvalidOption");
                     break;
