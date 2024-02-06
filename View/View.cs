@@ -1,48 +1,73 @@
 ﻿using System;
+using EasySaveConsole; // Assurez-vous d'ajuster cet espace de noms en fonction de votre projet
 
-namespace EasySaveConsole
-
+public class View
 {
-    public class View
+    private ConfigModel.BackupManager _backupManager;
+
+    public View(ConfigModel.BackupManager backupManager)
     {
-        public void StartInterface()
+        _backupManager = backupManager;
+    }
+
+    public void DisplayMenu()
+    {
+        bool exit = false;
+        while (!exit)
         {
-            bool continueRunning = true;
-            while (continueRunning)
+            Console.WriteLine("Choisissez une option :");
+            Console.WriteLine("1. Lister les sauvegardes");
+            Console.WriteLine("2. Créer une sauvegarde");
+            Console.WriteLine("3. Modifier une sauvegarde");
+            Console.WriteLine("4. Supprimer une sauvegarde");
+            Console.WriteLine("5. Quitter");
+
+            string choice = Console.ReadLine();
+            switch (choice)
             {
-                DisplayMenu();
-                string command = Console.ReadLine();
-                ProcessCommand(command);
+                case "1":
+                    ListBackups();
+                    break;
+                case "2":
+                    CreateBackup();
+                    break;
+                case "3":
+                    EditBackup();
+                    break;
+                case "4":
+                    DeleteBackup();
+                    break;
+                case "5":
+                    exit = true;
+                    break;
+                default:
+                    Console.WriteLine("Option invalide, veuillez réessayer.");
+                    break;
             }
         }
+    }
 
-        private void DisplayMenu()
-        {
-            Console.WriteLine("EasySave - Backup Menu");
-            Console.WriteLine("Enter your backup command (e.g., 1-3, 1 ;3) or 'exit' to quit:");
-        }
+    private void ListBackups()
+    {
+        Console.WriteLine("Liste des sauvegardes :");
+        // Ici, utiliser _backupManager pour lister les sauvegardes
+    }
 
-        private void ProcessCommand(string command)
-        {
-            if (command.Equals("exit", StringComparison.OrdinalIgnoreCase))
-            {
-                Environment.Exit(0);
-            }
-            else
-            {
-                // viewModel.executeTask(command);
-                // Display additional information if necessary
-            }
-        }
+    private void CreateBackup()
+    {
+        Console.WriteLine("Création d'une nouvelle sauvegarde. Veuillez fournir les détails.");
+        // Demander à l'utilisateur les détails nécessaires et utiliser _backupManager pour créer une sauvegarde
+    }
 
-        public void DisplayResult(string message)
-        {
-            Console.WriteLine(message);
-        }
+    private void EditBackup()
+    {
+        Console.WriteLine("Modification d'une sauvegarde. Veuillez fournir les détails.");
+        // Demander à l'utilisateur les détails nécessaires et utiliser _backupManager pour modifier une sauvegarde
+    }
 
-        public void DisplayError(string error)
-        {
-            Console.WriteLine("Error : " + error);
-        }
+    private void DeleteBackup()
+    {
+        Console.WriteLine("Suppression d'une sauvegarde. Veuillez fournir le nom de la sauvegarde.");
+        // Demander à l'utilisateur le nom de la sauvegarde à supprimer et utiliser _backupManager pour la supprimer
     }
 }
