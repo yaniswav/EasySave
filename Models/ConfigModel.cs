@@ -7,10 +7,10 @@ namespace EasySaveConsole
 {
     public class ConfigModel
     {
-        private const string BackupConfigFilePath = "Resources/config.json";
-        private const string LanguageConfigFilePath = "Resources/language.json";
+        private const string BackupConfigFilePath = "Resources/backupConfig.json";
+        private const string LocaleConfigFilePath = "Resources/localesConfig.json";
         private const int MaxBackupJobs = 5;
-        public string Language { get; private set; }
+        public string Locale { get; set; }
 
         public List<BackupJobConfig> LoadBackupJobs()
         {
@@ -23,30 +23,39 @@ namespace EasySaveConsole
             return JsonSerializer.Deserialize<List<BackupJobConfig>>(json) ?? new List<BackupJobConfig>();
         }
 
-        public void LoadCurrentLanguage()
+        public void LoadCurrentLocale()
         {
-            if (!File.Exists(LanguageConfigFilePath))
+            try
             {
-                throw new FileNotFoundException("Language file not found.");
+                if (!File.Exists(LocaleConfigFilePath))
+                {
+                    Console.WriteLine($"Warning: Locale file not found at '{LocaleConfigFilePath}'. Falling back to default language.");
+                    Locale = "en-US";
+                    return;
+                }
+
+                string json = File.ReadAllText(LocaleConfigFilePath);
+                var localesConfig = JsonSerializer.Deserialize<LocaleConfig>(json);
+
+                if (localesConfig == null || string.IsNullOrEmpty(localesConfig.CurrentLocale))
+                {
+                    throw new InvalidOperationException("Error while loading or invalid current locale setting.");
+                }
+
+                Locale = localesConfig.CurrentLocale;
             }
-
-            string json = File.ReadAllText(LanguageConfigFilePath);
-            var languageConfig = JsonSerializer.Deserialize<LanguageConfig>(json);
-
-            if (languageConfig == null || string.IsNullOrEmpty(languageConfig.Language))
+            catch (Exception ex)
             {
-                throw new InvalidOperationException("Error while loading or invalid language setting.");
+                Console.WriteLine($"Error loading language settings: {ex.Message}");
             }
-
-            Language = languageConfig.Language;
         }
         
-        public void SetLanguage(string newLanguage)
+        public void SetLocale(string newLocale)
         {
-            var languageConfig = new LanguageConfig { Language = newLanguage };
+            var languageConfig = new LocaleConfig { CurrentLocale = newLocale };
             string json = JsonSerializer.Serialize(languageConfig, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(LanguageConfigFilePath, json);
-            Language = newLanguage;
+            File.WriteAllText(LocaleConfigFilePath, json);
+            Locale = newLocale;
         }
 
         public void AddBackupJob(BackupJobConfig jobConfig)
@@ -72,8 +81,8 @@ namespace EasySaveConsole
         public string Type { get; set; }
     }
 
-    public class LanguageConfig
+    public class LocaleConfig
     {
-        public string Language { get; set; }
+        public string CurrentLocale { get; set; }
     }
 }
