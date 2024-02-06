@@ -4,22 +4,49 @@ using System.IO;
 using System.Text.Json;
 
 namespace EasySaveConsole
-
 {
     public class ConfigModel
     {
-        private const string ConfigFilePath = "backupConfig.json";
+        private const string BackupConfigFilePath = "Resources/config.json";
+        private const string LanguageConfigFilePath = "Resources/language.json";
         private const int MaxBackupJobs = 5;
+        public string Language { get; private set; }
 
         public List<BackupJobConfig> LoadBackupJobs()
         {
-            if (!File.Exists(ConfigFilePath))
+            if (!File.Exists(BackupConfigFilePath))
             {
                 return new List<BackupJobConfig>();
             }
 
-            string json = File.ReadAllText(ConfigFilePath);
+            string json = File.ReadAllText(BackupConfigFilePath);
             return JsonSerializer.Deserialize<List<BackupJobConfig>>(json) ?? new List<BackupJobConfig>();
+        }
+
+        public void LoadLanguage()
+        {
+            if (!File.Exists(LanguageConfigFilePath))
+            {
+                throw new FileNotFoundException("Language file not found.");
+            }
+
+            string json = File.ReadAllText(LanguageConfigFilePath);
+            var languageConfig = JsonSerializer.Deserialize<LanguageConfig>(json);
+
+            if (languageConfig == null || string.IsNullOrEmpty(languageConfig.Language))
+            {
+                throw new InvalidOperationException("Error while loading or invalid language setting.");
+            }
+
+            Language = languageConfig.Language;
+        }
+        
+        public void SetLanguage(string newLanguage)
+        {
+            var languageConfig = new LanguageConfig { Language = newLanguage };
+            string json = JsonSerializer.Serialize(languageConfig, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(LanguageConfigFilePath, json);
+            Language = newLanguage;
         }
 
         public void AddBackupJob(BackupJobConfig jobConfig)
@@ -33,7 +60,7 @@ namespace EasySaveConsole
 
             backupJobs.Add(jobConfig);
             string json = JsonSerializer.Serialize(backupJobs, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(ConfigFilePath, json);
+            File.WriteAllText(BackupConfigFilePath, json);
         }
     }
 
@@ -45,5 +72,8 @@ namespace EasySaveConsole
         public string Type { get; set; }
     }
 
-    // Remaining classes (BackupJob, CompleteBackup, DifferentialBackup, and BackupManager) remain unchanged
+    public class LanguageConfig
+    {
+        public string Language { get; set; }
+    }
 }
