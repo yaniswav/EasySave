@@ -25,7 +25,7 @@ namespace EasySaveConsole
             Console.WriteLine($"Starting backup: {Name}");
         }
     }
-
+    
     public class CompleteBackup : BackupJob
     {
         private const int MaxBufferSize = 1024 * 1024; // 1 MB
@@ -144,18 +144,21 @@ namespace EasySaveConsole
             }
         }
 
-        public void ExecuteJob(string jobName)
+        public void ExecuteJobs(string[] jobNames)
         {
-            foreach (var job in _backupJobs)
+            foreach (string jobName in jobNames)
             {
-                if (job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase))
+                BackupJob jobToExecute =
+                    _backupJobs.FirstOrDefault(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
+                if (jobToExecute != null)
                 {
-                    job.Start();
-                    break;
+                    jobToExecute.Start();
+                }
+                else
+                {
+                    Console.WriteLine($"Backup job '{jobName}' not found.");
                 }
             }
         }
-
-        // Add other BackupManager methods
     }
 }
