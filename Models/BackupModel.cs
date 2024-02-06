@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace EasySaveConsole
 {
-        
-    // BackupJob main class
     public class BackupJob
     {
         public string Name { get; set; }
         public string SourceDir { get; set; }
         public string DestinationDir { get; set; }
-        public string Type { get; set; } // Complet ou Différentiel
+        public string Type { get; set; }
 
         public BackupJob(string name, string sourceDir, string destinationDir, string type)
         {
@@ -20,68 +19,66 @@ namespace EasySaveConsole
             DestinationDir = destinationDir;
             Type = type;
         }
-    }
 
-    // BackupExec class (inherits from BackupJob)
-    public class BackupExec : BackupJob
-    {
-        public BackupExec(string name, string sourceDir, string destinationDir, string type)
-            : base(name, sourceDir, destinationDir, type) { }
-
-        public void Save()
+        public virtual void Start()
         {
-            // TODO -> implement save logic here
+            Console.WriteLine($"Starting backup: {Name}");
         }
     }
 
-    // BackupManager class (inherits from BackupJob)
+    public class DifferentialBackup : BackupJob
+    {
+        public DifferentialBackup(string name, string sourceDir, string destinationDir)
+            : base(name, sourceDir, destinationDir, "Differential") { }
+
+        public override void Start()
+        {
+            base.Start();
+            // Implement differential backup logic here
+            Console.WriteLine("Differential backup completed.");
+        }
+    }
+
+    public class CompleteBackup : BackupJob
+    {
+        public CompleteBackup(string name, string sourceDir, string destinationDir)
+            : base(name, sourceDir, destinationDir, "Complete") { }
+
+        public override void Start()
+        {
+            base.Start();
+            // Implement complete backup logic here
+            Console.WriteLine("Complete backup completed.");
+        }
+    }
+
     public class BackupManager
     {
-        private List<BackupJob> backupJobs;
+        private List<BackupJob> _backupJobs = new List<BackupJob>();
 
-        public BackupManager()
+        public void AddBackupJob(BackupJob job)
         {
-            backupJobs = new List<BackupJob>();
-            LoadJobsFromJson(); // Load BackupJobs from JSON file
+            _backupJobs.Add(job);
         }
 
-        public void Create(BackupJob job)
+        public void RemoveBackupJob(string jobName)
         {
-            backupJobs.Add(job);
-            SaveJobsToJson();
+            _backupJobs.RemoveAll(job => job.Name == jobName);
         }
 
-        public void Edit(string jobName, BackupJob updatedJob)
+        public void ExecuteAllJobs()
         {
-            var job = backupJobs.Find(j => j.Name == jobName);
-            if (job != null)
+            foreach (var job in _backupJobs)
             {
-                backupJobs.Remove(job);
-                backupJobs.Add(updatedJob);
-                SaveJobsToJson();
+                try
+                {
+                    job.Start();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error executing job {job.Name}: {ex.Message}");
+                }
             }
-            // TODO (handle error)
-        }
-
-        public void Delete(string jobName)
-        {
-            var job = backupJobs.Find(j => j.Name == jobName);
-            if (job != null)
-            {
-                backupJobs.Remove(job);
-                SaveJobsToJson();
-            }
-            // TODO (handle error)
-        }
-
-        private void SaveJobsToJson()
-        {
-            // TODO
-        }
-
-        private void LoadJobsFromJson()
-        {
-            // TODO
         }
     }
 }
