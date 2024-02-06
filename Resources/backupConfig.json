@@ -1,0 +1,20 @@
+﻿[
+  {
+    "Name": "BackupJobCrossClicker",
+    "SourceDir": "C:\\Users\\yanis\\Desktop\\CrossClicker",
+    "DestinationDir": "C:\\Users\\yanis\\Desktop\\Backups-Test\\CrossClicker",
+    "Type": "Complete"
+  },
+  {
+    "Name": "BackupJobDivers",
+    "SourceDir": "C:\\Users\\yanis\\Desktop\\Divers",
+    "DestinationDir": "C:\\Users\\yanis\\Desktop\\Backups-Test\\Divers",
+    "Type": "Complete"
+  },
+  {
+    "Name": "BackupJobCaVaTresBienSePasser",
+    "SourceDir": "C:\\Users\\yanis\\Desktop\\CaVaTresBienSePasser",
+    "DestinationDir": "C:\\Users\\yanis\\Desktop\\Backups-Test\\CaVaTresBienSePasser",
+    "Type": "Complete"
+  }
+]
