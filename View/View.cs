@@ -1,13 +1,13 @@
 ﻿using System;
-using EasySaveConsole; // Assurez-vous d'ajuster cet espace de noms en fonction de votre projet
+using EasySaveConsole; // Assurez-vous que cet espace de noms correspond à celui de votre projet.
 
 public class View
 {
-    private ConfigModel.BackupManager _backupManager;
+    private ConfigModel _configModel;
 
-    public View(ConfigModel.BackupManager backupManager)
+    public View(ConfigModel configModel)
     {
-        _backupManager = backupManager;
+        _configModel = configModel;
     }
 
     public void DisplayMenu()
@@ -18,8 +18,8 @@ public class View
             Console.WriteLine("Choisissez une option :");
             Console.WriteLine("1. Lister les sauvegardes");
             Console.WriteLine("2. Créer une sauvegarde");
-            Console.WriteLine("3. Modifier une sauvegarde");
-            Console.WriteLine("4. Supprimer une sauvegarde");
+            Console.WriteLine("3. Modifier une sauvegarde (non implémenté dans ConfigModel)");
+            Console.WriteLine("4. Supprimer une sauvegarde (non implémenté dans ConfigModel)");
             Console.WriteLine("5. Quitter");
 
             string choice = Console.ReadLine();
@@ -32,10 +32,10 @@ public class View
                     CreateBackup();
                     break;
                 case "3":
-                    EditBackup();
+                    Console.WriteLine("La modification n'est pas supportée dans la version actuelle.");
                     break;
                 case "4":
-                    DeleteBackup();
+                    Console.WriteLine("La suppression n'est pas supportée dans la version actuelle.");
                     break;
                 case "5":
                     exit = true;
@@ -49,25 +49,34 @@ public class View
 
     private void ListBackups()
     {
-        Console.WriteLine("Liste des sauvegardes :");
-        // Ici, utiliser _backupManager pour lister les sauvegardes
+        var backupJobs = _configModel.LoadBackupJobs();
+        if (backupJobs.Count == 0)
+        {
+            Console.WriteLine("Aucune sauvegarde configurée.");
+        }
+        else
+        {
+            foreach (var job in backupJobs)
+            {
+                Console.WriteLine($"Nom: {job.Name}, Source: {job.SourceDir}, Destination: {job.DestinationDir}, Type: {job.Type}");
+            }
+        }
     }
 
     private void CreateBackup()
     {
-        Console.WriteLine("Création d'une nouvelle sauvegarde. Veuillez fournir les détails.");
-        // Demander à l'utilisateur les détails nécessaires et utiliser _backupManager pour créer une sauvegarde
-    }
+        Console.WriteLine("Création d'une nouvelle sauvegarde.");
+        Console.Write("Nom de la sauvegarde : ");
+        string name = Console.ReadLine();
+        Console.Write("Répertoire source : ");
+        string sourceDir = Console.ReadLine();
+        Console.Write("Répertoire destination : ");
+        string destinationDir = Console.ReadLine();
+        Console.Write("Type (Complet/Différentiel) : ");
+        string type = Console.ReadLine();
 
-    private void EditBackup()
-    {
-        Console.WriteLine("Modification d'une sauvegarde. Veuillez fournir les détails.");
-        // Demander à l'utilisateur les détails nécessaires et utiliser _backupManager pour modifier une sauvegarde
-    }
-
-    private void DeleteBackup()
-    {
-        Console.WriteLine("Suppression d'une sauvegarde. Veuillez fournir le nom de la sauvegarde.");
-        // Demander à l'utilisateur le nom de la sauvegarde à supprimer et utiliser _backupManager pour la supprimer
+        BackupJobConfig newJob = new BackupJobConfig { Name = name, SourceDir = sourceDir, DestinationDir = destinationDir, Type = type };
+        _configModel.AddBackupJob(newJob);
+        Console.WriteLine("Sauvegarde ajoutée avec succès.");
     }
 }
