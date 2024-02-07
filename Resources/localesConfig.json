@@ -6,11 +6,11 @@
   "DefaultLocale": "en-US",
   "CurrentLocale": "fr-FR",
   "Locales": {
-    "frFR": {
+    "fr-FR": {
       "Name": "Français",
       "Flag": "🇫🇷"
     },
-    "enUS": {
+    "en-US": {
       "Name": "English",
       "Flag": "🇺🇸"
     }
