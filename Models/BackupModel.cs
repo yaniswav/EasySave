@@ -13,6 +13,11 @@ namespace EasySaveConsole
         public string DestinationDir { get; set; }
         public string Type { get; set; }
 
+        protected int TotalFilesToCopy = 0;
+        protected long TotalFilesSize = 0;
+        protected int NbFilesLeftToDo = 0;
+        protected double Progression = 0;
+
         public BackupJob(string name, string sourceDir, string destinationDir, string type)
         {
             Name = name;
@@ -54,12 +59,17 @@ namespace EasySaveConsole
             else
                 return MaxBufferSize;
         }
+
+
+        protected void UpdateState(string state)
+        {
+            StateModel.UpdateBackupState(this, state, TotalFilesToCopy, TotalFilesSize, NbFilesLeftToDo, Progression,
+                "state.json");
+        }
     }
 
     public class CompleteBackup : BackupJob
     {
-        private const int MaxBufferSize = 1024 * 1024; // 1 MB
-
         public CompleteBackup(string name, string sourceDir, string destinationDir)
             : base(name, sourceDir, destinationDir, "Complete")
         {
@@ -68,15 +78,34 @@ namespace EasySaveConsole
         public override void Start()
         {
             base.Start();
+            InitializeTrackingProperties();
+            UpdateState("ACTIVE");
+
             try
             {
                 CopyDirectory(SourceDir, DestinationDir);
-                Console.WriteLine("Complete backup completed.");
+                UpdateState("END");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error during backup: {ex.Message}");
+                UpdateState("ERROR");
             }
+        }
+
+        private void InitializeTrackingProperties()
+        {
+            var allFiles = Directory.GetFiles(SourceDir, "*", SearchOption.AllDirectories);
+            TotalFilesToCopy = allFiles.Length;
+            TotalFilesSize = allFiles.Sum(file => new FileInfo(file).Length);
+            NbFilesLeftToDo = TotalFilesToCopy;
+        }
+
+        private void UpdateProgress(string fileCopied)
+        {
+            NbFilesLeftToDo--;
+            Progression = (TotalFilesToCopy - NbFilesLeftToDo) / (double)TotalFilesToCopy * 100;
+            UpdateState("ACTIVE");
         }
 
         private void CopyDirectory(string sourceDir, string destinationDir)
@@ -108,15 +137,40 @@ namespace EasySaveConsole
         public override void Start()
         {
             base.Start();
+            InitializeTrackingProperties();
+            UpdateState("ACTIVE");
+
             try
             {
                 PerformDifferentialBackup(SourceDir, DestinationDir);
-                Console.WriteLine("Differential backup completed.");
+                UpdateState("END");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error during backup: {ex.Message}");
+                UpdateState("ERROR");
             }
+        }
+
+        private void InitializeTrackingProperties()
+        {
+            var allFiles = Directory.GetFiles(SourceDir, "*", SearchOption.AllDirectories);
+            TotalFilesSize = allFiles.Sum(file => new FileInfo(file).Length);
+
+            TotalFilesToCopy = allFiles.Count(file =>
+            {
+                string destFile = Path.Combine(DestinationDir, file.Substring(SourceDir.Length + 1));
+                return ShouldCopyFile(file, destFile);
+            });
+
+            NbFilesLeftToDo = TotalFilesToCopy;
+        }
+
+        private void UpdateProgress(string fileCopied)
+        {
+            NbFilesLeftToDo--;
+            Progression = (TotalFilesToCopy - NbFilesLeftToDo) / (double)TotalFilesToCopy * 100;
+            UpdateState("ACTIVE");
         }
 
         private void PerformDifferentialBackup(string sourceDir, string destinationDir)

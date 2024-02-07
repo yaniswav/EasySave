@@ -16,5 +16,17 @@
     "SourceDir": "C:\\Users\\yanis\\Desktop\\CaVaTresBienSePasser",
     "DestinationDir": "C:\\Users\\yanis\\Desktop\\Backups-Test\\CaVaTresBienSePasser",
     "Type": "Complete"
+  },
+  {
+    "Name": "ZTH",
+    "SourceDir": "C:\\Users\\yanis\\Desktop\\ZTH",
+    "DestinationDir": "C:\\Users\\yanis\\Desktop\\Backups-Test\\ZTH",
+    "Type": "Complete"
+  },
+  {
+    "Name": "SF",
+    "SourceDir": "C:\\Users\\yanis\\Desktop\\San-Francisco",
+    "DestinationDir": "C:\\Users\\yanis\\Desktop\\Backups-Test\\San-Francisco",
+    "Type": "Differential"
   }
 ]
