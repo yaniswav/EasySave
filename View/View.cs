@@ -56,6 +56,9 @@ public class View
                 case "6":
                     ChangeLocale();
                     break;
+                case "7":
+                    ViewModel.ExecuteBackups();
+                    break;
                 default:
                     DisplayMessage("IncorrectMessage");
                     break;
