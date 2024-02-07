@@ -84,6 +84,7 @@ namespace EasySaveConsole
             try
             {
                 CopyDirectory(SourceDir, DestinationDir);
+                UpdateProgress(null);
                 UpdateState("END");
             }
             catch (Exception ex)
@@ -103,10 +104,15 @@ namespace EasySaveConsole
 
         private void UpdateProgress(string fileCopied)
         {
-            NbFilesLeftToDo--;
-            Progression = (TotalFilesToCopy - NbFilesLeftToDo) / (double)TotalFilesToCopy * 100;
+            if (NbFilesLeftToDo > 0)
+            {
+                NbFilesLeftToDo--;
+            }
+
+            Progression = TotalFilesToCopy > 0 ? 100.0 * (TotalFilesToCopy - NbFilesLeftToDo) / TotalFilesToCopy : 100;
             UpdateState("ACTIVE");
         }
+
 
         private void CopyDirectory(string sourceDir, string destinationDir)
         {
@@ -144,6 +150,7 @@ namespace EasySaveConsole
             try
             {
                 PerformDifferentialBackup(SourceDir, DestinationDir);
+                UpdateProgress(null);
                 UpdateState("END");
             }
             catch (Exception ex)
@@ -169,10 +176,15 @@ namespace EasySaveConsole
 
         private void UpdateProgress(string fileCopied)
         {
-            NbFilesLeftToDo--;
-            Progression = 100.0 * (TotalFilesToCopy - NbFilesLeftToDo) / TotalFilesToCopy;
+            if (NbFilesLeftToDo > 0)
+            {
+                NbFilesLeftToDo--;
+            }
+
+            Progression = TotalFilesToCopy > 0 ? 100.0 * (TotalFilesToCopy - NbFilesLeftToDo) / TotalFilesToCopy : 100;
             UpdateState("ACTIVE");
         }
+
 
         private void PerformDifferentialBackup(string sourceDir, string destinationDir)
         {

@@ -24,7 +24,7 @@ namespace EasySaveConsole
                     return new List<StateModel>();
 
                 string jsonString = File.ReadAllText(filePath);
-                Console.WriteLine("Contenu du fichier JSON : " + jsonString); // Ajout pour le débogage
+                // Console.WriteLine("Contenu du fichier JSON : " + jsonString); // Ajout pour le débogage
                 return JsonSerializer.Deserialize<List<StateModel>>(jsonString, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
