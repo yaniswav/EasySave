@@ -25,8 +25,37 @@ namespace EasySaveConsole
         {
             Console.WriteLine($"Starting backup: {Name}");
         }
+
+        protected const int MaxBufferSize = 1024 * 1024; // 1 MB
+
+        protected void CopyFileWithBuffer(string sourceFile, string destinationFile)
+        {
+            long fileSize = new FileInfo(sourceFile).Length;
+            int bufferSize = DetermineBufferSize(fileSize);
+
+            using (FileStream sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read))
+            {
+                using (FileStream destStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
+                {
+                    byte[] buffer = new byte[bufferSize];
+                    int bytesRead;
+                    while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        destStream.Write(buffer, 0, bytesRead);
+                    }
+                }
+            }
+        }
+
+        protected int DetermineBufferSize(long fileSize)
+        {
+            if (fileSize <= MaxBufferSize)
+                return (int)fileSize;
+            else
+                return MaxBufferSize;
+        }
     }
-    
+
     public class CompleteBackup : BackupJob
     {
         private const int MaxBufferSize = 1024 * 1024; // 1 MB
@@ -67,33 +96,6 @@ namespace EasySaveConsole
                 CopyDirectory(directory, destDir);
             }
         }
-
-        private void CopyFileWithBuffer(string sourceFile, string destinationFile)
-        {
-            long fileSize = new FileInfo(sourceFile).Length;
-            int bufferSize = DetermineBufferSize(fileSize);
-
-            using (FileStream sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read))
-            {
-                using (FileStream destStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
-                {
-                    byte[] buffer = new byte[bufferSize];
-                    int bytesRead;
-                    while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        destStream.Write(buffer, 0, bytesRead);
-                    }
-                }
-            }
-        }
-
-        private int DetermineBufferSize(long fileSize)
-        {
-            if (fileSize <= MaxBufferSize)
-                return (int)fileSize;
-            else
-                return MaxBufferSize;
-        }
     }
 
     public class DifferentialBackup : BackupJob
@@ -106,10 +108,69 @@ namespace EasySaveConsole
         public override void Start()
         {
             base.Start();
-            // Implement differential backup logic here
-            Console.WriteLine("Differential backup completed.");
+            try
+            {
+                PerformDifferentialBackup(SourceDir, DestinationDir);
+                Console.WriteLine("Differential backup completed.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during backup: {ex.Message}");
+            }
+        }
+
+        private void PerformDifferentialBackup(string sourceDir, string destinationDir)
+        {
+            if (!Directory.Exists(destinationDir))
+                Directory.CreateDirectory(destinationDir);
+
+            foreach (var sourceFile in Directory.GetFiles(sourceDir))
+            {
+                var destFile = Path.Combine(destinationDir, Path.GetFileName(sourceFile));
+                if (ShouldCopyFile(sourceFile, destFile))
+                {
+                    CopyFileWithBuffer(sourceFile, destFile);
+                }
+                else
+                {
+                    Console.WriteLine($"Unchanged: {sourceFile}");
+                }
+            }
+
+            foreach (var directory in Directory.GetDirectories(sourceDir))
+            {
+                var destDir = Path.Combine(destinationDir, Path.GetFileName(directory));
+                PerformDifferentialBackup(directory, destDir);
+            }
+        }
+
+        private bool ShouldCopyFile(string sourceFile, string destinationFile)
+        {
+            if (!File.Exists(destinationFile))
+            {
+                Console.WriteLine($"New file: {sourceFile}");
+                return true;
+            }
+
+            var sourceFileInfo = new FileInfo(sourceFile);
+            var destFileInfo = new FileInfo(destinationFile);
+
+            bool isModified = sourceFileInfo.LastWriteTime > destFileInfo.LastWriteTime ||
+                              sourceFileInfo.Length != destFileInfo.Length;
+
+            if (isModified)
+            {
+                Console.WriteLine($"Replacing: {sourceFile}");
+                Console.WriteLine(
+                    $"  Source Last Modified: {sourceFileInfo.LastWriteTime}, Size: {sourceFileInfo.Length} bytes");
+                Console.WriteLine(
+                    $"  Dest. Last Modified: {destFileInfo.LastWriteTime}, Size: {destFileInfo.Length} bytes");
+            }
+
+            return isModified;
         }
     }
+
 
     public class BackupManager
     {
@@ -144,7 +205,7 @@ namespace EasySaveConsole
                     throw new InvalidOperationException("Unknown backup type");
             }
         }
-        
+
         public bool JobExists(string jobName)
         {
             return _backupJobs.Any(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
