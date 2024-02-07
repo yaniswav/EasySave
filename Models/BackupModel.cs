@@ -5,6 +5,8 @@ using System.Linq;
 
 namespace EasySaveConsole
 {
+    //Define BackupJob Class to represent backup task
+    
     public class BackupJob
     {
         public string Name { get; set; }
@@ -12,6 +14,8 @@ namespace EasySaveConsole
         public string DestinationDir { get; set; }
         public string Type { get; set; }
 
+        //Constructor to initialize a new BackupJob instance with parameters
+        
         public BackupJob(string name, string sourceDir, string destinationDir, string type)
         {
             Name = name;
@@ -20,21 +24,29 @@ namespace EasySaveConsole
             Type = type;
         }
 
+        //Start method used to start backup
+        
         public virtual void Start()
         {
             Console.WriteLine($"Starting backup: {Name}");
         }
     }
     
+    //Derived Class from BackupJob for full backup
+    
     public class CompleteBackup : BackupJob
     {
         private const int MaxBufferSize = 1024 * 1024; // 1 MB
 
+        //Specified constructor for full backup 
+        
         public CompleteBackup(string name, string sourceDir, string destinationDir)
             : base(name, sourceDir, destinationDir, "Complete")
         {
         }
 
+        //Override Start method to implement full backup process
+        
         public override void Start()
         {
             base.Start();
@@ -49,6 +61,8 @@ namespace EasySaveConsole
             }
         }
 
+        //Recursive copy of a directory and contents
+        
         private void CopyDirectory(string sourceDir, string destinationDir)
         {
             if (!Directory.Exists(destinationDir))
@@ -67,6 +81,8 @@ namespace EasySaveConsole
             }
         }
 
+        //Copy file with a buffer to optimize performance
+        
         private void CopyFileWithBuffer(string sourceFile, string destinationFile)
         {
             long fileSize = new FileInfo(sourceFile).Length;
@@ -86,6 +102,8 @@ namespace EasySaveConsole
             }
         }
 
+        //Determine buffer size based on file size
+        
         private int DetermineBufferSize(long fileSize)
         {
             if (fileSize <= MaxBufferSize)
@@ -95,6 +113,8 @@ namespace EasySaveConsole
         }
     }
 
+    //Derived class from BackupJob for differential backup
+    
     public class DifferentialBackup : BackupJob
     {
         public DifferentialBackup(string name, string sourceDir, string destinationDir)
@@ -110,11 +130,15 @@ namespace EasySaveConsole
         }
     }
 
+    //Class to manage execution of backup job
+    
     public class BackupManager
     {
         private List<BackupJob> _backupJobs = new List<BackupJob>();
         private ConfigModel _configModel = new ConfigModel();
 
+        //Load Backup Jobs from configuration 
+        
         public void LoadBackupJobs()
         {
             var jobConfigs = _configModel.LoadBackupJobs();
@@ -124,6 +148,8 @@ namespace EasySaveConsole
             }
         }
 
+        //Add backup job based on his type
+        
         private void AddBackupJobBasedOnType(dynamic job)
         {
             string type = job.Type;
@@ -144,6 +170,8 @@ namespace EasySaveConsole
             }
         }
 
+        //Execute specified backup jobs
+        
         public void ExecuteJobs(string[] jobNames)
         {
             foreach (string jobName in jobNames)
