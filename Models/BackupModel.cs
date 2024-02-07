@@ -117,6 +117,7 @@ namespace EasySaveConsole
             {
                 var destFile = Path.Combine(destinationDir, Path.GetFileName(file));
                 CopyFileWithBuffer(file, destFile);
+                UpdateProgress(file);
             }
 
             foreach (var directory in Directory.GetDirectories(sourceDir))
@@ -169,7 +170,7 @@ namespace EasySaveConsole
         private void UpdateProgress(string fileCopied)
         {
             NbFilesLeftToDo--;
-            Progression = (TotalFilesToCopy - NbFilesLeftToDo) / (double)TotalFilesToCopy * 100;
+            Progression = 100.0 * (TotalFilesToCopy - NbFilesLeftToDo) / TotalFilesToCopy;
             UpdateState("ACTIVE");
         }
 
