@@ -32,6 +32,7 @@ public class View
             DisplayMessage("EditBackup");
             DisplayMessage("DeleteBackup");
             DisplayMessage("ExitMessage");
+            
 
             Console.WriteLine("6. Change language / Changer la langue");
             string choice = Console.ReadLine();
@@ -56,7 +57,7 @@ public class View
                     ChangeLocale();
                     break;
                 default:
-                    Console.WriteLine("Invalid option, please try again. / Option invalide, veuillez réessayer.");
+                    DisplayMessage("IncorrectMessage");
                     break;
             }
         }
