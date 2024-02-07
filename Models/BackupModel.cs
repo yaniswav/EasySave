@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Configuration;
 
 namespace EasySaveConsole
 {
@@ -25,7 +26,7 @@ namespace EasySaveConsole
             Console.WriteLine($"Starting backup: {Name}");
         }
     }
-    
+
     public class CompleteBackup : BackupJob
     {
         private const int MaxBufferSize = 1024 * 1024; // 1 MB
@@ -113,11 +114,11 @@ namespace EasySaveConsole
     public class BackupManager
     {
         private List<BackupJob> _backupJobs = new List<BackupJob>();
-        private ConfigModel _configModel = new ConfigModel();
+        private BackupSettingsModel _backupSettingsModel = new BackupSettingsModel();
 
         public void LoadBackupJobs()
         {
-            var jobConfigs = _configModel.LoadBackupJobs();
+            var jobConfigs = _backupSettingsModel.LoadBackupJobs();
             foreach (var jobConfig in jobConfigs)
             {
                 AddBackupJobBasedOnType(jobConfig);
@@ -142,6 +143,11 @@ namespace EasySaveConsole
                 default:
                     throw new InvalidOperationException("Unknown backup type");
             }
+        }
+
+        public bool JobExists(string jobName)
+        {
+            return _backupJobs.Any(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
         }
 
         public void ExecuteJobs(string[] jobNames)

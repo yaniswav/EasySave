@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Specialized;
+using System.Configuration;
+using System.Globalization;
+
 
 namespace EasySaveConsole
 {
@@ -6,8 +11,9 @@ namespace EasySaveConsole
     {
         public static void Main(string[] args)
         {
+            IConfigurationManager configurationManager = new ConfigurationManagerImplementation();
             // Instanciation du ConfigModel qui contient la logique pour gérer les sauvegardes.
-            ConfigModel configModel = new ConfigModel();
+            ConfigModel configModel = new ConfigModel(configurationManager);
 
             // Création de la vue avec le modèle de configuration.
             View view = new View(configModel);

@@ -5,13 +5,13 @@ using System.Resources;
 
 public class View
 {
-    private ConfigModel _configModel;
+    private BackupSettingsModel _backupSettingsModel;
     private ResourceManager _resourceManager;
 
-    public View(ConfigModel configModel)
+    public View(BackupSettingsModel backupSettingsModel)
     {
-        _configModel = configModel;
-        _configModel.LoadCurrentLocale();
+        _backupSettingsModel = backupSettingsModel;
+        _backupSettingsModel.LoadCurrentLocale();
         _resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
     }
 
@@ -19,7 +19,7 @@ public class View
     {
         Console.WriteLine(_resourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture));
     }
-
+    
     public void DisplayMenu()
     {
         bool exit = false;
@@ -52,7 +52,9 @@ public class View
                 case "5":
                     exit = true;
                     break;
-                
+                case "6":
+                    ViewModel.ExecuteBackups();
+                    break;
                 default:
                     DisplayMessage("InvalidOption");
                     break;
@@ -62,7 +64,7 @@ public class View
 
     private void ListBackups()
     {
-        var backupJobs = _configModel.LoadBackupJobs();
+        var backupJobs = _backupSettingsModel.LoadBackupJobs();
         if (backupJobs.Count == 0)
         {
             Console.WriteLine("Aucune sauvegarde configurée.");
@@ -91,7 +93,7 @@ public class View
 
         BackupJobConfig newJob = new BackupJobConfig
             { Name = name, SourceDir = sourceDir, DestinationDir = destinationDir, Type = type };
-        _configModel.AddBackupJob(newJob);
+        _backupSettingsModel.AddBackupJob(newJob);
         Console.WriteLine("Sauvegarde ajoutée avec succès.");
     }
 }
