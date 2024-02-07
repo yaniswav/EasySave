@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -43,8 +43,7 @@ namespace EasySaveConsole
             {
                 if (!File.Exists(LocaleConfigFilePath))
                 {
-                    Console.WriteLine(
-                        $"Warning: Locale file not found at '{LocaleConfigFilePath}'. Falling back to default language.");
+                    Console.WriteLine($"Warning: Locale file not found at '{LocaleConfigFilePath}'. Falling back to default language.");
                     Locale = "en-US";
                     return;
                 }
@@ -59,18 +58,19 @@ namespace EasySaveConsole
                 }
 
                 Locale = localesConfig.CurrentLocale;
-                
                 Console.WriteLine($"Locale we got : {Locale}");
-                
-                CultureInfo culture = Locale == "fr" ? new CultureInfo("fr-FR") : new CultureInfo("en-US");
+
+                // Assurez-vous que les codes de langue correspondent à ceux du fichier JSON.
+                CultureInfo culture = new CultureInfo(Locale);
                 CultureInfo.CurrentUICulture = culture;
-                Console.WriteLine($"Locale set to: {Locale}");
+                Console.WriteLine($"Locale set to: {CultureInfo.CurrentUICulture}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading language settings: {ex.ToString()}");
+                Console.WriteLine($"Error loading language settings: {ex}");
             }
         }
+
 
         public void SetLocale(string newLocale)
         {
