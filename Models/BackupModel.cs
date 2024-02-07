@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Configuration;
 
 namespace EasySaveConsole
 {
@@ -142,6 +143,11 @@ namespace EasySaveConsole
                 default:
                     throw new InvalidOperationException("Unknown backup type");
             }
+        }
+        
+        public bool JobExists(string jobName)
+        {
+            return _backupJobs.Any(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
         }
 
         public void ExecuteJobs(string[] jobNames)

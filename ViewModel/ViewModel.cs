@@ -1,16 +1,53 @@
-﻿namespace EasySaveConsole
+﻿using System;
+using System.Globalization;
+using System.Resources;
+
+namespace EasySaveConsole
 {
     public class ViewModel
     {
-        public void ExecuteTask(string userCommand)
+        public static void ExecuteBackups()
         {
-            // Analyse user commands
-            // Example : "1-3" to execute saves 1 to 3
+            BackupManager backupManager = new BackupManager();
+            backupManager.LoadBackupJobs();
+
+            while (true)
+            {
+                Console.Write(
+                    "Entrez le nom du travail de sauvegarde à exécuter (séparés par une virgule) ou tapez 'exit' pour quitter: ");
+                string input = Console.ReadLine();
+
+                if (string.Equals(input, "exit", StringComparison.OrdinalIgnoreCase))
+                {
+                    break;
+                }
+
+                string[] jobNames = input.Split(',');
+
+                // Validation
+                bool isValid = ValidateJobNames(jobNames, backupManager);
+                if (!isValid)
+                {
+                    Console.WriteLine("Entrée invalide. Veuillez réessayer.");
+                    continue;
+                }
+
+                backupManager.ExecuteJobs(jobNames);
+                break;
+            }
         }
 
-        public void ExecuteSave(int saveIndex)
+        private static bool ValidateJobNames(string[] jobNames, BackupManager backupManager)
         {
-            // TODO
+            foreach (string jobName in jobNames)
+            {
+                if (string.IsNullOrWhiteSpace(jobName) || !backupManager.JobExists(jobName.Trim()))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
