@@ -33,7 +33,7 @@ public class View
             DisplayMessage("DeleteBackup");
             DisplayMessage("ExitMessage");
 
-            Console.WriteLine("6. Exécuter des travaux de sauvegarde");
+            Console.WriteLine("6. Change language / Changer la langue");
             string choice = Console.ReadLine();
             switch (choice)
             {
@@ -52,12 +52,25 @@ public class View
                 case "5":
                     exit = true;
                     break;
-                
+                case "6":
+                    ChangeLocale();
+                    break;
                 default:
-                    DisplayMessage("InvalidOption");
+                    Console.WriteLine("Invalid option, please try again. / Option invalide, veuillez réessayer.");
                     break;
             }
         }
+    }
+    
+    private void ChangeLocale()
+    {
+        Console.WriteLine("Choose your new default language / Choisissez votre nouvelle langue par défaut (en/fr):");
+        string newLocale = Console.ReadLine();
+        CultureInfo newCulture = newLocale == "fr" ? new CultureInfo("fr-FR") : new CultureInfo("en-US");
+        _configModel.SetLocale(newCulture.Name);
+        CultureInfo.CurrentUICulture = newCulture;
+        _resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
+        Console.WriteLine($"Language changed to / Langue changée en : {newCulture.DisplayName}");
     }
 
     private void ListBackups()
