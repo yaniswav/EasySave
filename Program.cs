@@ -8,25 +8,27 @@ using System.Collections.Specialized;
 
 namespace EasySaveConsole
 {
+    // Class for entry point of the EasySaveConsole application
     public class Program
     {
         public static void Main(string[] args)
         {
+            // Initialize the configuration model to manage application settings
             ConfigModel configModel = new ConfigModel();
 
-            // Création du ResourceManager pour les messages
+            //Create ResourceManager for message
             var resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
 
-            // Initialisation de Utilities avec le ResourceManager
+            //Initialize Utilities with ResourceManager to display message to the user
             Utilities messageDisplay = new Utilities(resourceManager);
 
-            // Création de l'instance ViewModel avec ConfigModel et Utilities
+            //Create ViewModel instance to provide access to business logic and interaction with the model
             ViewModel viewModel = new ViewModel(configModel, messageDisplay);
 
-            // Création de l'instance View avec ConfigModel, ViewModel et Utilities
+            // Create View instance, responsible for user interface logic and user interactions
             View view = new View(configModel, viewModel, messageDisplay);
 
-            // Affichage du menu
+            // Menu display
             view.DisplayMenu();
         }
     }
