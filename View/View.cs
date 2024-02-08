@@ -6,30 +6,36 @@ using System.Configuration;
 using System.Collections;
 using System.Collections.Specialized;
 
+// This class represents the user interface logic for the application
 public class View
 {
+    // Dependencies for managing configurations, displaying messages, and accessing resource files
     private ConfigModel _configModel;
     private ViewModel _viewModel;
     private Utilities _messageDisplay;
     private ResourceManager _resourceManager;
 
+    // Constructor initializes the view with necessary models and utilities
     public View(ConfigModel configModel, ViewModel viewModel, Utilities messageDisplay)
     {
         _configModel = configModel;
         _viewModel = viewModel;
-        _configModel.LoadCurrentLocale();
+        _configModel.LoadCurrentLocale(); // Load the current locale based on application settings
+        // Initialize ResourceManager for accessing localized strings
         var resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
-        _messageDisplay = new Utilities(resourceManager);
+        _messageDisplay = new Utilities(resourceManager); // Utilities for displaying messages to the user
     }
 
 
+    // Displays the main menu and handles user interactions
     public void DisplayMenu()
     {
-        bool exit = false;
+        bool exit = false; // Flag to control the menu loop
         _messageDisplay.DisplayMessage("WelcomeMessage");
         Console.WriteLine();
         while (!exit)
         {
+            // Display menu options
             _messageDisplay.DisplayMessage("ChooseOption");
             Console.WriteLine();
             _messageDisplay.DisplayMessage("BackupList");
@@ -41,8 +47,8 @@ public class View
             _messageDisplay.DisplayMessage("ExitMessage");
             Console.WriteLine();
 
-            string choice = Console.ReadLine();
-            switch (choice)
+            string choice = Console.ReadLine(); // User input for menu selection
+            switch (choice) // Handle menu selection
             {
                 case "1":
                     ListBackups();
@@ -79,6 +85,7 @@ public class View
         }
     }
 
+    // Allows the user to change the application's language/locale
     private void ChangeLocale()
     {
         Console.WriteLine("Choose your new default language / Choisissez votre nouvelle langue par défaut (en/fr):");
@@ -90,6 +97,7 @@ public class View
         Console.WriteLine($"Language changed to / Langue changée en : {newCulture.DisplayName}");
     }
 
+    // Displays a list of configured backup jobs
     private void ListBackups()
     {
         var backupJobs = _configModel.LoadBackupJobs();
@@ -99,6 +107,7 @@ public class View
         }
         else
         {
+            // Display details of each configured backup job
             foreach (var job in backupJobs)
             {
                 Console.WriteLine(
@@ -108,8 +117,10 @@ public class View
     }
 
 
+    // Interface for creating a new backup job
     public void CreateBackupInterface()
     {
+        // Collect input from user for new backup job details
         _messageDisplay.DisplayMessage("CreateNewBackup");
         _messageDisplay.DisplayMessage("BackupName");
         string name = Console.ReadLine();
@@ -123,6 +134,7 @@ public class View
         Console.Write("Type (Complete/Differential) : ");
         string type = Console.ReadLine();
 
+        // Attempt to create backup job with provided details
         if (_viewModel.TryCreateBackup(name, sourceDir, destinationDir, type, out string errorMessage))
         {
             _messageDisplay.DisplayMessage("BackupSuccess");
@@ -133,8 +145,10 @@ public class View
         }
     }
 
+    // Interface for editing an existing backup job
     public void EditBackupInterface()
     {
+        // Collect new details for the backup job to be edited
         _messageDisplay.DisplayMessage("EditBackupName");
         string jobName = Console.ReadLine();
 
@@ -147,6 +161,7 @@ public class View
         Console.Write("Type (Complete/Differential) : ");
         string newType = Console.ReadLine();
 
+        // Attempt to edit backup job with new details
         if (_viewModel.TryEditBackup(jobName, newSourceDir, newDestinationDir, newType, out string errorMessage))
         {
             _messageDisplay.DisplayMessage("EditSuccess");
@@ -157,6 +172,7 @@ public class View
         }
     }
 
+    // Interface for deleting an existing backup job
     public void DeleteBackupInterface()
     {
         _messageDisplay.DisplayMessage("DeleteBackupName");
