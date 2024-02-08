@@ -6,7 +6,7 @@ using System.Configuration;
 
 namespace EasySaveConsole
 {
-    //class representing a backup job with properties
+    // Class representing a backup job with properties
     public class BackupJob
     {
         public string Name { get; set; }
@@ -19,7 +19,7 @@ namespace EasySaveConsole
         protected int NbFilesLeftToDo = 0;
         protected double Progression = 0;
 
-        //Constructor to initialize a new BackupJob with basic details
+        // Constructor to initialize a new BackupJob with basic details
         public BackupJob(string name, string sourceDir, string destinationDir, string type)
         {
             Name = name;
@@ -64,7 +64,7 @@ namespace EasySaveConsole
 
                 // Log in log.json file
                 LoggingModel.LogFileTransfer(
-                    this.Name, //Supposed you have an attribute Name in your class to identify backup
+                    this.Name, // Supposed you have an attribute Name in your class to identify backup
                     sourceFile,
                     destinationFile,
                     fileSize,
@@ -77,9 +77,9 @@ namespace EasySaveConsole
             {
                 stopwatch.Stop();
                 Console.WriteLine($"Erreur lors de la copie du fichier : {ex.Message}");
-                //Be sure to have error management in your LoggingModel
+                // Be sure to have error management in your LoggingModel
                 LoggingModel.LogFileTransfer(
-                    this.Name, //Supposed you have an attribute Name in your class to identify your backup
+                    this.Name, // Supposed you have an attribute Name in your class to identify your backup
                     sourceFile,
                     destinationFile,
                     fileSize,
