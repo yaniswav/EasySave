@@ -115,9 +115,9 @@ namespace EasySaveConsole
         // Tries to delete an existing backup job, always returns true indicating success
         public bool TryDeleteBackup(string jobName)
         {
-            _configModel.DeleteBackupJob(jobName);
-            return true;
+            return _configModel.DeleteBackupJob(jobName);
         }
+
 
         // Initiates the execution of backup jobs based on user input
         public void ExecuteBackups()

@@ -102,4 +102,7 @@
     <data name="ChangedLanguage" xml:space="preserve">
         <value>Langue changée en :</value>
     </data>
+    <data name="DeleteFailure" xml:space="preserve">
+        <value>Erreur, il n'y a pas de sauvegarde avec ce nom</value>
+    </data>
 </root>

@@ -69,23 +69,25 @@ namespace EasySaveConsole
         }
 
         // Deletes a backup job configuration by name
-        public void DeleteBackupJob(string jobName)
+        public bool DeleteBackupJob(string jobName)
         {
             var backupJobs = GetBackupJobs();
-            var jobToDelete =
-                backupJobs.FirstOrDefault(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
+            var jobToDelete = backupJobs.FirstOrDefault(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
 
             if (jobToDelete != null)
             {
                 backupJobs.Remove(jobToDelete);
                 SaveBackupJobs(backupJobs);
-                Console.WriteLine($"Backup job {jobName} deleted.");
+                Console.WriteLine($"Backup job {jobName} deleted."); // Cette ligne peut être supprimée si vous gérez les messages dans la vue.
+                return true;
             }
             else
             {
-                Console.WriteLine($"Backup job {jobName} not found.");
+                Console.WriteLine($"Backup job {jobName} not found."); // Cette ligne peut être supprimée si vous gérez les messages dans la vue.
+                return false;
             }
         }
+
 
         // Modifies an existing backup job configuration
         public void ModifyBackupJob(string jobName, BackupJobConfig modifiedJob)

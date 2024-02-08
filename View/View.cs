@@ -114,7 +114,7 @@ public class View
             foreach (var job in backupJobs)
             {
                 Console.WriteLine(
-                    $"Nom: {job.Name}, Source: {job.SourceDir}, Destination: {job.DestinationDir}, Type: {job.Type}");
+                    $"Name: {job.Name}, Source: {job.SourceDir}, Destination: {job.DestinationDir}, Type: {job.Type}");
             }
         }
     }
@@ -177,7 +177,7 @@ public class View
         }
     }
 
-    // Interface for deleting an existing backup job
+// Interface for deleting an existing backup job
     public void DeleteBackupInterface()
     {
         Console.WriteLine();
