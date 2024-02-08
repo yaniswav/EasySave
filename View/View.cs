@@ -2,6 +2,9 @@
 using EasySaveConsole;
 using System.Globalization;
 using System.Resources;
+using System.Configuration;
+using System.Collections;
+using System.Collections.Specialized;
 
 public class View
 {
@@ -59,6 +62,8 @@ public class View
                 case "7":
                     ViewModel.ExecuteBackups();
                     break;
+                case "8":
+                    break;
                 default:
                     DisplayMessage("IncorrectMessage");
                     break;
@@ -66,13 +71,14 @@ public class View
         }
     }
 
+
     private void ChangeLocale()
     {
         Console.WriteLine("Choose your new default language / Choisissez votre nouvelle langue par défaut (en/fr):");
         string newLocale = Console.ReadLine();
         CultureInfo newCulture = newLocale == "fr" ? new CultureInfo("fr-FR") : new CultureInfo("en-US");
         _configModel.SetLocale(newCulture.Name);
-        CultureInfo.CurrentUICulture = newCulture;
+        CultureInfo.CurrentUICulture = newCulture; // Cette ligne est correcte
         _resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
         Console.WriteLine($"Language changed to / Langue changée en : {newCulture.DisplayName}");
     }
