@@ -103,12 +103,35 @@ public class View
         Console.WriteLine("Création d'une nouvelle sauvegarde.");
         Console.Write("Nom de la sauvegarde : ");
         string name = Console.ReadLine();
+        if (_configModel.BackupJobExists(name))
+        {
+            Console.WriteLine("Un job de sauvegarde avec ce nom existe déjà.");
+            return;
+        }
+
         Console.Write("Répertoire source : ");
         string sourceDir = Console.ReadLine();
+        if (!IsValidPath(sourceDir))
+        {
+            Console.WriteLine("Le chemin source est invalide.");
+            return;
+        }
+
         Console.Write("Répertoire destination : ");
         string destinationDir = Console.ReadLine();
+        if (!IsValidPath(destinationDir))
+        {
+            Console.WriteLine("Le chemin de destination est invalide.");
+            return;
+        }
+
         Console.Write("Type (Complet/Différentiel) : ");
         string type = Console.ReadLine();
+        if (!IsValidBackupType(type))
+        {
+            Console.WriteLine("Le type de sauvegarde est invalide.");
+            return;
+        }
 
         BackupJobConfig newJob = new BackupJobConfig
             { Name = name, SourceDir = sourceDir, DestinationDir = destinationDir, Type = type };
@@ -124,10 +147,35 @@ public class View
         // Obtenez les nouvelles informations de sauvegarde
         Console.Write("Nouveau répertoire source : ");
         string newSourceDir = Console.ReadLine();
+
+
+        if (!IsValidPath(newSourceDir))
+        {
+            Console.WriteLine("Le chemin source est invalide.");
+            return;
+        }
+
+
         Console.Write("Nouveau répertoire destination : ");
+
         string newDestinationDir = Console.ReadLine();
-        Console.Write("Nouveau type (Complet/Différentiel) : ");
+
+        if (!IsValidPath(newDestinationDir))
+        {
+            Console.WriteLine("Le chemin source est invalide.");
+            return;
+        }
+
+        Console.Write("Nouveau type (Complete/Differential) : ");
         string newType = Console.ReadLine();
+
+
+        if (!IsValidBackupType(newType))
+        {
+            Console.WriteLine("Le type de sauvegarde est invalide.");
+            return;
+        }
+
 
         // Créez une nouvelle configuration de job
         BackupJobConfig modifiedJob = new BackupJobConfig
@@ -149,5 +197,24 @@ public class View
 
         _configModel.DeleteBackupJob(jobName);
         Console.WriteLine("Sauvegarde supprimée avec succès.");
+    }
+
+    private bool IsValidBackupType(string type)
+    {
+        var validTypes = new[] { "Complete", "Differential" };
+        return validTypes.Contains(type);
+    }
+
+    private bool IsValidPath(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return false;
+        }
+
+        var validPathPrefixes = new List<string>
+            { "C:\\", "D:\\", "E:\\", "F:\\", "G:\\", "H:\\" };
+
+        return validPathPrefixes.Any(prefix => path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
     }
 }

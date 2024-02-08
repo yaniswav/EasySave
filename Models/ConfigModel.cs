@@ -58,6 +58,7 @@ namespace EasySaveConsole
                 return;
             }
 
+
             backupJobs.Add(jobConfig);
             SaveBackupJobs(backupJobs);
             Console.WriteLine($"Backup job {jobConfig.Name} added.");
@@ -132,6 +133,12 @@ namespace EasySaveConsole
             {
                 throw new InvalidOperationException("Maximum number of backup jobs reached.");
             }
+        }
+
+        public bool BackupJobExists(string jobName)
+        {
+            var backupJobs = GetBackupJobs();
+            return backupJobs.Any(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
         }
 
         private static void UpdateAppSettings(string key, string value)
