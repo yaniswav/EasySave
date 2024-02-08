@@ -48,21 +48,19 @@ public class View
                     CreateBackup();
                     break;
                 case "3":
-                    DisplayMessage("EditNotSupported");
+                    ModifyBackup();
                     break;
                 case "4":
-                    DisplayMessage("DeleteNotSupported");
+                    DeleteBackup();
                     break;
                 case "5":
-                    exit = true;
-                    break;
-                case "6":
                     ChangeLocale();
                     break;
-                case "7":
+                case "6":
                     ViewModel.ExecuteBackups();
                     break;
-                case "8":
+                case "7":
+                    exit = true;
                     break;
                 default:
                     DisplayMessage("IncorrectMessage");
@@ -116,5 +114,40 @@ public class View
             { Name = name, SourceDir = sourceDir, DestinationDir = destinationDir, Type = type };
         _configModel.AddBackupJob(newJob);
         Console.WriteLine("Sauvegarde ajoutée avec succès.");
+    }
+
+    private void ModifyBackup()
+    {
+        Console.WriteLine("Entrez le nom du job de sauvegarde à modifier : ");
+        string jobName = Console.ReadLine();
+
+        // Obtenez les nouvelles informations de sauvegarde
+        Console.Write("Nouveau répertoire source : ");
+        string newSourceDir = Console.ReadLine();
+        Console.Write("Nouveau répertoire destination : ");
+        string newDestinationDir = Console.ReadLine();
+        Console.Write("Nouveau type (Complet/Différentiel) : ");
+        string newType = Console.ReadLine();
+
+        // Créez une nouvelle configuration de job
+        BackupJobConfig modifiedJob = new BackupJobConfig
+        {
+            Name = jobName,
+            SourceDir = newSourceDir,
+            DestinationDir = newDestinationDir,
+            Type = newType
+        };
+
+        _configModel.ModifyBackupJob(jobName, modifiedJob);
+        Console.WriteLine("Sauvegarde modifiée avec succès.");
+    }
+
+    private void DeleteBackup()
+    {
+        Console.WriteLine("Entrez le nom du job de sauvegarde à supprimer : ");
+        string jobName = Console.ReadLine();
+
+        _configModel.DeleteBackupJob(jobName);
+        Console.WriteLine("Sauvegarde supprimée avec succès.");
     }
 }

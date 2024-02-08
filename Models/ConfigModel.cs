@@ -13,7 +13,7 @@ namespace EasySaveConsole
         private const int MaxBackupJobs = 5;
 
         public string Locale { get; private set; }
-        
+
         public ConfigModel()
         {
             LoadCurrentLocale();
@@ -23,27 +23,95 @@ namespace EasySaveConsole
         {
             Console.WriteLine("Loading current locale...");
             Locale = ConfigurationManager.AppSettings[CurrentLocaleKey] ?? "en-US";
-            CultureInfo cultureInfo = new CultureInfo(Locale);
-            CultureInfo.CurrentCulture = cultureInfo;
-            CultureInfo.CurrentUICulture = cultureInfo; // Ajoutez cette ligne
-            Console.WriteLine($"Locale set to: {CultureInfo.CurrentCulture}");
+            SetCulture(Locale);
         }
-
 
         public void SetLocale(string newLocale)
         {
             Console.WriteLine($"Setting new locale to: {newLocale}");
             UpdateAppSettings(CurrentLocaleKey, newLocale);
-            LoadCurrentLocale(); // Reload locale to update CultureInfo
+            SetCulture(newLocale);
+        }
+
+        private void SetCulture(string locale)
+        {
+            CultureInfo cultureInfo = new CultureInfo(locale);
+            CultureInfo.CurrentCulture = cultureInfo;
+            CultureInfo.CurrentUICulture = cultureInfo;
+            Console.WriteLine($"Locale set to: {CultureInfo.CurrentCulture}");
         }
 
         public List<BackupJobConfig> LoadBackupJobs()
         {
             Console.WriteLine("Loading backup jobs...");
+            return GetBackupJobs();
+        }
+
+        public void AddBackupJob(BackupJobConfig jobConfig)
+        {
+            var backupJobs = GetBackupJobs();
+            ValidateBackupJobCount(backupJobs);
+
+            if (backupJobs.Any(job => job.Name.Equals(jobConfig.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine($"A backup job with the name '{jobConfig.Name}' already exists.");
+                return;
+            }
+
+            backupJobs.Add(jobConfig);
+            SaveBackupJobs(backupJobs);
+            Console.WriteLine($"Backup job {jobConfig.Name} added.");
+        }
+
+        public void DeleteBackupJob(string jobName)
+        {
+            var backupJobs = GetBackupJobs();
+            var jobToDelete =
+                backupJobs.FirstOrDefault(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
+
+            if (jobToDelete != null)
+            {
+                backupJobs.Remove(jobToDelete);
+                SaveBackupJobs(backupJobs);
+                Console.WriteLine($"Backup job {jobName} deleted.");
+            }
+            else
+            {
+                Console.WriteLine($"Backup job {jobName} not found.");
+            }
+        }
+
+        public void ModifyBackupJob(string jobName, BackupJobConfig modifiedJob)
+        {
+            var backupJobs = GetBackupJobs();
+            var jobToModify =
+                backupJobs.FirstOrDefault(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
+
+            if (jobToModify != null)
+            {
+                backupJobs.Remove(jobToModify);
+                if (backupJobs.Any(job => job.Name.Equals(modifiedJob.Name, StringComparison.OrdinalIgnoreCase)))
+                {
+                    Console.WriteLine($"A backup job with the name '{modifiedJob.Name}' already exists.");
+                    return;
+                }
+
+                backupJobs.Add(modifiedJob);
+                SaveBackupJobs(backupJobs);
+                Console.WriteLine($"Backup job {jobName} modified.");
+            }
+            else
+            {
+                Console.WriteLine($"Backup job {jobName} not found.");
+            }
+        }
+
+
+        private List<BackupJobConfig> GetBackupJobs()
+        {
             string jobsData = ConfigurationManager.AppSettings[BackupJobsKey];
             if (string.IsNullOrEmpty(jobsData))
             {
-                Console.WriteLine("No backup jobs found.");
                 return new List<BackupJobConfig>();
             }
 
@@ -52,21 +120,18 @@ namespace EasySaveConsole
                 .ToList();
         }
 
-        public void AddBackupJob(BackupJobConfig jobConfig)
+        private void SaveBackupJobs(List<BackupJobConfig> backupJobs)
         {
-            Console.WriteLine($"Adding backup job: {jobConfig.Name}");
-            var backupJobs = LoadBackupJobs();
-
-            if (backupJobs.Count >= MaxBackupJobs)
-            {
-                Console.WriteLine("Reached maximum backup job limit.");
-                throw new InvalidOperationException("Maximum number of backup jobs reached.");
-            }
-
-            backupJobs.Add(jobConfig);
             string jobsData = string.Join(";", backupJobs.Select(job => job.ToString()));
             UpdateAppSettings(BackupJobsKey, jobsData);
-            Console.WriteLine($"Backup job {jobConfig.Name} added.");
+        }
+
+        private void ValidateBackupJobCount(List<BackupJobConfig> backupJobs)
+        {
+            if (backupJobs.Count >= MaxBackupJobs)
+            {
+                throw new InvalidOperationException("Maximum number of backup jobs reached.");
+            }
         }
 
         private static void UpdateAppSettings(string key, string value)
