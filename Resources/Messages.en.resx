@@ -43,4 +43,13 @@
     <data name="SelectLocale" xml:space="preserve">
         <value>Which language do you want to switch to? </value>
     </data>
+    <data name="NoBackup" xml:space="preserve">
+        <value>There is no backup</value>
+    </data>
+    <data name="CreateNewBackup" xml:space="preserve">
+        <value>Creating a new backup</value>
+    </data>
+    <data name="IncorrectMessage" xml:space="preserve">
+        <value>Invalid message, please retry</value>
+    </data>
 </root>
