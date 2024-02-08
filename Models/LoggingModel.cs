@@ -5,8 +5,10 @@ using System.Text.Json;
 
 namespace EasySaveConsole
 {
+    // Represents the model for logging backup job details
     public class LoggingModel
     {
+        // Properties to store log details
         public string Name { get; set; }
         public string FileSource { get; set; }
         public string FileTarget { get; set; }
@@ -14,9 +16,10 @@ namespace EasySaveConsole
         public double FileTransferTime { get; set; }
         public string Time { get; set; }
 
+        // Retrieves the path to the log file, ensuring the directory exists
         private static string GetLogFilePath()
         {
-            // Utilisez un chemin approprié pour le système de fichiers du client
+            //Use an appropriate path for client file system
             string logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
             if (!Directory.Exists(logDirectory))
                 Directory.CreateDirectory(logDirectory);
@@ -25,9 +28,11 @@ namespace EasySaveConsole
             return Path.Combine(logDirectory, logFileName);
         }
 
+        // Logs details of a file transfer to a JSON file
         public static void LogFileTransfer(string name, string source, string target, long fileSize,
             double transferTime, bool error = false)
         {
+            // Create a new log entry
             var log = new LoggingModel
             {
                 Name = name,
