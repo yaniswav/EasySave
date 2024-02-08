@@ -5,8 +5,10 @@ using System.Text.Json;
 
 namespace EasySaveConsole
 {
+    // Represents the model for logging backup job details
     public class LoggingModel
     {
+        // Properties to store log details
         public string Name { get; set; }
         public string FileSource { get; set; }
         public string FileTarget { get; set; }
@@ -14,9 +16,10 @@ namespace EasySaveConsole
         public double FileTransferTime { get; set; }
         public string Time { get; set; }
 
+        // Retrieves the path to the log file, ensuring the directory exists
         private static string GetLogFilePath()
         {
-            // Utilisez un chemin approprié pour le système de fichiers du client
+            // Use an appropriate path for client file system
             string logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
             if (!Directory.Exists(logDirectory))
                 Directory.CreateDirectory(logDirectory);
@@ -25,9 +28,11 @@ namespace EasySaveConsole
             return Path.Combine(logDirectory, logFileName);
         }
 
+        // Logs details of a file transfer to a JSON file
         public static void LogFileTransfer(string name, string source, string target, long fileSize,
             double transferTime, bool error = false)
         {
+            // Create a new log entry
             var log = new LoggingModel
             {
                 Name = name,
@@ -35,22 +40,24 @@ namespace EasySaveConsole
                 FileTarget = target,
                 FileSize = fileSize,
                 FileTransferTime = error ? -transferTime : transferTime,
-                Time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
+                Time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") // Current timestamp
             };
 
-            List<LoggingModel> logs = new List<LoggingModel>();
-            string filePath = GetLogFilePath();
+            List<LoggingModel> logs = new List<LoggingModel>(); // List to hold all log entries
+            string filePath = GetLogFilePath(); // Path to the log file
 
+            // Load existing logs if the file exists
             if (File.Exists(filePath))
             {
                 string existingLogs = File.ReadAllText(filePath);
                 logs = JsonSerializer.Deserialize<List<LoggingModel>>(existingLogs) ?? new List<LoggingModel>();
             }
 
-            logs.Add(log);
+            logs.Add(log); // Add the new log to the list
 
+            // Serialize the list of logs to JSON and write to the file
             string jsonString = JsonSerializer.Serialize(logs, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(filePath, jsonString);
+            File.WriteAllText(filePath, jsonString); // Overwrite the file with updated logs
         }
     }
 }

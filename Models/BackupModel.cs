@@ -6,6 +6,7 @@ using System.Configuration;
 
 namespace EasySaveConsole
 {
+    // Class representing a backup job with properties
     public class BackupJob
     {
         public string Name { get; set; }
@@ -18,6 +19,7 @@ namespace EasySaveConsole
         protected int NbFilesLeftToDo = 0;
         protected double Progression = 0;
 
+        // Constructor to initialize a new BackupJob with basic details
         public BackupJob(string name, string sourceDir, string destinationDir, string type)
         {
             Name = name;
@@ -27,6 +29,7 @@ namespace EasySaveConsole
         }
 
 
+        // Starts the backup process
         public virtual void Start()
         {
             Console.WriteLine($"Starting backup: {Name}");
@@ -34,6 +37,7 @@ namespace EasySaveConsole
 
         protected const int MaxBufferSize = 1024 * 1024; // 1 MB
 
+        // Copies a file from source to destination with a buffer to optimize performance
         protected void CopyFileWithBuffer(string sourceFile, string destinationFile)
         {
             long fileSize = new FileInfo(sourceFile).Length;
@@ -58,9 +62,9 @@ namespace EasySaveConsole
 
                 stopwatch.Stop();
 
-                // Log dans le fichier log.json
+                // Log in log.json file
                 LoggingModel.LogFileTransfer(
-                    this.Name, // Supposé que vous avez un attribut Name dans votre classe pour identifier la sauvegarde
+                    this.Name, // Supposed you have an attribute Name in your class to identify backup
                     sourceFile,
                     destinationFile,
                     fileSize,
@@ -73,19 +77,20 @@ namespace EasySaveConsole
             {
                 stopwatch.Stop();
                 Console.WriteLine($"Erreur lors de la copie du fichier : {ex.Message}");
-                // Assurez-vous d'avoir une gestion d'erreur dans votre LoggingModel pour traiter ce cas
+                // Be sure to have error management in your LoggingModel
                 LoggingModel.LogFileTransfer(
-                    this.Name, // Supposé que vous avez un attribut Name dans votre classe pour identifier la sauvegarde
+                    this.Name, // Supposed you have an attribute Name in your class to identify your backup
                     sourceFile,
                     destinationFile,
                     fileSize,
                     stopwatch.ElapsedMilliseconds,
-                    true // Indique une erreur
+                    true // Return an error 
                 );
             }
         }
 
 
+        // Determines the buffer size based on the file size
         protected int DetermineBufferSize(long fileSize)
         {
             if (fileSize <= MaxBufferSize)
@@ -95,6 +100,7 @@ namespace EasySaveConsole
         }
 
 
+        // Updates the state of the backup job with progress and other details
         protected void UpdateState(string state)
         {
             StateModel.UpdateBackupState(this, state, TotalFilesToCopy, TotalFilesSize, NbFilesLeftToDo, Progression,
@@ -102,6 +108,7 @@ namespace EasySaveConsole
         }
     }
 
+    // Derived class for performing a complete backup
     public class CompleteBackup : BackupJob
     {
         public CompleteBackup(string name, string sourceDir, string destinationDir)
@@ -109,6 +116,7 @@ namespace EasySaveConsole
         {
         }
 
+        // Overrides the Start method to perform a complete backup
         public override void Start()
         {
             base.Start();
@@ -128,6 +136,7 @@ namespace EasySaveConsole
             }
         }
 
+        // Initializes properties to track progress and size of the backup
         private void InitializeTrackingProperties()
         {
             var allFiles = Directory.GetFiles(SourceDir, "*", SearchOption.AllDirectories);
@@ -136,6 +145,7 @@ namespace EasySaveConsole
             NbFilesLeftToDo = TotalFilesToCopy;
         }
 
+        // Updates the progress of the backup process
         private void UpdateProgress(string fileCopied)
         {
             if (NbFilesLeftToDo > 0)
@@ -148,6 +158,7 @@ namespace EasySaveConsole
         }
 
 
+        // Recursively copies directories and files from source to destination
         private void CopyDirectory(string sourceDir, string destinationDir)
         {
             if (!Directory.Exists(destinationDir))
@@ -168,6 +179,7 @@ namespace EasySaveConsole
         }
     }
 
+    // Derived class for performing a differential backup
     public class DifferentialBackup : BackupJob
     {
         public DifferentialBackup(string name, string sourceDir, string destinationDir)
@@ -175,6 +187,7 @@ namespace EasySaveConsole
         {
         }
 
+        // Overrides the Start method to perform a differential backup
         public override void Start()
         {
             base.Start();
@@ -194,6 +207,7 @@ namespace EasySaveConsole
             }
         }
 
+        // Initializes properties for tracking which files need to be copied
         private void InitializeTrackingProperties()
         {
             var allFiles = Directory.GetFiles(SourceDir, "*", SearchOption.AllDirectories);
@@ -208,6 +222,7 @@ namespace EasySaveConsole
             NbFilesLeftToDo = TotalFilesToCopy;
         }
 
+        // Updates the progress of the backup process
         private void UpdateProgress(string fileCopied)
         {
             if (NbFilesLeftToDo > 0)
@@ -220,6 +235,7 @@ namespace EasySaveConsole
         }
 
 
+        // Performs the differential backup by copying only modified or new files
         private void PerformDifferentialBackup(string sourceDir, string destinationDir)
         {
             if (!Directory.Exists(destinationDir))
@@ -245,6 +261,7 @@ namespace EasySaveConsole
             }
         }
 
+        // Determines if a file should be copied based on modification date and size
         private bool ShouldCopyFile(string sourceFile, string destinationFile)
         {
             if (!File.Exists(destinationFile))
@@ -273,11 +290,13 @@ namespace EasySaveConsole
     }
 
 
+    // Manages backup jobs, loading configurations, and executing specified jobs
     public class BackupManager
     {
         private List<BackupJob> _backupJobs = new List<BackupJob>();
         private ConfigModel _configModel = new ConfigModel();
 
+        // Loads backup job configurations from a source and initializes jobs based on those configurations
         public void LoadBackupJobs()
         {
             var jobConfigs = _configModel.LoadBackupJobs();
@@ -287,6 +306,7 @@ namespace EasySaveConsole
             }
         }
 
+        // Adds a backup job to the list based on its type
         private void AddBackupJobBasedOnType(dynamic job)
         {
             string type = job.Type;
@@ -307,11 +327,13 @@ namespace EasySaveConsole
             }
         }
 
+        // Checks if a job with the specified name exists
         public bool JobExists(string jobName)
         {
             return _backupJobs.Any(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
         }
 
+        // Executes the specified backup jobs by name
         public void ExecuteJobs(string[] jobNames)
         {
             foreach (string jobName in jobNames)

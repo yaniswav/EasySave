@@ -6,19 +6,23 @@ using System.Linq;
 
 namespace EasySaveConsole
 {
+    // Manages application configuration, including locales and backup job settings
     public class ConfigModel
     {
+        // Constants to identify configuration keys and limits
         private const string BackupJobsKey = "BackupJobs";
         private const string CurrentLocaleKey = "CurrentLocale";
         private const int MaxBackupJobs = 5;
 
         public string Locale { get; private set; }
 
+        // Constructor initializes the current locale from configuration
         public ConfigModel()
         {
             LoadCurrentLocale();
         }
 
+        // Loads the current locale from the application settings, defaults to "en-US" if not set
         public void LoadCurrentLocale()
         {
             Console.WriteLine("Loading current locale...");
@@ -26,6 +30,7 @@ namespace EasySaveConsole
             SetCulture(Locale);
         }
 
+        // Sets a new locale and updates application settings
         public void SetLocale(string newLocale)
         {
             Console.WriteLine($"Setting new locale to: {newLocale}");
@@ -33,6 +38,7 @@ namespace EasySaveConsole
             SetCulture(newLocale);
         }
 
+        // Applies the specified culture settings to the application
         private void SetCulture(string locale)
         {
             CultureInfo cultureInfo = new CultureInfo(locale);
@@ -41,12 +47,14 @@ namespace EasySaveConsole
             Console.WriteLine($"Locale set to: {CultureInfo.CurrentCulture}");
         }
 
+        // Loads backup job configurations from application settings
         public List<BackupJobConfig> LoadBackupJobs()
         {
             Console.WriteLine("Loading backup jobs...");
             return GetBackupJobs();
         }
 
+        // Adds a new backup job configuration, ensuring the job name is unique and the max count is not exceeded
         public void AddBackupJob(BackupJobConfig jobConfig)
         {
             var backupJobs = GetBackupJobs();
@@ -64,6 +72,7 @@ namespace EasySaveConsole
             Console.WriteLine($"Backup job {jobConfig.Name} added.");
         }
 
+        // Deletes a backup job configuration by name
         public void DeleteBackupJob(string jobName)
         {
             var backupJobs = GetBackupJobs();
@@ -82,6 +91,7 @@ namespace EasySaveConsole
             }
         }
 
+        // Modifies an existing backup job configuration
         public void ModifyBackupJob(string jobName, BackupJobConfig modifiedJob)
         {
             var backupJobs = GetBackupJobs();
@@ -108,6 +118,7 @@ namespace EasySaveConsole
         }
 
 
+        // Retrieves backup job configurations from application settings
         private List<BackupJobConfig> GetBackupJobs()
         {
             string jobsData = ConfigurationManager.AppSettings[BackupJobsKey];
@@ -121,12 +132,14 @@ namespace EasySaveConsole
                 .ToList();
         }
 
+        // Saves updated backup job configurations to application settings
         private void SaveBackupJobs(List<BackupJobConfig> backupJobs)
         {
             string jobsData = string.Join(";", backupJobs.Select(job => job.ToString()));
             UpdateAppSettings(BackupJobsKey, jobsData);
         }
 
+        // Ensures the total number of backup jobs does not exceed the maximum allowed
         private void ValidateBackupJobCount(List<BackupJobConfig> backupJobs)
         {
             if (backupJobs.Count >= MaxBackupJobs)
@@ -135,12 +148,14 @@ namespace EasySaveConsole
             }
         }
 
+        // Checks if a backup job with the specified name exists
         public bool BackupJobExists(string jobName)
         {
             var backupJobs = GetBackupJobs();
             return backupJobs.Any(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
         }
 
+        // Updates a single application setting by key
         private static void UpdateAppSettings(string key, string value)
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -158,6 +173,7 @@ namespace EasySaveConsole
         }
     }
 
+    // Class to represent the configuration for a single backup job
     public class BackupJobConfig
     {
         public string Name { get; set; }
@@ -165,11 +181,13 @@ namespace EasySaveConsole
         public string DestinationDir { get; set; }
         public string Type { get; set; }
 
+        // Converts the backup job configuration to a string for storage
         public override string ToString()
         {
             return $"{Name},{SourceDir},{DestinationDir},{Type}";
         }
 
+        // Creates a backup job configuration from a string
         public static BackupJobConfig FromString(string data)
         {
             var parts = data.Split(',');
@@ -183,6 +201,7 @@ namespace EasySaveConsole
         }
     }
 
+    // Used to store the current locale configuration
     public class LocaleConfig
     {
         public string CurrentLocale { get; set; }
