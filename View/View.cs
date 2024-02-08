@@ -9,38 +9,38 @@ using System.Collections.Specialized;
 public class View
 {
     private ConfigModel _configModel;
+    private ViewModel _viewModel;
+    private Utilities _messageDisplay;
     private ResourceManager _resourceManager;
 
-    public View(ConfigModel configModel)
+    public View(ConfigModel configModel, ViewModel viewModel, Utilities messageDisplay)
     {
         _configModel = configModel;
+        _viewModel = viewModel;
         _configModel.LoadCurrentLocale();
-        _resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
+        var resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
+        _messageDisplay = new Utilities(resourceManager);
     }
 
-    public void DisplayMessage(string resourceKey)
-    {
-        Console.WriteLine(_resourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture));
-    }
 
     public void DisplayMenu()
     {
         bool exit = false;
-        DisplayMessage("WelcomeMessage");
+        _messageDisplay.DisplayMessage("WelcomeMessage");
         Console.WriteLine();
         while (!exit)
         {
-            DisplayMessage("ChooseOption");
+            _messageDisplay.DisplayMessage("ChooseOption");
             Console.WriteLine();
-            DisplayMessage("BackupList");
-            DisplayMessage("CreateBackup");
-            DisplayMessage("EditBackup");
-            DisplayMessage("DeleteBackup");
-            DisplayMessage("ExecuteBackup");
-            DisplayMessage("ChangeLanguage");
-            DisplayMessage("ExitMessage");
+            _messageDisplay.DisplayMessage("BackupList");
+            _messageDisplay.DisplayMessage("CreateBackup");
+            _messageDisplay.DisplayMessage("EditBackup");
+            _messageDisplay.DisplayMessage("DeleteBackup");
+            _messageDisplay.DisplayMessage("ExecuteBackup");
+            _messageDisplay.DisplayMessage("ChangeLanguage");
+            _messageDisplay.DisplayMessage("ExitMessage");
             Console.WriteLine();
-            
+
             string choice = Console.ReadLine();
             switch (choice)
             {
@@ -49,19 +49,19 @@ public class View
                     Console.WriteLine();
                     break;
                 case "2":
-                    CreateBackup();
+                    CreateBackupInterface();
                     Console.WriteLine();
                     break;
                 case "3":
-                    EditBackup();
+                    EditBackupInterface();
                     Console.WriteLine();
                     break;
                 case "4":
-                    DeleteBackup();
+                    DeleteBackupInterface();
                     Console.WriteLine();
                     break;
                 case "5":
-                    ViewModel.ExecuteBackups();
+                    _viewModel.ExecuteBackups();
                     Console.WriteLine();
                     break;
                 case "6":
@@ -72,20 +72,20 @@ public class View
                     exit = true;
                     break;
                 default:
-                    DisplayMessage("IncorrectMessage");
+                    _messageDisplay.DisplayMessage("IncorrectMessage");
                     Console.WriteLine();
                     break;
             }
         }
     }
-    
+
     private void ChangeLocale()
     {
         Console.WriteLine("Choose your new default language / Choisissez votre nouvelle langue par défaut (en/fr):");
         string newLocale = Console.ReadLine();
         CultureInfo newCulture = newLocale == "fr" ? new CultureInfo("fr-FR") : new CultureInfo("en-US");
         _configModel.SetLocale(newCulture.Name);
-        CultureInfo.CurrentUICulture = newCulture; 
+        CultureInfo.CurrentUICulture = newCulture;
         _resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
         Console.WriteLine($"Language changed to / Langue changée en : {newCulture.DisplayName}");
     }
@@ -95,7 +95,7 @@ public class View
         var backupJobs = _configModel.LoadBackupJobs();
         if (backupJobs.Count == 0)
         {
-            DisplayMessage("NoBackup");
+            _messageDisplay.DisplayMessage("NoBackup");
         }
         else
         {
@@ -107,123 +107,64 @@ public class View
         }
     }
 
-    private void CreateBackup()
+
+    public void CreateBackupInterface()
     {
-        DisplayMessage("CreateNewBackup"); 
-        DisplayMessage("BackupName"); 
+        _messageDisplay.DisplayMessage("CreateNewBackup");
+        _messageDisplay.DisplayMessage("BackupName");
         string name = Console.ReadLine();
-        if (_configModel.BackupJobExists(name))
-        {
-            DisplayMessage("JobAlredyExists"); 
-            return;
-        }
 
-        DisplayMessage("SourceDirectory"); 
+        _messageDisplay.DisplayMessage("SourceDirectory");
         string sourceDir = Console.ReadLine();
-        if (!IsValidPath(sourceDir))
-        {
-            DisplayMessage("InvalidPath"); 
-            return;
-        }
 
-        DisplayMessage("TargetDirectory"); 
+        _messageDisplay.DisplayMessage("TargetDirectory");
         string destinationDir = Console.ReadLine();
-        if (!IsValidPath(destinationDir))
-        {
-            DisplayMessage("InvalidPath"); 
-            return;
-        }
 
         Console.Write("Type (Complete/Differential) : ");
         string type = Console.ReadLine();
-        if (!IsValidBackupType(type))
-        {
-            DisplayMessage("InvalidType"); 
-            return;
-        }
 
-        BackupJobConfig newJob = new BackupJobConfig
-            { Name = name, SourceDir = sourceDir, DestinationDir = destinationDir, Type = type };
-        _configModel.AddBackupJob(newJob);
-        DisplayMessage("BackupSuccess"); 
+        if (_viewModel.TryCreateBackup(name, sourceDir, destinationDir, type, out string errorMessage))
+        {
+            _messageDisplay.DisplayMessage("BackupSuccess");
+        }
+        else
+        {
+            _messageDisplay.DisplayMessage(errorMessage);
+        }
     }
 
-    private void EditBackup()
+    public void EditBackupInterface()
     {
-        DisplayMessage("EditBackupName"); 
+        _messageDisplay.DisplayMessage("EditBackupName");
         string jobName = Console.ReadLine();
 
-        // Obtenez les nouvelles informations de sauvegarde
-        DisplayMessage("SourceDirectory"); 
+        _messageDisplay.DisplayMessage("SourceDirectory");
         string newSourceDir = Console.ReadLine();
 
-
-        if (!IsValidPath(newSourceDir))
-        {
-            DisplayMessage("InvalidPath"); 
-            return;
-        }
-
-
-        DisplayMessage("TargetDirectory"); 
-
+        _messageDisplay.DisplayMessage("TargetDirectory");
         string newDestinationDir = Console.ReadLine();
-
-        if (!IsValidPath(newDestinationDir))
-        {
-            DisplayMessage("InvalidPath"); 
-            return;
-        }
 
         Console.Write("Type (Complete/Differential) : ");
         string newType = Console.ReadLine();
 
-
-        if (!IsValidBackupType(newType))
+        if (_viewModel.TryEditBackup(jobName, newSourceDir, newDestinationDir, newType, out string errorMessage))
         {
-            DisplayMessage("InvalidType"); 
-            return;
+            _messageDisplay.DisplayMessage("EditSuccess");
         }
-
-
-        // Créez une nouvelle configuration de job
-        BackupJobConfig modifiedJob = new BackupJobConfig
+        else
         {
-            Name = jobName,
-            SourceDir = newSourceDir,
-            DestinationDir = newDestinationDir,
-            Type = newType
-        };
-
-        _configModel.ModifyBackupJob(jobName, modifiedJob);
-        DisplayMessage("EditSuccess"); 
+            _messageDisplay.DisplayMessage(errorMessage);
+        }
     }
 
-    private void DeleteBackup()
+    public void DeleteBackupInterface()
     {
-        DisplayMessage("DeleteBackupName"); 
+        _messageDisplay.DisplayMessage("DeleteBackupName");
         string jobName = Console.ReadLine();
 
-        _configModel.DeleteBackupJob(jobName);
-        DisplayMessage("DeleteSuccess"); 
-    }
-
-    private bool IsValidBackupType(string type)
-    {
-        var validTypes = new[] { "Complete", "Differential" };
-        return validTypes.Contains(type);
-    }
-
-    private bool IsValidPath(string path)
-    {
-        if (string.IsNullOrWhiteSpace(path))
+        if (_viewModel.TryDeleteBackup(jobName))
         {
-            return false;
+            _messageDisplay.DisplayMessage("DeleteSuccess");
         }
-
-        var validPathPrefixes = new List<string>
-            { "C:\\", "D:\\", "E:\\", "F:\\", "G:\\", "H:\\" };
-
-        return validPathPrefixes.Any(prefix => path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
     }
 }

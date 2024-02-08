@@ -93,4 +93,10 @@
     <data name="EnterBackupName" xml:space="preserve">
         <value>Entrez le nom du travail de sauvegarde à exécuter (séparés par une virgule) ou tapez 'exit' pour quitter : </value>
     </data>
+    <data name="InvalidEntry" xml:space="preserve">
+        <value>Entrée invalide. Veuillez réessayer.</value>
+    </data>
+    <data name="ExecuteBackupMessage" xml:space="preserve">
+        <value>Entrez le nom du travail de sauvegarde à exécuter (séparés par une virgule) ou tapez 'exit' pour quitter: </value>
+    </data>
 </root>

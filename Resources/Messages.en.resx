@@ -94,4 +94,10 @@
     <data name="EnterBackupName" xml:space="preserve">
         <value>Enter the name of the backup job to run (separated by a comma) or type 'exit' to exit :</value>
     </data>
+    <data name="InvalidEntry" xml:space="preserve">
+        <value>Invalid entry. Please try again.</value>
+    </data>
+    <data name="ExecuteBackupMessage" xml:space="preserve">
+        <value>Enter the name of the backup job to be run (separated by a comma) or type 'exit' to quit:</value>
+    </data>
 </root>
