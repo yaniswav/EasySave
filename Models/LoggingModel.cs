@@ -1,63 +1,35 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using System.Collections.Generic;
-
-//Define namespace to organize classes related to logs functionality
 
 namespace EasySaveConsole
 {
-    //Class for LogEntry 
-    
-    public class LogEntry
-    {
-        public DateTime Timestamp { get; set; }
-        public string BackupName { get; set; }
-        public string Action { get; set; }
-        public string Details { get; set; }
-
-        //Constructor to initialize new entry in log with specified details 
-        
-        public LogEntry(string backupName, string action, string details)
-        {
-            Timestamp = DateTime.Now;
-            BackupName = backupName;
-            Action = action;
-            Details = details;
-        }
-    }
-
-    //Class to manage log model and log writing entries
-    
     public class LogModel
     {
-        private readonly string _logFilePath;
-        private readonly List<LogEntry> _logEntries;
+        public string Name { get; set; }
+        public string FileSource { get; set; }
+        public string FileTarget { get; set; }
+        public long FileSize { get; set; }
+        public double FileTransferTime { get; set; }
+        public DateTime Time { get; set; }
 
-        
-        //Constructor to initialize log model with specified path
-        
-        public LogModel(string logFilePath)
+        public static void WriteLog(LogModel log, string logFilePath)
         {
-            _logFilePath = logFilePath;
-            _logEntries = new List<LogEntry>();
-        }
+            List<LogModel> logs = new List<LogModel>();
+            if (File.Exists(logFilePath))
+            {
+                string existingLogs = File.ReadAllText(logFilePath);
+                logs = JsonSerializer.Deserialize<List<LogModel>>(existingLogs) ?? new List<LogModel>();
+            }
 
-        //Method to add a new entry in log and file entry
-        
-        public void AddEntry(string backupName, string action, string details)
-        {
-            var logEntry = new LogEntry(backupName, action, details);
-            _logEntries.Add(logEntry);
-            WriteLogToFile(logEntry);
-        }
+            logs.Add(log);
 
-        //Private method to write an log entry in LogFile
-        
-        private void WriteLogToFile(LogEntry logEntry)
-        {
-            string json = JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true });
-            File.AppendAllText(_logFilePath, json + Environment.NewLine);
+            string jsonString = JsonSerializer.Serialize(logs, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+            File.WriteAllText(logFilePath, jsonString);
         }
     }
 }
