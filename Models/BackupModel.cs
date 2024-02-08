@@ -26,6 +26,7 @@ namespace EasySaveConsole
             Type = type;
         }
 
+
         public virtual void Start()
         {
             Console.WriteLine($"Starting backup: {Name}");
@@ -36,21 +37,54 @@ namespace EasySaveConsole
         protected void CopyFileWithBuffer(string sourceFile, string destinationFile)
         {
             long fileSize = new FileInfo(sourceFile).Length;
+
             int bufferSize = DetermineBufferSize(fileSize);
 
-            using (FileStream sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read))
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            try
             {
-                using (FileStream destStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
+                using (FileStream sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read))
                 {
-                    byte[] buffer = new byte[bufferSize];
-                    int bytesRead;
-                    while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
+                    using (FileStream destStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
                     {
-                        destStream.Write(buffer, 0, bytesRead);
+                        byte[] buffer = new byte[bufferSize];
+                        int bytesRead;
+                        while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            destStream.Write(buffer, 0, bytesRead);
+                        }
                     }
                 }
+
+                stopwatch.Stop();
+
+                // Log dans le fichier log.json
+                LoggingModel.LogFileTransfer(
+                    this.Name, // Supposé que vous avez un attribut Name dans votre classe pour identifier la sauvegarde
+                    sourceFile,
+                    destinationFile,
+                    fileSize,
+                    stopwatch.ElapsedMilliseconds
+                );
+                Console.WriteLine(
+                    $"Log de transfert pour {sourceFile} effectué. Temps de transfert : {stopwatch.ElapsedMilliseconds} ms.");
+            }
+            catch (Exception ex)
+            {
+                stopwatch.Stop();
+                Console.WriteLine($"Erreur lors de la copie du fichier : {ex.Message}");
+                // Assurez-vous d'avoir une gestion d'erreur dans votre LoggingModel pour traiter ce cas
+                LoggingModel.LogFileTransfer(
+                    this.Name, // Supposé que vous avez un attribut Name dans votre classe pour identifier la sauvegarde
+                    sourceFile,
+                    destinationFile,
+                    fileSize,
+                    stopwatch.ElapsedMilliseconds,
+                    true // Indique une erreur
+                );
             }
         }
+
 
         protected int DetermineBufferSize(long fileSize)
         {
