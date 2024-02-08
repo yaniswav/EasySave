@@ -37,7 +37,7 @@
         <value>4. Supprimer une sauvegarde</value>
     </data>
     <data name="ExitMessage" xml:space="preserve">
-        <value>5. Quitter </value>
+        <value>7. Quitter </value>
     </data>
     <data name="SelectLocale" xml:space="preserve">
         <value>Sur quelle langue voulez-vous passer ? </value>
@@ -50,5 +50,47 @@
     </data>
     <data name="IncorrectMessage" xml:space="preserve">
         <value>Message incorrect, veuillez réessayer </value>
+    </data>
+    <data name="ChangeLanguage" xml:space="preserve">
+        <value>6. Changer la langue</value>
+    </data>
+    <data name="ExecuteBackup" xml:space="preserve">
+        <value>5. Exectuter une sauvegarde</value>
+    </data>
+    <data name="BackupName" xml:space="preserve">
+        <value>Nom de la sauvegarde :</value>
+    </data>
+    <data name="JobAlredyExists" xml:space="preserve">
+        <value>Un travail de sauvegarde avec ce nom existe déjà</value>
+    </data>
+    <data name="SourceDirectory" xml:space="preserve">
+        <value>Répertoire source :</value>
+    </data>
+    <data name="InvalidPath" xml:space="preserve">
+        <value>Le chemin est invalide </value>
+    </data>
+    <data name="TargetDirectory" xml:space="preserve">
+        <value>Répertoire cible : </value>
+    </data>
+    <data name="InvalidType" xml:space="preserve">
+        <value>Le type de sauvegarde est invalide</value>
+    </data>
+    <data name="BackupSuccess" xml:space="preserve">
+        <value>Sauvegarde ajoutée avec succès</value>
+    </data>
+    <data name="EditSuccess" xml:space="preserve">
+        <value>Sauvegarde modifiée avec succès</value>
+    </data>
+    <data name="EditBackupName" xml:space="preserve">
+        <value>Entrez le nom du travail de sauvegarde à modifier :</value>
+    </data>
+    <data name="DeleteBackupName" xml:space="preserve">
+        <value>Entrez le nom du travail de sauvegarde à supprimer :</value>
+    </data>
+    <data name="DeleteSuccess" xml:space="preserve">
+        <value>Sauvegarde supprimée avec succès</value>
+    </data>
+    <data name="EnterBackupName" xml:space="preserve">
+        <value>Entrez le nom du travail de sauvegarde à exécuter (séparés par une virgule) ou tapez 'exit' pour quitter : </value>
     </data>
 </root>

@@ -18,7 +18,7 @@ public class View
         _resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
     }
 
-    private void DisplayMessage(string resourceKey)
+    public void DisplayMessage(string resourceKey)
     {
         Console.WriteLine(_resourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture));
     }
@@ -26,57 +26,66 @@ public class View
     public void DisplayMenu()
     {
         bool exit = false;
+        DisplayMessage("WelcomeMessage");
+        Console.WriteLine();
         while (!exit)
         {
-            DisplayMessage("WelcomeMessage");
             DisplayMessage("ChooseOption");
+            Console.WriteLine();
             DisplayMessage("BackupList");
             DisplayMessage("CreateBackup");
             DisplayMessage("EditBackup");
             DisplayMessage("DeleteBackup");
+            DisplayMessage("ExecuteBackup");
+            DisplayMessage("ChangeLanguage");
             DisplayMessage("ExitMessage");
-
-
-            Console.WriteLine("6. Change language / Changer la langue");
+            Console.WriteLine();
+            
             string choice = Console.ReadLine();
             switch (choice)
             {
                 case "1":
                     ListBackups();
+                    Console.WriteLine();
                     break;
                 case "2":
                     CreateBackup();
+                    Console.WriteLine();
                     break;
                 case "3":
-                    ModifyBackup();
+                    EditBackup();
+                    Console.WriteLine();
                     break;
                 case "4":
                     DeleteBackup();
+                    Console.WriteLine();
                     break;
                 case "5":
-                    ChangeLocale();
+                    ViewModel.ExecuteBackups();
+                    Console.WriteLine();
                     break;
                 case "6":
-                    ViewModel.ExecuteBackups();
+                    ChangeLocale();
+                    Console.WriteLine();
                     break;
                 case "7":
                     exit = true;
                     break;
                 default:
                     DisplayMessage("IncorrectMessage");
+                    Console.WriteLine();
                     break;
             }
         }
     }
-
-
+    
     private void ChangeLocale()
     {
         Console.WriteLine("Choose your new default language / Choisissez votre nouvelle langue par défaut (en/fr):");
         string newLocale = Console.ReadLine();
         CultureInfo newCulture = newLocale == "fr" ? new CultureInfo("fr-FR") : new CultureInfo("en-US");
         _configModel.SetLocale(newCulture.Name);
-        CultureInfo.CurrentUICulture = newCulture; // Cette ligne est correcte
+        CultureInfo.CurrentUICulture = newCulture; 
         _resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
         Console.WriteLine($"Language changed to / Langue changée en : {newCulture.DisplayName}");
     }
@@ -86,7 +95,7 @@ public class View
         var backupJobs = _configModel.LoadBackupJobs();
         if (backupJobs.Count == 0)
         {
-            Console.WriteLine("Aucune sauvegarde configurée.");
+            DisplayMessage("NoBackup");
         }
         else
         {
@@ -100,79 +109,79 @@ public class View
 
     private void CreateBackup()
     {
-        Console.WriteLine("Création d'une nouvelle sauvegarde.");
-        Console.Write("Nom de la sauvegarde : ");
+        DisplayMessage("CreateNewBackup"); 
+        DisplayMessage("BackupName"); 
         string name = Console.ReadLine();
         if (_configModel.BackupJobExists(name))
         {
-            Console.WriteLine("Un job de sauvegarde avec ce nom existe déjà.");
+            DisplayMessage("JobAlredyExists"); 
             return;
         }
 
-        Console.Write("Répertoire source : ");
+        DisplayMessage("SourceDirectory"); 
         string sourceDir = Console.ReadLine();
         if (!IsValidPath(sourceDir))
         {
-            Console.WriteLine("Le chemin source est invalide.");
+            DisplayMessage("InvalidPath"); 
             return;
         }
 
-        Console.Write("Répertoire destination : ");
+        DisplayMessage("TargetDirectory"); 
         string destinationDir = Console.ReadLine();
         if (!IsValidPath(destinationDir))
         {
-            Console.WriteLine("Le chemin de destination est invalide.");
+            DisplayMessage("InvalidPath"); 
             return;
         }
 
-        Console.Write("Type (Complet/Différentiel) : ");
+        Console.Write("Type (Complete/Differential) : ");
         string type = Console.ReadLine();
         if (!IsValidBackupType(type))
         {
-            Console.WriteLine("Le type de sauvegarde est invalide.");
+            DisplayMessage("InvalidType"); 
             return;
         }
 
         BackupJobConfig newJob = new BackupJobConfig
             { Name = name, SourceDir = sourceDir, DestinationDir = destinationDir, Type = type };
         _configModel.AddBackupJob(newJob);
-        Console.WriteLine("Sauvegarde ajoutée avec succès.");
+        DisplayMessage("BackupSuccess"); 
     }
 
-    private void ModifyBackup()
+    private void EditBackup()
     {
-        Console.WriteLine("Entrez le nom du job de sauvegarde à modifier : ");
+        DisplayMessage("EditBackupName"); 
         string jobName = Console.ReadLine();
 
         // Obtenez les nouvelles informations de sauvegarde
-        Console.Write("Nouveau répertoire source : ");
+        DisplayMessage("SourceDirectory"); 
         string newSourceDir = Console.ReadLine();
 
 
         if (!IsValidPath(newSourceDir))
         {
-            Console.WriteLine("Le chemin source est invalide.");
+            DisplayMessage("InvalidPath"); 
             return;
         }
 
 
-        Console.Write("Nouveau répertoire destination : ");
+        DisplayMessage("TargetDirectory"); 
 
         string newDestinationDir = Console.ReadLine();
 
         if (!IsValidPath(newDestinationDir))
         {
-            Console.WriteLine("Le chemin source est invalide.");
+            DisplayMessage("InvalidPath"); 
             return;
         }
 
-        Console.Write("Nouveau type (Complete/Differential) : ");
+        Console.Write("Type (Complete/Differential) : ");
         string newType = Console.ReadLine();
 
 
         if (!IsValidBackupType(newType))
         {
-            Console.WriteLine("Le type de sauvegarde est invalide.");
+            DisplayMessage("InvalidType"); 
             return;
         }
 
@@ -187,16 +196,16 @@ public class View
         };
 
         _configModel.ModifyBackupJob(jobName, modifiedJob);
-        Console.WriteLine("Sauvegarde modifiée avec succès.");
+        DisplayMessage("EditSuccess"); 
     }
 
     private void DeleteBackup()
     {
-        Console.WriteLine("Entrez le nom du job de sauvegarde à supprimer : ");
+        DisplayMessage("DeleteBackupName"); 
         string jobName = Console.ReadLine();
 
         _configModel.DeleteBackupJob(jobName);
-        Console.WriteLine("Sauvegarde supprimée avec succès.");
+        DisplayMessage("DeleteSuccess"); 
     }
 
     private bool IsValidBackupType(string type)
