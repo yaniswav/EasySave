@@ -19,7 +19,7 @@ namespace EasySaveConsole
         // Retrieves the path to the log file, ensuring the directory exists
         private static string GetLogFilePath()
         {
-            //Use an appropriate path for client file system
+            // Use an appropriate path for client file system
             string logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
             if (!Directory.Exists(logDirectory))
                 Directory.CreateDirectory(logDirectory);
@@ -40,22 +40,24 @@ namespace EasySaveConsole
                 FileTarget = target,
                 FileSize = fileSize,
                 FileTransferTime = error ? -transferTime : transferTime,
-                Time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
+                Time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") // Current timestamp
             };
 
-            List<LoggingModel> logs = new List<LoggingModel>();
-            string filePath = GetLogFilePath();
+            List<LoggingModel> logs = new List<LoggingModel>(); // List to hold all log entries
+            string filePath = GetLogFilePath(); // Path to the log file
 
+            // Load existing logs if the file exists
             if (File.Exists(filePath))
             {
                 string existingLogs = File.ReadAllText(filePath);
                 logs = JsonSerializer.Deserialize<List<LoggingModel>>(existingLogs) ?? new List<LoggingModel>();
             }
 
-            logs.Add(log);
+            logs.Add(log); // Add the new log to the list
 
+            // Serialize the list of logs to JSON and write to the file
             string jsonString = JsonSerializer.Serialize(logs, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(filePath, jsonString);
+            File.WriteAllText(filePath, jsonString); // Overwrite the file with updated logs
         }
     }
 }
