@@ -21,4 +21,9 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="System.Collections" Version="4.3.0" />
+      <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+    </ItemGroup>
+
 </Project>
