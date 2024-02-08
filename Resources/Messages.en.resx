@@ -38,7 +38,7 @@
         <value>4. Delete a backup</value>
     </data>
     <data name="ExitMessage" xml:space="preserve">
-        <value>5. Exit</value>
+        <value>7. Exit</value>
     </data>
     <data name="SelectLocale" xml:space="preserve">
         <value>Which language do you want to switch to? </value>
@@ -51,5 +51,47 @@
     </data>
     <data name="IncorrectMessage" xml:space="preserve">
         <value>Invalid message, please retry</value>
+    </data>
+    <data name="ChangeLanguage" xml:space="preserve">
+        <value>6. Change language</value>
+    </data>
+    <data name="ExecuteBackup" xml:space="preserve">
+        <value>5. Exectue a backup</value>
+    </data>
+    <data name="BackupName" xml:space="preserve">
+        <value>Backup name :</value>
+    </data>
+    <data name="JobAlredyExists" xml:space="preserve">
+        <value>A backup job with this name already exists</value>
+    </data>
+    <data name="SourceDirectory" xml:space="preserve">
+        <value>Source directory :</value>
+    </data>
+    <data name="InvalidPath" xml:space="preserve">
+        <value>The path is not valid</value>
+    </data>
+    <data name="TargetDirectory" xml:space="preserve">
+        <value>Target directory : </value>
+    </data>
+    <data name="InvalidType" xml:space="preserve">
+        <value>The backup type is not valid</value>
+    </data>
+    <data name="BackupSuccess" xml:space="preserve">
+        <value>Backup added with success</value>
+    </data>
+    <data name="EditSuccess" xml:space="preserve">
+        <value>Backup edited with success</value>
+    </data>
+    <data name="EditBackupName" xml:space="preserve">
+        <value>Enter the name of the backup job to modify :</value>
+    </data>
+    <data name="DeleteBackupName" xml:space="preserve">
+        <value>Enter the name of the backup job to delete :</value>
+    </data>
+    <data name="DeleteSuccess" xml:space="preserve">
+        <value>Backup deleted with success</value>
+    </data>
+    <data name="EnterBackupName" xml:space="preserve">
+        <value>Enter the name of the backup job to run (separated by a comma) or type 'exit' to exit :</value>
     </data>
 </root>
