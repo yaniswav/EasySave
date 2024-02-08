@@ -88,18 +88,21 @@ public class View
     // Allows the user to change the application's language/locale
     private void ChangeLocale()
     {
+        Console.WriteLine();
         Console.WriteLine("Choose your new default language / Choisissez votre nouvelle langue par défaut (en/fr):");
         string newLocale = Console.ReadLine();
         CultureInfo newCulture = newLocale == "fr" ? new CultureInfo("fr-FR") : new CultureInfo("en-US");
         _configModel.SetLocale(newCulture.Name);
         CultureInfo.CurrentUICulture = newCulture;
         _resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
-        Console.WriteLine($"Language changed to / Langue changée en : {newCulture.DisplayName}");
+        _messageDisplay.DisplayMessage("ChangedLanguage");
+        Console.WriteLine($"{newCulture.DisplayName}");
     }
 
     // Displays a list of configured backup jobs
     private void ListBackups()
     {
+        Console.WriteLine();
         var backupJobs = _configModel.LoadBackupJobs();
         if (backupJobs.Count == 0)
         {
@@ -120,6 +123,7 @@ public class View
     // Interface for creating a new backup job
     public void CreateBackupInterface()
     {
+        Console.WriteLine();
         // Collect input from user for new backup job details
         _messageDisplay.DisplayMessage("CreateNewBackup");
         _messageDisplay.DisplayMessage("BackupName");
@@ -148,6 +152,7 @@ public class View
     // Interface for editing an existing backup job
     public void EditBackupInterface()
     {
+        Console.WriteLine();
         // Collect new details for the backup job to be edited
         _messageDisplay.DisplayMessage("EditBackupName");
         string jobName = Console.ReadLine();
@@ -175,6 +180,7 @@ public class View
     // Interface for deleting an existing backup job
     public void DeleteBackupInterface()
     {
+        Console.WriteLine();
         _messageDisplay.DisplayMessage("DeleteBackupName");
         string jobName = Console.ReadLine();
 

@@ -99,4 +99,7 @@
     <data name="ExecuteBackupMessage" xml:space="preserve">
         <value>Entrez le nom du travail de sauvegarde à exécuter (séparés par une virgule) ou tapez 'exit' pour quitter: </value>
     </data>
+    <data name="ChangedLanguage" xml:space="preserve">
+        <value>Langue changée en :</value>
+    </data>
 </root>

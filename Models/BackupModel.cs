@@ -71,12 +71,12 @@ namespace EasySaveConsole
                     stopwatch.ElapsedMilliseconds
                 );
                 Console.WriteLine(
-                    $"Log de transfert pour {sourceFile} effectué. Temps de transfert : {stopwatch.ElapsedMilliseconds} ms.");
+                    $"Transfert log for {sourceFile} done. Transert time : {stopwatch.ElapsedMilliseconds} ms.");
             }
             catch (Exception ex)
             {
                 stopwatch.Stop();
-                Console.WriteLine($"Erreur lors de la copie du fichier : {ex.Message}");
+                Console.WriteLine($"Error during the file copying : {ex.Message}");
                 // Be sure to have error management in your LoggingModel
                 LoggingModel.LogFileTransfer(
                     this.Name, // Supposed you have an attribute Name in your class to identify your backup

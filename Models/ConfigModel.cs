@@ -25,7 +25,6 @@ namespace EasySaveConsole
         // Loads the current locale from the application settings, defaults to "en-US" if not set
         public void LoadCurrentLocale()
         {
-            Console.WriteLine("Loading current locale...");
             Locale = ConfigurationManager.AppSettings[CurrentLocaleKey] ?? "en-US";
             SetCulture(Locale);
         }
@@ -33,7 +32,6 @@ namespace EasySaveConsole
         // Sets a new locale and updates application settings
         public void SetLocale(string newLocale)
         {
-            Console.WriteLine($"Setting new locale to: {newLocale}");
             UpdateAppSettings(CurrentLocaleKey, newLocale);
             SetCulture(newLocale);
         }
@@ -44,13 +42,11 @@ namespace EasySaveConsole
             CultureInfo cultureInfo = new CultureInfo(locale);
             CultureInfo.CurrentCulture = cultureInfo;
             CultureInfo.CurrentUICulture = cultureInfo;
-            Console.WriteLine($"Locale set to: {CultureInfo.CurrentCulture}");
         }
 
         // Loads backup job configurations from application settings
         public List<BackupJobConfig> LoadBackupJobs()
         {
-            Console.WriteLine("Loading backup jobs...");
             return GetBackupJobs();
         }
 
