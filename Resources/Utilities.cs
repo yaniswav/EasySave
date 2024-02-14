@@ -15,4 +15,6 @@ public class Utilities
     {
         Console.WriteLine(_resourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture));
     }
+    
+    
 }

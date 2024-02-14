@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Specialized;
 
 
-namespace EasySaveConsole
+namespace EasySave
 {
     // Class for entry point of the EasySaveConsole application
     public class Program
@@ -16,8 +16,8 @@ namespace EasySaveConsole
             // Initialize the configuration model to manage application settings
             ConfigModel configModel = new ConfigModel();
 
-            //Create ResourceManager for message
-            var resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
+            // Create ResourceManager for message
+            var resourceManager = new ResourceManager("EasySave.Resources.Languages.Messages", typeof(Program).Assembly);
 
             //Initialize Utilities with ResourceManager to display message to the user
             Utilities messageDisplay = new Utilities(resourceManager);

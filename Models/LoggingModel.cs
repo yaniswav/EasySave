@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace EasySaveConsole
+namespace EasySave
 {
     // Represents the model for logging backup job details
     public class LoggingModel

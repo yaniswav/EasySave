@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Configuration;
 
-namespace EasySaveConsole
+namespace EasySave
 {
     // Class representing a backup job with properties
     public class BackupJob

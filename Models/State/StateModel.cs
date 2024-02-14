@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace EasySaveConsole
+namespace EasySave
 {
     // Represents the state of a backup job including details like file paths, progress, etc.
     public class StateModel

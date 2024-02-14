@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Resources;
 
-namespace EasySaveConsole
+namespace EasySave
 {
     // This class manage the interaction between the view and the model, handling business logic
     public class ViewModel
@@ -14,7 +14,7 @@ namespace EasySaveConsole
         public ViewModel(ConfigModel configModel, Utilities messageDisplay)
         {
             // Initialize resources and utilities
-            var resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
+            var resourceManager = new ResourceManager("EasySave.Resources.Messages", typeof(Program).Assembly);
             _messageDisplay = new Utilities(resourceManager);
             _configModel = configModel;
         }

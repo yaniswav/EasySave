@@ -1,5 +1,5 @@
 ﻿using System;
-using EasySaveConsole;
+using EasySave;
 using System.Globalization;
 using System.Resources;
 using System.Configuration;
@@ -22,7 +22,7 @@ public class View
         _viewModel = viewModel;
         _configModel.LoadCurrentLocale(); // Load the current locale based on application settings
         // Initialize ResourceManager for accessing localized strings
-        var resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
+        var resourceManager = new ResourceManager("EasySave.Resources.Languages.Messages", typeof(Program).Assembly);
         _messageDisplay = new Utilities(resourceManager); // Utilities for displaying messages to the user
     }
 
@@ -94,7 +94,7 @@ public class View
         CultureInfo newCulture = newLocale == "fr" ? new CultureInfo("fr-FR") : new CultureInfo("en-US");
         _configModel.SetLocale(newCulture.Name);
         CultureInfo.CurrentUICulture = newCulture;
-        _resourceManager = new ResourceManager("easySave_console.Resources.Messages", typeof(Program).Assembly);
+        _resourceManager = new ResourceManager("EasySave.Resources.Messages", typeof(Program).Assembly);
         _messageDisplay.DisplayMessage("ChangedLanguage");
         Console.WriteLine($"{newCulture.DisplayName}");
     }
