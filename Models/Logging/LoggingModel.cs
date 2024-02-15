@@ -2,62 +2,38 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Xml.Serialization;
 
 namespace EasySave
 {
-    // Represents the model for logging backup job details
-    public class LoggingModel
+    public abstract class LoggingModel
     {
-        // Properties to store log details
+        // Propriétés communes
         public string Name { get; set; }
         public string FileSource { get; set; }
         public string FileTarget { get; set; }
         public long FileSize { get; set; }
         public double FileTransferTime { get; set; }
         public string Time { get; set; }
+        public bool Error { get; set; }
 
-        // Retrieves the path to the log file, ensuring the directory exists
-        private static string GetLogFilePath()
+        // Méthodes abstraites pour l'écriture et le chargement des logs
+        public abstract void WriteLog(LoggingModel log);
+        protected abstract List<LoggingModel> LoadLogs(string filePath);
+
+        // Constructeur sans paramètre
+        protected LoggingModel()
         {
-            // Use an appropriate path for client file system
-            string logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
-            if (!Directory.Exists(logDirectory))
-                Directory.CreateDirectory(logDirectory);
-
-            string logFileName = DateTime.Now.ToString("yyyy-MM-dd") + ".json";
-            return Path.Combine(logDirectory, logFileName);
         }
 
-        // Logs details of a file transfer to a JSON file
-        public static void LogFileTransfer(string name, string source, string target, long fileSize,
-            double transferTime, bool error = false)
+        // Méthode helper pour obtenir le chemin du fichier de log
+        protected static string GetLogFilePath(string extension)
         {
-            // Create a new log entry
-            var log = new LoggingModel
-            {
-                Name = name,
-                FileSource = source,
-                FileTarget = target,
-                FileSize = fileSize,
-                FileTransferTime = error ? -transferTime : transferTime,
-                Time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") // Current timestamp
-            };
+            string logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
+            Directory.CreateDirectory(logDirectory); // Crée le répertoire s'il n'existe pas
 
-            List<LoggingModel> logs = new List<LoggingModel>(); // List to hold all log entries
-            string filePath = GetLogFilePath(); // Path to the log file
-
-            // Load existing logs if the file exists
-            if (File.Exists(filePath))
-            {
-                string existingLogs = File.ReadAllText(filePath);
-                logs = JsonSerializer.Deserialize<List<LoggingModel>>(existingLogs) ?? new List<LoggingModel>();
-            }
-
-            logs.Add(log); // Add the new log to the list
-
-            // Serialize the list of logs to JSON and write to the file
-            string jsonString = JsonSerializer.Serialize(logs, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(filePath, jsonString); // Overwrite the file with updated logs
+            string logFileName = DateTime.Now.ToString("yyyy-MM-dd") + extension;
+            return Path.Combine(logDirectory, logFileName);
         }
     }
 }

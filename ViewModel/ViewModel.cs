@@ -14,7 +14,7 @@ namespace EasySave
         public ViewModel(ConfigModel configModel, Utilities messageDisplay)
         {
             // Initialize resources and utilities
-            var resourceManager = new ResourceManager("EasySave.Resources.Messages", typeof(Program).Assembly);
+            var resourceManager = new ResourceManager("EasySave.Resources.Languages.Messages", typeof(Program).Assembly);
             _messageDisplay = new Utilities(resourceManager);
             _configModel = configModel;
         }

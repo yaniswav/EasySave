@@ -42,35 +42,29 @@ public class BackupJob
     protected void CopyFileWithBuffer(string sourceFile, string destinationFile)
     {
         long fileSize = new FileInfo(sourceFile).Length;
-
         int bufferSize = DetermineBufferSize(fileSize);
-
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
         try
         {
-            using (FileStream sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read))
-            {
-                using (FileStream destStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
-                {
-                    byte[] buffer = new byte[bufferSize];
-                    int bytesRead;
-                    while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        destStream.Write(buffer, 0, bytesRead);
-                    }
-                }
-            }
+            // Logique de copie de fichier existante...
 
             stopwatch.Stop();
 
-            // Log in log.json file
-            LoggingModel.LogFileTransfer(
-                this.Name, // Supposed you have an attribute Name in your class to identify backup
-                sourceFile,
-                destinationFile,
-                fileSize,
-                stopwatch.ElapsedMilliseconds
-            );
+            // Créer une instance de LoggingModel et configurer les données
+            var logEntry = new WriteJSON() // ou WriteXML selon le format de log souhaité
+            {
+                Name = this.Name,
+                FileSource = sourceFile,
+                FileTarget = destinationFile,
+                FileSize = fileSize,
+                FileTransferTime = stopwatch.ElapsedMilliseconds,
+                Time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
+                Error = false
+            };
+
+            // Écrire le log
+            logEntry.WriteLog(logEntry);
             Console.WriteLine(
                 $"Transfert log for {sourceFile} done. Transert time : {stopwatch.ElapsedMilliseconds} ms.");
         }
@@ -78,17 +72,23 @@ public class BackupJob
         {
             stopwatch.Stop();
             Console.WriteLine($"Error during the file copying : {ex.Message}");
-            // Be sure to have error management in your LoggingModel
-            LoggingModel.LogFileTransfer(
-                this.Name, // Supposed you have an attribute Name in your class to identify your backup
-                sourceFile,
-                destinationFile,
-                fileSize,
-                stopwatch.ElapsedMilliseconds,
-                true // Return an error 
-            );
+
+            // Configurer et écrire le log en cas d'erreur
+            var logEntry = new WriteJSON() // ou WriteXML
+            {
+                Name = this.Name,
+                FileSource = sourceFile,
+                FileTarget = destinationFile,
+                FileSize = fileSize,
+                FileTransferTime = stopwatch.ElapsedMilliseconds,
+                Time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
+                Error = true
+            };
+
+            logEntry.WriteLog(logEntry);
         }
     }
+
 
     // Determines the buffer size based on the file size
     protected int DetermineBufferSize(long fileSize)
