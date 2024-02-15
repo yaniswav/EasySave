@@ -38,7 +38,7 @@ public class BackupJob
 
     protected const int MaxBufferSize = 1024 * 1024; // 1 MB
 
-    // Copies a file from source to destination with a buffer to optimize performance
+    // Copy a file from source to destination with a buffer to optimize performance
     protected void CopyFileWithBuffer(string sourceFile, string destinationFile)
     {
         long fileSize = new FileInfo(sourceFile).Length;
@@ -47,12 +47,23 @@ public class BackupJob
 
         try
         {
-            // Logique de copie de fichier existante...
+            using (FileStream sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read))
+            {
+                using (FileStream destStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
+                {
+                    byte[] buffer = new byte[bufferSize];
+                    int bytesRead;
+                    while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        destStream.Write(buffer, 0, bytesRead);
+                    }
+                }
+            }
 
             stopwatch.Stop();
 
             // Créer une instance de LoggingModel et configurer les données
-            var logEntry = new WriteJSON() // ou WriteXML selon le format de log souhaité
+            var logEntry = new XmlLogger() // ou WriteXML selon le format de log souhaité
             {
                 Name = this.Name,
                 FileSource = sourceFile,
@@ -74,7 +85,7 @@ public class BackupJob
             Console.WriteLine($"Error during the file copying : {ex.Message}");
 
             // Configurer et écrire le log en cas d'erreur
-            var logEntry = new WriteJSON() // ou WriteXML
+            var logEntry = new XmlLogger() // ou WriteXML
             {
                 Name = this.Name,
                 FileSource = sourceFile,
@@ -88,7 +99,6 @@ public class BackupJob
             logEntry.WriteLog(logEntry);
         }
     }
-
 
     // Determines the buffer size based on the file size
     protected int DetermineBufferSize(long fileSize)

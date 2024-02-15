@@ -8,7 +8,6 @@ namespace EasySave
 {
     public class BackupModel
     {
-
         public void StartBackup(BackupJob job)
         {
             switch (job.Type)
