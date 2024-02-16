@@ -107,29 +107,7 @@ public class BackupJob
         else
             return MaxBufferSize;
     }
-
-    // Method to encrypt file with cryptosoft 
-    /*
-     public void FileExt(List<string> EncryptList, string destinationDir)
-    {
-        CryptosoftChecker checker = new CryptosoftChecker();
-        if (checker.IsCryptosoftInstalled())
-        {
-            foreach (string EncryptList in EncryptList)
-            {
-                Process process = new Process();
-                process.StartInfo.FileName = "cryptosoft.exe";
-                process.StartInfo.Arguments = $"{EncryptList} {destinationDirectory}";
-                process.Start();
-            }
-        }
-        else
-        {
-            Console.WriteLine("Cryptosoft n'est pas installé. Veuillez installer cryptosoft pour continuer.");
-        }
-    }
-    */
-
+    
     // Updates the state of the backup job with progress and other details
     protected void UpdateState(string state)
     {
