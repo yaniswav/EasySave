@@ -297,6 +297,11 @@ namespace EasySaveConsole
         private ConfigModel _configModel = new ConfigModel();
 
         // Loads backup job configurations from a source and initializes jobs based on those configurations
+        
+        public List<BackupJob> Jobs
+        {
+            get { return _backupJobs; }
+        }
         public void LoadBackupJobs()
         {
             var jobConfigs = _configModel.LoadBackupJobs();
