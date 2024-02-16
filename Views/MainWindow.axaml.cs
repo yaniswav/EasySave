@@ -2,14 +2,18 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System.Resources;
 using System.Reflection;
+using EasySave.ViewModels;
 
 namespace EasySave.Views
 {
     public partial class MainWindow : Window
     {
+        private MainWindowViewModel _mainWindowViewModel;
         public MainWindow()
         {
             InitializeComponent();
+            _mainWindowViewModel = new MainWindowViewModel(); // Initialisation du ViewModel
+            DataContext = _mainWindowViewModel;
             // Cache initialement les panels pour créer/modifier et supprimer/exécuter
             ShowCreateEditFields(false);
             ShowDeleteExecuteFields(false);
@@ -42,7 +46,6 @@ namespace EasySave.Views
             ShowDeleteExecuteFields(true);
             // Cache le message de confirmation pour les autres actions
             HideConfirmationMessages();
-            ActionDeleteExecuteButton.Content = "Supprimer";
         }
 
         private void OnExecuteBackupClick(object sender, RoutedEventArgs e)
@@ -104,17 +107,13 @@ namespace EasySave.Views
         
         private void OnActionCreateEditButtonClick(object sender, RoutedEventArgs e)
         {
-            // Affiche le message "OK" sous le bouton Créer/Modifier
             CreateEditConfirmationTextBlock.IsVisible = true;
-            // Cache potentiellement les autres messages de confirmation
             DeleteExecuteConfirmationTextBlock.IsVisible = false;
         }
 
         private void OnActionDeleteExecuteButtonClick(object sender, RoutedEventArgs e)
         {
-            // Affiche le message "OK" sous le bouton Supprimer/Executer
             DeleteExecuteConfirmationTextBlock.IsVisible = true;
-            // Cache potentiellement les autres messages de confirmation
             CreateEditConfirmationTextBlock.IsVisible = false;
         }
         

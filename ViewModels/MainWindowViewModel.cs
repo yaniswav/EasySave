@@ -45,7 +45,7 @@ namespace EasySave.ViewModels
             LoadBackupJobs();
         }
 
-        private void LoadBackupJobs()
+        public void LoadBackupJobs()
         {
             ValidateBackupJobs(_backupManager.Jobs);
         }
