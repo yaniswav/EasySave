@@ -19,7 +19,7 @@ public class CryptosoftChecker
             using (Process process = Process.Start(startInfo))
             {
                 process.WaitForExit();
-                
+
                 if (process.ExitCode == 0)
                 {
                     return true;
@@ -32,4 +32,5 @@ public class CryptosoftChecker
         }
 
         return false; // Return false because cryptosoft wasn't find or not installed
+    }
 }
