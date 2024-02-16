@@ -293,6 +293,18 @@ namespace EasySaveConsole
     // Manages backup jobs, loading configurations, and executing specified jobs
     public class BackupManager
     {
+        public bool DeleteJob(string jobName)
+        {
+            var job = _backupJobs.FirstOrDefault(j => j.Name == jobName);
+            if (job != null)
+            {
+                _backupJobs.Remove(job);
+                // Ici, vous pouvez ajouter une logique supplémentaire, comme mettre à jour un fichier de configuration, si nécessaire.
+                return true;
+            }
+            return false;
+        }
+
         private List<BackupJob> _backupJobs = new List<BackupJob>();
         private ConfigModel _configModel = new ConfigModel();
 

@@ -1,83 +1,106 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using EasySaveConsole;
+using ReactiveUI;
 
 namespace EasySave.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelBase, INotifyDataErrorInfo
     {
+        public void DeleteBackupJob(string jobName)
+        {
+            if (string.IsNullOrWhiteSpace(jobName))
+            {
+                Console.WriteLine("Le nom du travail de sauvegarde est vide.");
+                return;
+            }
+
+            var isDeleted = _backupManager.DeleteJob(jobName);
+            if (isDeleted)
+            {
+                Console.WriteLine($"Le travail de sauvegarde '{jobName}' a été supprimé.");
+                // Mise à jour de l'interface utilisateur si nécessaire, par exemple, recharger la liste des travaux.
+                LoadBackupJobs();
+            }
+            else
+            {
+                Console.WriteLine($"Le travail de sauvegarde '{jobName}' n'a pas été trouvé.");
+            }
+        }
+
         private readonly BackupManager _backupManager;
+        private Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
 
-        public ObservableCollection<BackupJob> BackupJobs { get; }
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
-        public ICommand StartBackupCommand { get; }
-        public ICommand LoadBackupJobsCommand { get; }
+        public bool HasErrors => _errors.Any();
 
         public MainWindowViewModel()
         {
-            BackupJobs = new ObservableCollection<BackupJob>();
             _backupManager = new BackupManager();
-
-            // Utilisation de la méthode correcte pour charger les jobs de sauvegarde
             LoadBackupJobs();
-
-            LoadBackupJobsCommand = new RelayCommand(_ => LoadBackupJobs());
-            StartBackupCommand = new RelayCommand(StartBackup, CanStartBackup);
         }
 
-        // Méthode pour charger les jobs de sauvegarde à partir de BackupManager
         private void LoadBackupJobs()
         {
-            BackupJobs.Clear();
-            _backupManager.LoadBackupJobs(); // Charge les jobs à partir de la configuration
-            foreach (var job in _backupManager.Jobs) // Utilise la nouvelle propriété publique Jobs de BackupManager
+            ValidateBackupJobs(_backupManager.Jobs);
+        }
+
+        // Correction : Type de retour spécifié comme IEnumerable (non générique) à IEnumerable<string>
+        public IEnumerable GetErrors(string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName) || !_errors.ContainsKey(propertyName))
             {
-                BackupJobs.Add(job);
+                // Correction : Retourne un IEnumerable vide plutôt que null
+                return Enumerable.Empty<string>();
+            }
+
+            return _errors[propertyName];
+        }
+
+        private void ValidateBackupJobs(List<BackupJob> jobs)
+        {
+            foreach (var job in jobs)
+            {
+                if (string.IsNullOrWhiteSpace(job.SourceDir) || string.IsNullOrWhiteSpace(job.DestinationDir))
+                {
+                    AddError(job.Name, "Le répertoire source et destination ne peuvent pas être vides.");
+                }
+                else
+                {
+                    RemoveError(job.Name);
+                }
             }
         }
 
-        private bool CanStartBackup(object parameter)
+        private void AddError(string propertyName, string error)
         {
-            // Logique pour déterminer si la commande StartBackup peut s'exécuter
-            return parameter is string jobName && !string.IsNullOrWhiteSpace(jobName);
-        }
+            if (!_errors.ContainsKey(propertyName))
+                _errors[propertyName] = new List<string>();
 
-        private void StartBackup(object parameter)
-        {
-            if (parameter is string jobName)
+            if (!_errors[propertyName].Contains(error))
             {
-                _backupManager.ExecuteJobs(new string[] { jobName });
+                _errors[propertyName].Add(error);
+                OnErrorsChanged(propertyName);
             }
         }
-    }
 
-    public class RelayCommand : ICommand
-    {
-        private readonly Action<object> _execute;
-        private readonly Predicate<object> _canExecute;
-
-        public event EventHandler CanExecuteChanged;
-
-        public RelayCommand(Action<object> execute, Predicate<object> canExecute = null)
+        private void RemoveError(string propertyName)
         {
-            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            _canExecute = canExecute;
+            if (_errors.ContainsKey(propertyName))
+            {
+                _errors.Remove(propertyName);
+                OnErrorsChanged(propertyName);
+            }
         }
 
-        public bool CanExecute(object parameter)
+        private void OnErrorsChanged([CallerMemberName] string propertyName = null)
         {
-            return _canExecute?.Invoke(parameter) ?? true;
-        }
-
-        public void Execute(object parameter)
-        {
-            _execute?.Invoke(parameter);
-        }
-
-        public void OnCanExecuteChanged()
-        {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
     }
 }
