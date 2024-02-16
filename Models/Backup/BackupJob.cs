@@ -28,8 +28,7 @@ public class BackupJob
         DestinationDir = destinationDir;
         Type = type;
     }
-
-
+    
     // Starts the backup process
     public virtual void Start()
     {

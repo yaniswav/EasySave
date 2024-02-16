@@ -38,50 +38,11 @@ public class BackupJobConfig
             Type = parts[3]
         };
     }
-
-    public bool IsValid()
-    {
-        try
-        {
-            ValidateString(Name, "Name");
-            ValidateString(SourceDir, "SourceDir");
-            ValidateString(DestinationDir, "DestinationDir");
-
-            return !string.IsNullOrEmpty(Name) &&
-                   !string.IsNullOrEmpty(SourceDir) &&
-                   !string.IsNullOrEmpty(DestinationDir) &&
-                   !SourceDir.Equals(DestinationDir, StringComparison.OrdinalIgnoreCase);
-        }
-        catch (ArgumentException)
-        {
-            return false;
-        }
-    }
-
-    private static void ValidateString(string value, string propertyName)
-    {
-        if (value.Any(c => c < 32 || c > 126 || (c >= 58 && c <= 63 && !IsAllowedColon(c, value))))
-        {
-            var invalidChars = value
-                .Where(c => c < 32 || c > 126 || (c >= 58 && c <= 63 && !IsAllowedColon(c, value))).ToArray();
-            var invalidCharString = new string(invalidChars);
-            throw new ArgumentException($"{propertyName} contains invalid characters: {invalidCharString}",
-                propertyName);
-        }
-    }
-
-    private static bool IsAllowedColon(char c, string value)
-    {
-        // Allow colons that follow a single letter (drive letter)
-        int index = value.IndexOf(c);
-        return c == 58 && index == 1 && char.IsLetter(value[0]);
-    }
 }
 
 public partial class ConfigModel
 {
     private const string BackupJobsKey = "BackupJobs";
-
 
     public List<BackupJobConfig> LoadBackupJobs()
     {
@@ -97,9 +58,15 @@ public partial class ConfigModel
 
         var backupJobs = GetBackupJobs();
 
-        if (backupJobs.Any(job => job.Name.Equals(jobConfig.Name, StringComparison.OrdinalIgnoreCase)))
+        if (BackupJobExists(jobConfig.Name))
         {
             Console.WriteLine($"A backup job with the name '{jobConfig.Name}' already exists.");
+            return;
+        }
+
+        if (!IsValid(jobConfig))
+        {
+            Console.WriteLine($"Invalid backup job configuration for '{jobConfig.Name}'.");
             return;
         }
 
@@ -211,16 +178,5 @@ public partial class ConfigModel
         {
             Console.WriteLine($"Error saving backup jobs: {e.Message}");
         }
-    }
-
-    public bool BackupJobExists(string jobName)
-    {
-        if (string.IsNullOrWhiteSpace(jobName))
-        {
-            throw new ArgumentException("Job name cannot be null or whitespace", nameof(jobName));
-        }
-
-        var backupJobs = GetBackupJobs();
-        return backupJobs.Any(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
     }
 }

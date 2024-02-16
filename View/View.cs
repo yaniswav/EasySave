@@ -145,7 +145,7 @@ public class View
         }
         else
         {
-            _messageDisplay.DisplayMessage(errorMessage);
+            Console.WriteLine(errorMessage);
         }
     }
 
@@ -173,7 +173,7 @@ public class View
         }
         else
         {
-            _messageDisplay.DisplayMessage(errorMessage);
+            _messageDisplay.DisplayMessage("errorMessage");
         }
     }
 
