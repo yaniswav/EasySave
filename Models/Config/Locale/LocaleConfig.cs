@@ -11,8 +11,7 @@ public partial class ConfigModel
 
 {
     private const string CurrentLocaleKey = "CurrentLocale";
-
-
+    
     public string CurrentLocale { get; set; }
 
     public string Locale { get; private set; }

@@ -58,17 +58,6 @@ public partial class ConfigModel
 
         var backupJobs = GetBackupJobs();
 
-        if (BackupJobExists(jobConfig.Name))
-        {
-            Console.WriteLine($"A backup job with the name '{jobConfig.Name}' already exists.");
-            return;
-        }
-
-        if (!IsValid(jobConfig))
-        {
-            Console.WriteLine($"Invalid backup job configuration for '{jobConfig.Name}'.");
-            return;
-        }
 
         backupJobs.Add(jobConfig);
         SaveBackupJobs(backupJobs);
@@ -77,11 +66,6 @@ public partial class ConfigModel
 
     public bool DeleteBackupJob(string jobName)
     {
-        if (string.IsNullOrWhiteSpace(jobName))
-        {
-            throw new ArgumentException("Job name cannot be null or whitespace", nameof(jobName));
-        }
-
         var backupJobs = GetBackupJobs();
         var jobToDelete =
             backupJobs.FirstOrDefault(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
@@ -102,16 +86,6 @@ public partial class ConfigModel
 
     public void ModifyBackupJob(string jobName, BackupJobConfig modifiedJob)
     {
-        if (string.IsNullOrWhiteSpace(jobName))
-        {
-            throw new ArgumentException("Job name cannot be null or whitespace", nameof(jobName));
-        }
-
-        if (modifiedJob == null)
-        {
-            throw new ArgumentNullException(nameof(modifiedJob), "Modified job configuration cannot be null");
-        }
-
         var backupJobs = GetBackupJobs();
         var jobToModify =
             backupJobs.FirstOrDefault(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));

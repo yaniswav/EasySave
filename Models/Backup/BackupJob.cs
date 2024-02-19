@@ -28,10 +28,30 @@ public class BackupJob
         DestinationDir = destinationDir;
         Type = type;
     }
-    
+
+    public List<string> ExtensionsToEncrypt { get; set; }
+    private List<string> FilesToEncrypt;
+
+    public BackupJob(string name, string sourceDir, string destinationDir, string type,
+        List<string> extensionsToEncrypt)
+        : this(name, sourceDir, destinationDir, type) // Appel du constructeur existant
+    {
+        ExtensionsToEncrypt = extensionsToEncrypt ?? new List<string>();
+        FilesToEncrypt = new List<string>();
+    }
+
+    protected void PrepareEncryptionList()
+    {
+        FilesToEncrypt = Directory.GetFiles(SourceDir, "*.*", SearchOption.AllDirectories)
+            .Where(file => ExtensionsToEncrypt.Contains(Path.GetExtension(file).ToLower()))
+            .ToList();
+    }
+
+
     // Starts the backup process
     public virtual void Start()
     {
+        PrepareEncryptionList();
         Console.WriteLine($"Starting backup: {Name}");
     }
 
