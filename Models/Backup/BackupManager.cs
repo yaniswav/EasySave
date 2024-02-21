@@ -1,4 +1,8 @@
-﻿namespace EasySave;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace EasySave;
 
 // Manages backup jobs, loading configurations, and executing specified jobs
 public class BackupManager
