@@ -1,85 +1,56 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using ReactiveUI;
 
 namespace EasySave.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase, INotifyDataErrorInfo
+    public class ViewModelBase : INotifyPropertyChanged, INotifyDataErrorInfo
     {
-        public void DeleteBackupJob(string jobName)
-        {
-            if (string.IsNullOrWhiteSpace(jobName))
-            {
-                Console.WriteLine("Le nom du travail de sauvegarde est vide.");
-                return;
-            }
+        private Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
 
-            var isDeleted = _backupManager.DeleteJob(jobName);
-            if (isDeleted)
+        public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        // Implémentation de INotifyDataErrorInfo
+        public bool HasErrors => _errors.Any();
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected void OnErrorsChanged([CallerMemberName] string propertyName = null)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+
+        public IEnumerable GetErrors(string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName))
             {
-                Console.WriteLine($"Le travail de sauvegarde '{jobName}' a été supprimé.");
-                // Mise à jour de l'interface utilisateur si nécessaire, par exemple, recharger la liste des travaux.
-                LoadBackupJobs();
+                return _errors.Values.SelectMany(v => v).ToList();
             }
             else
             {
-                Console.WriteLine($"Le travail de sauvegarde '{jobName}' n'a pas été trouvé.");
-            }
-        }
-
-        private readonly BackupManager _backupManager;
-        private Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
-
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-
-        public bool HasErrors => _errors.Any();
-
-        public MainWindowViewModel()
-        {
-            _backupManager = new BackupManager();
-            LoadBackupJobs();
-        }
-
-        public void LoadBackupJobs()
-        {
-            ValidateBackupJobs(_backupManager.Jobs);
-        }
-
-        // Correction : Type de retour spécifié comme IEnumerable (non générique) à IEnumerable<string>
-        public IEnumerable GetErrors(string propertyName)
-        {
-            if (string.IsNullOrEmpty(propertyName) || !_errors.ContainsKey(propertyName))
-            {
-                // Correction : Retourne un IEnumerable vide plutôt que null
-                return Enumerable.Empty<string>();
-            }
-
-            return _errors[propertyName];
-        }
-
-        private void ValidateBackupJobs(List<BackupJob> jobs)
-        {
-            foreach (var job in jobs)
-            {
-                if (string.IsNullOrWhiteSpace(job.SourceDir) || string.IsNullOrWhiteSpace(job.DestinationDir))
+                if (_errors.ContainsKey(propertyName))
                 {
-                    AddError(job.Name, "Le répertoire source et destination ne peuvent pas être vides.");
+                    return _errors[propertyName];
                 }
                 else
                 {
-                    RemoveError(job.Name);
+                    return null;
                 }
             }
         }
 
-        private void AddError(string propertyName, string error)
+        protected void AddError(string propertyName, string error)
         {
             if (!_errors.ContainsKey(propertyName))
+            {
                 _errors[propertyName] = new List<string>();
+            }
 
             if (!_errors[propertyName].Contains(error))
             {
@@ -88,7 +59,7 @@ namespace EasySave.ViewModels
             }
         }
 
-        private void RemoveError(string propertyName)
+        protected void ClearErrors(string propertyName)
         {
             if (_errors.ContainsKey(propertyName))
             {
@@ -97,9 +68,16 @@ namespace EasySave.ViewModels
             }
         }
 
-        private void OnErrorsChanged([CallerMemberName] string propertyName = null)
+        protected void ValidateProperty<T>(T value, string propertyName, Func<T, bool> validationLogic, string errorMessage)
         {
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+            if (!validationLogic(value))
+            {
+                AddError(propertyName, errorMessage);
+            }
+            else
+            {
+                ClearErrors(propertyName);
+            }
         }
     }
 }
