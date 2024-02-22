@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Configuration;
+using System.Threading;
 
 namespace EasySave;
 
@@ -18,7 +19,7 @@ public class BackupJob
     protected int TotalFilesToCopy = 0;
     protected long TotalFilesSize = 0;
     protected int NbFilesLeftToDo = 0;
-    protected double Progression = 0;
+    public double Progression = 0;
 
     // Constructor to initialize a new BackupJob with basic details
     public BackupJob(string name, string sourceDir, string destinationDir, string type)
@@ -49,7 +50,7 @@ public class BackupJob
 
 
     // Starts the backup process
-    public virtual void Start()
+    public virtual void Start(CancellationToken cancellationToken, ManualResetEvent pauseEvent)
     {
         PrepareEncryptionList();
         Console.WriteLine($"Starting backup: {Name}");
@@ -95,8 +96,8 @@ public class BackupJob
 
             // Écrire le log
             logEntry.WriteLog(logEntry);
-            Console.WriteLine(
-                $"Transfert log for {sourceFile} done. Transert time : {stopwatch.ElapsedMilliseconds} ms.");
+            // Console.WriteLine(
+                // $"Transfert log for {sourceFile} done. Transert time : {stopwatch.ElapsedMilliseconds} ms.");
         }
         catch (Exception ex)
         {
@@ -127,7 +128,7 @@ public class BackupJob
         else
             return MaxBufferSize;
     }
-    
+
     // Updates the state of the backup job with progress and other details
     protected void UpdateState(string state)
     {

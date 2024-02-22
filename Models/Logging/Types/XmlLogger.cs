@@ -20,25 +20,25 @@ namespace EasySave
         {
             try
             {
-                Console.WriteLine("Début de l'écriture du log en XML.");
+                // Console.WriteLine("Début de l'écriture du log en XML.");
                 string filePath = GetLogFilePath(".xml");
-                Console.WriteLine($"Chemin du fichier de log XML : {filePath}");
+                // Console.WriteLine($"Chemin du fichier de log XML : {filePath}");
 
                 var logs = LoadLogs<LoggingModel>(filePath, LogFormat.Xml);
-                Console.WriteLine($"Logs XML chargés. Nombre de logs existants : {logs.Count}");
+                // Console.WriteLine($"Logs XML chargés. Nombre de logs existants : {logs.Count}");
 
                 logs.Add(log);
                 XmlSerializer serializer = new XmlSerializer(typeof(List<LoggingModel>));
-                Console.WriteLine($"XML Serializer : {serializer}");
+                // Console.WriteLine($"XML Serializer : {serializer}");
                 using (StreamWriter writer = new StreamWriter(filePath, false)) // false to overwrite the file
 
                 {
                     serializer.Serialize(writer, logs);
-                    Console.WriteLine(
-                        $"Sérialisation des logs XML terminée. Nombre de logs : {logs.Count}, chemin : {filePath}, writer : {writer}, serializer : {serializer}");
+                    // Console.WriteLine(
+                        // $"Sérialisation des logs XML terminée. Nombre de logs : {logs.Count}, chemin : {filePath}, writer : {writer}, serializer : {serializer}");
                 }
 
-                Console.WriteLine("Log XML écrit dans le fichier.");
+                // Console.WriteLine("Log XML écrit dans le fichier.");
             }
             catch (Exception e)
             {

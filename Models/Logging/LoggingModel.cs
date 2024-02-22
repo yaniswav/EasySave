@@ -34,7 +34,7 @@ namespace EasySave
         {
             if (!File.Exists(filePath) || new FileInfo(filePath).Length == 0)
             {
-                Console.WriteLine("Log file is empty or not found. Creating a new list.");
+                // Console.WriteLine("Log file is empty or not found. Creating a new list.");
                 return new List<T>();
             }
 
@@ -43,7 +43,7 @@ namespace EasySave
                 string content = File.ReadAllText(filePath);
                 if (string.IsNullOrWhiteSpace(content))
                 {
-                    Console.WriteLine("Log file is empty. Creating a new list.");
+                    // Console.WriteLine("Log file is empty. Creating a new list.");
                     return new List<T>();
                 }
 

@@ -10,13 +10,15 @@ namespace EasySave
         private Utilities _messageDisplay;
         private ResourceManager _resourceManager;
         private ConfigModel _configModel;
-
+        public BackupManager BackupManager { get; private set; }
+        
         public ViewModel(ConfigModel configModel, Utilities messageDisplay)
         {
             // Initialize resources and utilities
             var resourceManager = new ResourceManager("EasySave.Resources.Languages.Messages", typeof(Program).Assembly);
             _messageDisplay = new Utilities(resourceManager);
             _configModel = configModel;
+            BackupManager = new BackupManager();
         }
 
 
@@ -123,8 +125,7 @@ namespace EasySave
         public void ExecuteBackups()
         {
             Console.WriteLine();
-            BackupManager backupManager = new BackupManager();
-            backupManager.LoadBackupJobs();
+            BackupManager.LoadBackupJobs();
 
             while (true)
             {
@@ -141,7 +142,7 @@ namespace EasySave
                 string[] jobNames = input.Split(','); // Split input into individual job names
 
                 // Validation
-                bool isValid = ValidateJobNames(jobNames, backupManager);
+                bool isValid = ValidateJobNames(jobNames, BackupManager);
                 if (!isValid)
                 {
                     _messageDisplay.DisplayMessage("InvalidEntry");
@@ -149,7 +150,7 @@ namespace EasySave
                 }
 
                 // Execute specified backup jobs
-                backupManager.ExecuteJobs(jobNames);
+                BackupManager.ExecuteJobs(jobNames);
                 break;
             }
         }

@@ -68,7 +68,7 @@ public class View
                     break;
                 case "5":
                     _viewModel.ExecuteBackups();
-                    Console.WriteLine();
+                    DisplayBackupProgress(_viewModel.BackupManager);
                     break;
                 case "6":
                     ChangeLocale();
@@ -187,6 +187,19 @@ public class View
         if (_viewModel.TryDeleteBackup(jobName))
         {
             _messageDisplay.DisplayMessage("DeleteSuccess");
+        }
+    }
+
+    public void DisplayBackupProgress(BackupManager backupManager)
+    {
+        while (!backupManager.AllJobsCompleted)
+        {
+            var progress = backupManager.GetBackupProgress();
+            foreach (var kvp in progress)
+            {
+                Console.WriteLine($"Progression de {kvp.Key}: {kvp.Value}%");
+            }
+
         }
     }
 }
