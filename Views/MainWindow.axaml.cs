@@ -8,12 +8,9 @@ namespace EasySave.Views
 {
     public partial class MainWindow : Window
     {
-        private MainWindowViewModel _mainWindowViewModel;
         public MainWindow()
         {
             InitializeComponent();
-            _mainWindowViewModel = new MainWindowViewModel(); // Initialisation du ViewModel
-            DataContext = _mainWindowViewModel;
             // Cache initialement les panels pour créer/modifier et supprimer/exécuter
             ShowCreateEditFields(false);
             ShowDeleteExecuteFields(false);

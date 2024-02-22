@@ -4,25 +4,34 @@ using Avalonia.Markup.Xaml;
 using EasySave.ViewModels;
 using EasySave.Views;
 
-namespace EasySave;
 
-public partial class App : Application
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Markup.Xaml;
+using EasySave.ViewModels; // Assurez-vous que cet espace de noms est correct
+using EasySave.Views;
+
+namespace EasySave
 {
-    public override void Initialize()
+    public partial class App : Application
     {
-        AvaloniaXamlLoader.Load(this);
-    }
-
-    public override void OnFrameworkInitializationCompleted()
-    {
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        public override void Initialize()
         {
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = new MainWindowViewModel(),
-            };
+            AvaloniaXamlLoader.Load(this);
         }
 
-        base.OnFrameworkInitializationCompleted();
+        public override void OnFrameworkInitializationCompleted()
+        {
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var mainWindow = new MainWindow();
+
+                mainWindow.Show();
+            }
+
+
+
+            base.OnFrameworkInitializationCompleted();
+        }
     }
 }

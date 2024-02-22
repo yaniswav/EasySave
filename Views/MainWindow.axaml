@@ -58,6 +58,7 @@
 
 
         <!-- Input Field for Delete and Execute -->
+        
         <StackPanel x:Name="DeleteExecuteInputFieldsPanel" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,60,0,0" IsVisible="False">
             <TextBox x:Name="SingleBackupNameTextBox" Width="200" Margin="5" Watermark="Nom de sauvegarde" />
             <Button x:Name="ActionDeleteExecuteButton" Width="200" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="5" Click="OnActionDeleteExecuteButtonClick"/>
