@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="EasySave.Views.BackupView">
+    <StackPanel Orientation="Horizontal">
+        <Button Content="Créer"/>
+        <Button Content="Modifier"/>
+        <Button Content="Supprimer"/>
+        <Button Content="Exécuter"/>
+        <Button Content="Pause"/>
+        <Button Content="Reprendre"/>
+        <Button Content="Stop"/>
+        <DataGrid>
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Header="Sélectionner"/>
+                <DataGridTextColumn Header="Nom"/>
+                <DataGridTextColumn Header="Répertoire source"/>
+                <DataGridTextColumn Header="Répertoire de destination"/>
+                <DataGridTextColumn Header="Type"/>
+                <DataGridTextColumn Header="État"/>
+                <DataGridTextColumn Header="Progression"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
+</UserControl>

@@ -1,80 +1,16 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="EasySave.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="EasySave">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        
-        <!-- Boutons à gauche -->
-        <StackPanel Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10">
-            <!-- Assurez-vous que HorizontalContentAlignment est réglé sur 'Center' -->
-            <Button x:Name="ListBackupsButton" Content="Lister les sauvegardes" Margin="5" Width="250" Height="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="OnListBackupsClick"/>
-            <Button x:Name="CreateBackupButton" Content="Créer une sauvegarde" Margin="5" Width="250" Height="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="OnCreateBackupClick"/>
-            <Button x:Name="ExecuteBackupButton" Content="Executer une sauvegarde" Margin="5" Width="250" Height="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="OnExecuteBackupClick"/>
-            <Button x:Name="EditBackupButton" Content="Modifier une sauvegarde" Margin="5" Width="250" Height="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="OnEditBackupClick"/>
-            <Button x:Name="DeleteBackupButton" Content="Supprimer une sauvegarde" Margin="5" Width="250" Height="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="OnDeleteBackupClick"/>
-            <Button x:Name="QuitButton" Content="Quitter" Margin="5" Width="250" Height="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="OnQuitClick"/>
-        </StackPanel>
-        
-        
-        <!-- Titre de l'action au-dessus des champs de saisie -->
-        <StackPanel x:Name="ActionTitlePanel" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10">
-            <TextBlock x:Name="ActionTitleTextBlock" Text="" Margin="5" FontWeight="Bold"/>
+        Title="EasySave"
+        Width="1280" Height="720">
+    <DockPanel>
+        <!-- Barre latérale pour la navigation -->
+        <StackPanel DockPanel.Dock="Left" Width="200" Background="#333">
+            <Button x:Name="BackupButton" Content="SAUVEGARDE" Click="BackupButton_Click"/>
+            <Button x:Name="SettingsButton" Content="PARAMÈTRES" Click="SettingsButton_Click"/>
         </StackPanel>
 
-        <!-- Input Fields for Create and Edit avec boutons pour parcourir -->
-        <StackPanel x:Name="CreateEditInputFieldsPanel" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,60,0,0" IsVisible="False">
-            <StackPanel Orientation="Horizontal" Margin="5">
-                <TextBox x:Name="BackupNameTextBox" Width="235" Watermark="Nom de sauvegarde" />
-                <Button Width="30" Height="30" Margin="5,0,0,0" Opacity="0" IsEnabled="False"></Button>
-            </StackPanel>
-    
-            <StackPanel Orientation="Horizontal" Margin="5">
-                <TextBox x:Name="SourceDirectoryTextBox" Width="200" Watermark="Répertoire source" />
-                <Button Width="30" Height="30" Margin="5,0,0,0" Click="OnSelectSourceDirectoryClick">...</Button>
-            </StackPanel>
-    
-            <StackPanel Orientation="Horizontal" Margin="5">
-                <TextBox x:Name="TargetDirectoryTextBox" Width="200" Watermark="Répertoire cible" />
-                <Button Width="30" Height="30" Margin="5,0,0,0" Click="OnSelectTargetDirectoryClick">...</Button>
-            </StackPanel>
-    
-            <ComboBox x:Name="BackupTypeComboBox" Width="235" Height="20" Margin="5" PlaceholderText="Type de sauvegarde">
-                <ComboBoxItem Content="Complète" />
-                <ComboBoxItem Content="Différentielle" />
-            </ComboBox>
-
-            <Button x:Name="ActionCreateEditButton" Width="235" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="5" Click="OnActionCreateEditButtonClick"/>
-            <TextBlock x:Name="CreateEditConfirmationTextBlock" Text="OK" Margin="5" IsVisible="False"/>
-        </StackPanel>
-
-
-
-        <!-- Input Field for Delete and Execute -->
-        
-        <StackPanel x:Name="DeleteExecuteInputFieldsPanel" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,60,0,0" IsVisible="False">
-            <TextBox x:Name="SingleBackupNameTextBox" Width="200" Margin="5" Watermark="Nom de sauvegarde" />
-            <Button x:Name="ActionDeleteExecuteButton" Width="200" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="5" Click="OnActionDeleteExecuteButtonClick"/>
-            <TextBlock x:Name="DeleteExecuteConfirmationTextBlock" Text="OK" Margin="5" IsVisible="False"/>
-        </StackPanel>
-
-
-        <!-- Bouton de langue à droite -->
-        <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10">
-            <ToggleButton x:Name="LanguageButton" Content="Langue"/>
-            <Popup IsOpen="{Binding #LanguageButton.IsChecked}" Placement="Bottom">
-                <StackPanel Background="White">
-                    <Button Content="Français" Margin="5"/>
-                    <Button Content="English" Margin="5"/>
-                </StackPanel>
-            </Popup>
-        </StackPanel>
-    </Grid>
+        <!-- Zone de contenu principal -->
+        <ContentControl x:Name="MainContent" />
+    </DockPanel>
 </Window>
