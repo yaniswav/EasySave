@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Configuration;
+using System.Threading;
 
 namespace EasySave;
 
@@ -15,24 +16,31 @@ public class DifferentialBackup : BackupJob
     }
 
     // Overrides the Start method to perform a differential backup
-    public override void Start()
+    public override void Start(CancellationToken cancellationToken, ManualResetEvent pauseEvent)
     {
-        base.Start();
         InitializeTrackingProperties();
         UpdateState("ACTIVE");
 
         try
         {
-            PerformDifferentialBackup(SourceDir, DestinationDir);
+            PerformDifferentialBackup(SourceDir, DestinationDir, cancellationToken, pauseEvent);
             UpdateProgress(null);
             UpdateState("END");
         }
+
+        catch (OperationCanceledException)
+        {
+            Console.WriteLine("Backup cancelled.");
+            UpdateState("CANCELLED");
+        }
+
         catch (Exception ex)
         {
             Console.WriteLine($"Error during backup: {ex.Message}");
             UpdateState("ERROR");
         }
     }
+
 
     // Initializes properties for tracking which files need to be copied
     private void InitializeTrackingProperties()
@@ -63,7 +71,8 @@ public class DifferentialBackup : BackupJob
 
 
     // Performs the differential backup by copying only modified or new files
-    private void PerformDifferentialBackup(string sourceDir, string destinationDir)
+    private void PerformDifferentialBackup(string sourceDir, string destinationDir, CancellationToken cancellationToken,
+        ManualResetEvent pauseEvent)
     {
         if (!Directory.Exists(destinationDir))
             Directory.CreateDirectory(destinationDir);
@@ -81,10 +90,12 @@ public class DifferentialBackup : BackupJob
             }
         }
 
+        // Dans la méthode PerformDifferentialBackup
         foreach (var directory in Directory.GetDirectories(sourceDir))
         {
             var destDir = Path.Combine(destinationDir, Path.GetFileName(directory));
-            PerformDifferentialBackup(directory, destDir);
+            PerformDifferentialBackup(directory, destDir, cancellationToken,
+                pauseEvent); // Utiliser directement les paramètres existants
         }
     }
 

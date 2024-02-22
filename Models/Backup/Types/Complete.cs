@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Configuration;
+using System.Threading;
 
 namespace EasySave;
 
@@ -15,17 +16,19 @@ public class CompleteBackup : BackupJob
     }
 
     // Overrides the Start method to perform a complete backup
-    public override void Start()
+    public override void Start(CancellationToken cancellationToken, ManualResetEvent pauseEvent)
     {
-        base.Start();
-        InitializeTrackingProperties();
-        UpdateState("ACTIVE");
-
         try
         {
-            CopyDirectory(SourceDir, DestinationDir);
-            UpdateProgress(null);
+            InitializeTrackingProperties();
+            UpdateState("ACTIVE");
+            CopyDirectory(SourceDir, DestinationDir, cancellationToken, pauseEvent);
             UpdateState("END");
+        }
+        catch (OperationCanceledException)
+        {
+            Console.WriteLine("Backup cancelled.");
+            UpdateState("CANCELLED");
         }
         catch (Exception ex)
         {
@@ -57,13 +60,17 @@ public class CompleteBackup : BackupJob
 
 
     // Recursively copies directories and files from source to destination
-    private void CopyDirectory(string sourceDir, string destinationDir)
+    private void CopyDirectory(string sourceDir, string destinationDir, CancellationToken cancellationToken,
+        ManualResetEvent pauseEvent)
     {
         if (!Directory.Exists(destinationDir))
             Directory.CreateDirectory(destinationDir);
 
         foreach (var file in Directory.GetFiles(sourceDir))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            pauseEvent.WaitOne();
+
             var destFile = Path.Combine(destinationDir, Path.GetFileName(file));
             CopyFileWithBuffer(file, destFile);
             UpdateProgress(file);
@@ -72,7 +79,7 @@ public class CompleteBackup : BackupJob
         foreach (var directory in Directory.GetDirectories(sourceDir))
         {
             var destDir = Path.Combine(destinationDir, Path.GetFileName(directory));
-            CopyDirectory(directory, destDir);
+            CopyDirectory(directory, destDir, cancellationToken, pauseEvent);
         }
     }
 }

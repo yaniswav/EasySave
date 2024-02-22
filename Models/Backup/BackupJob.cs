@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Configuration;
+using System.Threading;
 
 namespace EasySave;
 
@@ -49,7 +50,7 @@ public class BackupJob
 
 
     // Starts the backup process
-    public virtual void Start()
+    public virtual void Start(CancellationToken cancellationToken, ManualResetEvent pauseEvent)
     {
         PrepareEncryptionList();
         Console.WriteLine($"Starting backup: {Name}");
@@ -127,7 +128,7 @@ public class BackupJob
         else
             return MaxBufferSize;
     }
-    
+
     // Updates the state of the backup job with progress and other details
     protected void UpdateState(string state)
     {
