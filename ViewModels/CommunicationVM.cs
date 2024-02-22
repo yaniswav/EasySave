@@ -1,16 +1,15 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Linq;
 
 namespace EasySave.ViewModels
 {
-    public class EncryptionSettingsViewModel : INotifyPropertyChanged, IDataErrorInfo
+    public class CommunicationVm : INotifyPropertyChanged, IDataErrorInfo
     {
         private List<string> _extensionsToEncrypt;
         private string _extensionToAdd = "";
 
-        public EncryptionSettingsViewModel()
+        public CommunicationVm()
         {
             _extensionsToEncrypt = new List<string>();
         }
@@ -54,14 +53,14 @@ namespace EasySave.ViewModels
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public string Error => null;
+        public string Error => string.Empty;
 
         public string this[string columnName]
         {
@@ -79,7 +78,7 @@ namespace EasySave.ViewModels
                         return "Extension already added.";
                     }
                 }
-                return null;
+                return string.Empty;
             }
         }
     }

@@ -1,20 +1,16 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Linq;
 
 namespace EasySave.ViewModels
 {
-    public class PriorityFilesViewModel : INotifyPropertyChanged
+    public class ModifyBackupVm : INotifyPropertyChanged
     {
-        private ObservableCollection<string> _priorityExtensions;
-        private string _newExtension;
-        public event PropertyChangedEventHandler PropertyChanged;
+        private ObservableCollection<string> _priorityExtensions = new ObservableCollection<string>();
+        private string _newExtension = string.Empty; // Initialisé avec une chaîne vide pour éviter l'affectation de null
 
-        public PriorityFilesViewModel()
-        {
-            _priorityExtensions = new ObservableCollection<string>();
-        }
+        // Implémentez l'interface avec un événement nullable
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public ObservableCollection<string> PriorityExtensions
         {
@@ -45,7 +41,7 @@ namespace EasySave.ViewModels
             {
                 _priorityExtensions.Add(NewExtension);
                 OnPropertyChanged(nameof(PriorityExtensions));
-                NewExtension = string.Empty; // Reset after adding
+                NewExtension = string.Empty; // Utilisez une chaîne vide au lieu de null
             }
         }
 
@@ -58,7 +54,7 @@ namespace EasySave.ViewModels
             }
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) // Marquez propertyName comme nullable
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
