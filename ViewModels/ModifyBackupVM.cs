@@ -7,7 +7,9 @@ namespace EasySave.ViewModels
     public class ModifyBackupVm : INotifyPropertyChanged
     {
         private ObservableCollection<string> _priorityExtensions = new ObservableCollection<string>();
-        private string _newExtension = string.Empty; // Initialisé avec une chaîne vide pour éviter l'affectation de null
+
+        private string
+            _newExtension = string.Empty; // Initialisé avec une chaîne vide pour éviter l'affectation de null
 
         // Implémentez l'interface avec un événement nullable
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -54,7 +56,8 @@ namespace EasySave.ViewModels
             }
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) // Marquez propertyName comme nullable
+        protected void
+            OnPropertyChanged([CallerMemberName] string? propertyName = null) // Marquez propertyName comme nullable
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

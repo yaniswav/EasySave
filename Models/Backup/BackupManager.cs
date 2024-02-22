@@ -104,7 +104,7 @@ public class BackupManager
             }
         }
     }
-    
+
     // Checks if a job with the specified name exists
     public bool JobExists(string jobName)
     {
