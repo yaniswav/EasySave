@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Globalization;
 using System.Resources;
 
@@ -11,11 +11,12 @@ namespace EasySave
         private ResourceManager _resourceManager;
         private ConfigModel _configModel;
         public BackupManager BackupManager { get; private set; }
-        
+
         public ViewModel(ConfigModel configModel, Utilities messageDisplay)
         {
             // Initialize resources and utilities
-            var resourceManager = new ResourceManager("EasySave.Resources.Languages.Messages", typeof(Program).Assembly);
+            var resourceManager =
+                new ResourceManager("EasySave.Resources.Languages.Messages", typeof(Program).Assembly);
             _messageDisplay = new Utilities(resourceManager);
             _configModel = configModel;
             BackupManager = new BackupManager();
@@ -145,6 +146,7 @@ namespace EasySave
                 bool isValid = ValidateJobNames(jobNames, BackupManager);
                 if (!isValid)
                 {
+                    Console.WriteLine($"Not valid: {string.Join(", ", jobNames)}");
                     _messageDisplay.DisplayMessage("InvalidEntry");
                     continue;
                 }

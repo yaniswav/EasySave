@@ -97,7 +97,7 @@ public class BackupJob
             // Écrire le log
             logEntry.WriteLog(logEntry);
             // Console.WriteLine(
-                // $"Transfert log for {sourceFile} done. Transert time : {stopwatch.ElapsedMilliseconds} ms.");
+            // $"Transfert log for {sourceFile} done. Transert time : {stopwatch.ElapsedMilliseconds} ms.");
         }
         catch (Exception ex)
         {

@@ -198,6 +198,7 @@ public class View
             foreach (var kvp in progress)
             {
                 Console.WriteLine($"Progression de {kvp.Key}: {kvp.Value}%");
+                Thread.Sleep(1000);
             }
 
         }
