@@ -15,7 +15,7 @@ public partial class BackupView : UserControl
     private async void OnSelectSourceDirectoryClick(object sender, RoutedEventArgs e)
     {
         var dialog = new OpenFolderDialog();
-        var result = await dialog.ShowAsync(this);
+        var result = await dialog.ShowAsync(new Window());
         if (!string.IsNullOrEmpty(result))
         {
             SourceDirectoryTextBox.Text = result;
@@ -25,7 +25,7 @@ public partial class BackupView : UserControl
     private async void OnSelectTargetDirectoryClick(object sender, RoutedEventArgs e)
     {
         var dialog = new OpenFolderDialog();
-        var result = await dialog.ShowAsync(this);
+        var result = await dialog.ShowAsync(new Window());
         if (!string.IsNullOrEmpty(result))
         {
             TargetDirectoryTextBox.Text = result;

@@ -32,17 +32,39 @@
             <Button Content="Stop"/>
         </StackPanel>
         
-        <Grid Margin="15, 10" HorizontalAlignment="Stretch" VerticalAlignment="Top" RowDefinitions="Auto" ColumnDefinitions="2*, Auto, 2*, Auto, 2*, 2*">
-            <TextBox Grid.Column="0" Margin="5" Watermark="Nom de la sauvegarde"/>
-            <TextBox Grid.Column="2" x:Name="SourceDirectoryTextBox" Margin="5" Watermark="Répertoire source"/>
-            <Button Width="30" Height="30" Margin="5,0,0,0" Click="OnSelectSourceDirectoryClick">...</Button>
-            <TextBox Grid.Column="4" x:Name="TargetDirectoryTextBox" Margin="5" Watermark="Répertoire de destination"/>
-            <Button Width="30" Height="30" Margin="5,0,0,0" Click="OnSelectTargetDirectoryClick">...</Button>
-            <ComboBox Grid.Column="6" Margin="5" PlaceholderText="Type">
+        <Grid Margin="20, 0, 40, 20" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/> <!-- Nom de la sauvegarde -->
+                <ColumnDefinition Width="Auto"/> <!-- Bouton source -->
+                <ColumnDefinition Width="Auto"/> <!-- Répertoire source -->
+                <ColumnDefinition Width="Auto"/> <!-- Bouton destination -->
+                <ColumnDefinition Width="Auto"/> <!-- Répertoire Destination -->
+                <ColumnDefinition Width="Auto"/> <!-- Type -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Nom de la sauvegarde -->
+            <TextBox Grid.Column="0" x:Name="NameTextBox" Width="200" Margin="5" Watermark="Nom de la sauvegarde"/>
+
+            <!-- Répertoire source -->
+            <TextBox Grid.Column="1" x:Name="SourceDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="Répertoire source"/>
+            <Button Grid.Column="2" Margin="0,5,5,5" Width="30" Height="30" Click="OnSelectSourceDirectoryClick">
+                <Image Source="/Assets/folder.png" Width="20" Height="20"/>
+            </Button>
+
+            <!-- Répertoire de destination -->
+            <TextBox Grid.Column="3" x:Name="TargetDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="Répertoire de destination"/>
+            <Button Grid.Column="4" Margin="0,5,5,5" Width="30" Height="30" Click="OnSelectTargetDirectoryClick">
+                <Image Source="/Assets/folder.png" Width="20" Height="20"/>
+            </Button>
+
+            <!-- Type -->
+            <ComboBox Grid.Column="5" Width="200" Margin="5" PlaceholderText="Type de sauvegarde">
                 <ComboBoxItem Content="Complète"/>
                 <ComboBoxItem Content="Différentielle"/>
             </ComboBox>
         </Grid>
+
+
         
         <DataGrid Margin="15, 10, 15, 0" VerticalAlignment="Top">
             <DataGrid.Columns>
