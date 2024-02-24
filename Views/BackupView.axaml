@@ -12,23 +12,35 @@
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
-        <Style Selector="TextBox">
-            <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#6552d1"/>
         </Style>
-        <Style Selector="ComboBox">
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-        </Style>
+        
     </UserControl.Styles>
     
-    <StackPanel Orientation="Vertical" Background="#dad7fc" Margin="30, 0, 30, 30" >
+    <StackPanel Orientation="Vertical" Background="#dad7fc" Margin="25, 0, 25, 25" >
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="15, 10" Spacing="10">
-            <Button Content="Créer"/>
-            <Button Content="Modifier"/>
-            <Button Content="Supprimer"/>
-            <Button Content="Exécuter"/>
-            <Button Content="Pause"/>
-            <Button Content="Reprendre"/>
-            <Button Content="Stop"/>
+            <Button x:Name="CreateButton" Width="100" Height="40" Cursor="Hand" ToolTip.Tip="Créer une sauvegarde">
+                <Image Source="/Assets/create.png" Width="20" Height="20"/>
+            </Button>
+            <Button x:Name="EditButton" Width="100" Height="40" Cursor="Hand" ToolTip.Tip="Modifier une sauvegarde">
+                <Image Source="/Assets/edit.png" Width="20" Height="20"/>
+            </Button>
+            <Button x:Name="DeleteButton" Width="100" Height="40" Cursor="Hand" ToolTip.Tip="Supprimer une sauveagrde">
+                <Image Source="/Assets/trash.png" Width="20" Height="20"/>
+            </Button>
+            <Button x:Name="ExecuteButton" Width="100" Height="40" Cursor="Hand" ToolTip.Tip="Lancer une sauvegarde">
+                <Image Source="/Assets/play.png" Width="20" Height="20"/>
+            </Button>
+            <Button x:Name="PauseButton" Width="100" Height="40" Cursor="Hand" ToolTip.Tip="Mettre en pause la sauvegarde">
+                <Image Source="/Assets/pause.png" Width="20" Height="20"/>
+            </Button>
+            <Button x:Name="PlayButton" Width="100" Height="40" Cursor="Hand" ToolTip.Tip="Reprendre la sauveagrde">
+                <Image Source="/Assets/redo.png" Width="20" Height="20"/>
+            </Button>
+            <Button x:Name="StopeButton" Width="100" Height="40" Cursor="Hand" ToolTip.Tip="Arrêter la sauvegarde">
+                <Image Source="/Assets/stop.png" Width="20" Height="20"/>
+            </Button>
         </StackPanel>
         
         <Grid Margin="0, 0" HorizontalAlignment="Center">
@@ -46,13 +58,13 @@
 
             <!-- Répertoire source -->
             <TextBox Grid.Column="1" x:Name="SourceDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="Répertoire source"/>
-            <Button Grid.Column="2" Margin="0,5,5,5" Width="30" Height="30" Click="OnSelectSourceDirectoryClick">
+            <Button Grid.Column="2" Margin="0,5,5,5" Width="30" Height="30" Cursor="Hand" ToolTip.Tip="Parcourir vos dossiers" Click="OnSelectSourceDirectoryClick">
                 <Image Source="/Assets/folder.png" Width="20" Height="20"/>
             </Button>
 
             <!-- Répertoire de destination -->
             <TextBox Grid.Column="3" x:Name="TargetDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="Répertoire de destination"/>
-            <Button Grid.Column="4" Margin="0,5,5,5" Width="30" Height="30" Click="OnSelectTargetDirectoryClick">
+            <Button Grid.Column="4" Margin="0,5,5,5" Width="30" Height="30" Cursor="Hand" ToolTip.Tip="Parcourir vos dossiers" Click="OnSelectTargetDirectoryClick">
                 <Image Source="/Assets/folder.png" Width="20" Height="20"/>
             </Button>
 

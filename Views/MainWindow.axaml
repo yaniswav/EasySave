@@ -17,11 +17,9 @@
         </Style>
 
         <!-- Ne fonctionne pas encore -->
-        <Style Selector="Button.MainButton:pointerover">
-            <Setter Property="Background" Value="#857DFF" />
-        </Style>
-        <Style Selector="Button.MainButton:pressed">
-            <Setter Property="Background" Value="#857DFF" />
+        <Style Selector="Button.MainButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#6552d1"/>
+            <Setter Property="Foreground" Value="white"/>
         </Style>
     </Window.Styles>
     
@@ -38,8 +36,8 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Classes="MainButton" x:Name="BackupButton" Content="SAUVEGARDE" Grid.Column="1" Width="600" Height="70" Margin="15, 20" Click="BackupButton_Click"/>
-            <Button Classes="MainButton" x:Name="SettingsButton" Content="PARAMÈTRES" Grid.Column="2" Width="600" Height="70" Margin="15, 20" Click="SettingsButton_Click"/>
+            <Button Classes="MainButton" x:Name="BackupButton" Content="SAUVEGARDE" Grid.Column="1" Width="600" Height="70" Margin="15, 20" Cursor="Hand" Click="BackupButton_Click"/>
+            <Button Classes="MainButton" x:Name="SettingsButton" Content="PARAMÈTRES" Grid.Column="2" Width="600" Height="70" Margin="15, 20" Cursor="Hand" Click="SettingsButton_Click"/>
         </Grid>
         <ContentControl Grid.Row="1" x:Name="MainContent" />
     </Grid>
