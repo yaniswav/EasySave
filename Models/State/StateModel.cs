@@ -12,7 +12,8 @@ namespace EasySave
         private static readonly object _queueLock = new object();
         private static Queue<StateModel> _updateQueue = new Queue<StateModel>();
         private static Thread _updateThread;
-
+        private static readonly object _jsonFileLock = new object();
+        private static string stateFilePath = "State/state.json";
 
         // Properties to store state information
         public string Name { get; set; }
@@ -58,11 +59,20 @@ namespace EasySave
         // Saves a list of StateModel instances to a JSON file
         public static void SaveToJson(List<StateModel> stateModels, string filePath)
         {
-            string jsonString = JsonSerializer.Serialize(stateModels, new JsonSerializerOptions
+            lock (_jsonFileLock)
             {
-                WriteIndented = true
-            });
-            File.WriteAllText(filePath, jsonString);
+                // Ensure the directory exists
+                var directory = Path.GetDirectoryName(filePath);
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                // Serialize and write the file content
+                string jsonString =
+                    JsonSerializer.Serialize(stateModels, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(filePath, jsonString);
+            }
         }
 
 
@@ -107,7 +117,6 @@ namespace EasySave
                 {
                     try
                     {
-                        string stateFilePath = "State/state.json"; // Update with the actual file path
                         List<StateModel> existingData = LoadFromJson(stateFilePath) ?? new List<StateModel>();
                         existingData.Add(stateModel);
                         SaveToJson(existingData, stateFilePath);

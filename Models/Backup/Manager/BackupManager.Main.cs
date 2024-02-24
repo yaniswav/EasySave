@@ -14,12 +14,12 @@ namespace EasySave
             // Construct
         }
 
-        public void LoadBackupJobs()
+        public async Task LoadBackupJobs()
         {
-            var jobConfigs = _configModel.LoadBackupJobs();
+            var jobConfigs = await Task.Run(() => _configModel.LoadBackupJobs());
             foreach (var jobConfig in jobConfigs)
             {
-                AddBackupJobBasedOnType(jobConfig);
+                await AddBackupJobBasedOnType(jobConfig);
             }
         }
 
@@ -28,7 +28,7 @@ namespace EasySave
             return _backupJobs.Any(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
         }
 
-        private void AddBackupJobBasedOnType(dynamic job)
+        private async Task AddBackupJobBasedOnType(dynamic job)
         {
             string type = job.Type;
             string name = job.Name;

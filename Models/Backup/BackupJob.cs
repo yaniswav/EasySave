@@ -84,8 +84,8 @@ public class BackupJob
 
             stopwatch.Stop();
 
-            // Créer une instance de LoggingModel et configurer les données
-            var logEntry = new XmlLogger() // ou WriteXML selon le format de log souhaité
+
+            var logEntry = new XmlLogger
             {
                 Name = this.Name,
                 FileSource = sourceFile,
@@ -96,8 +96,8 @@ public class BackupJob
                 Error = false
             };
 
-            // Écrire le log
-            logEntry.WriteLog(logEntry);
+
+            LoggingModel.EnqueueLog(logEntry);
             // Console.WriteLine(
             // $"Transfert log for {sourceFile} done. Transert time : {stopwatch.ElapsedMilliseconds} ms.");
         }
@@ -107,7 +107,8 @@ public class BackupJob
             Console.WriteLine($"Error during the file copying : {ex.Message}");
 
             // Configurer et écrire le log en cas d'erreur
-            var logEntry = new XmlLogger() // ou WriteXML
+
+            var logEntry = new XmlLogger
             {
                 Name = this.Name,
                 FileSource = sourceFile,
@@ -115,10 +116,11 @@ public class BackupJob
                 FileSize = fileSize,
                 FileTransferTime = stopwatch.ElapsedMilliseconds,
                 Time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
-                Error = true
+                Error = false
             };
 
-            logEntry.WriteLog(logEntry);
+
+            LoggingModel.EnqueueLog(logEntry);
         }
     }
 

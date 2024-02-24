@@ -7,19 +7,17 @@ namespace EasySave
 {
     public class JsonLogger : LoggingModel
     {
-        public override void WriteLog(LoggingModel log)
+        // Cette méthode est appelée par le thread de journalisation dans la classe de base pour écrire les données dans le fichier JSON.
+        protected override void WriteLogToFile()
         {
-            // Console.WriteLine("Début de l'écriture du log en JSON.");
-            string filePath = GetLogFilePath(".json");
-            // Console.WriteLine($"Chemin du fichier de log JSON : {filePath}");
-
-            var logs = LoadLogs<LoggingModel>(filePath, LogFormat.Json);
-            // Console.WriteLine($"Logs JSON chargés. Nombre de logs existants : {logs.Count}");
-
-            logs.Add(log);
-            string jsonString = JsonConvert.SerializeObject(logs, Formatting.Indented);
-            File.WriteAllText(filePath, jsonString);
-            // Console.WriteLine("Log JSON écrit dans le fichier.");
+            lock (FileLock) // Utilisez le verrou de fichier de la classe de base
+            {
+                List<LoggingModel> logs = LoadLogs<LoggingModel>(GetLogFilePath(".json"), LogFormat.Json) ??
+                                          new List<LoggingModel>();
+                logs.Add(this); // Ajoute l'entrée actuelle au journal
+                string jsonString = JsonConvert.SerializeObject(logs, Formatting.Indented);
+                File.WriteAllText(GetLogFilePath(".json"), jsonString);
+            }
         }
     }
 }
