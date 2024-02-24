@@ -19,26 +19,28 @@
     </UserControl.Styles>
     
     <StackPanel Orientation="Vertical" Background="#dad7fc" Margin="25, 0, 25, 25" >
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="15, 10" Spacing="10">
-            <Button x:Name="CreateButton" Width="100" Height="40" Cursor="Hand" ToolTip.Tip="Créer une sauvegarde">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="15, 10, 15, 0" Spacing="10">
+            <Button x:Name="CreateButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Créer une sauvegarde" Click="OnCreateButtonClick">
                 <Image Source="/Assets/create.png" Width="20" Height="20"/>
             </Button>
-            <Button x:Name="EditButton" Width="100" Height="40" Cursor="Hand" ToolTip.Tip="Modifier une sauvegarde">
+            <Button x:Name="EditButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Modifier une sauvegarde" Click="OnEditButtonClick">
                 <Image Source="/Assets/edit.png" Width="20" Height="20"/>
             </Button>
-            <Button x:Name="DeleteButton" Width="100" Height="40" Cursor="Hand" ToolTip.Tip="Supprimer une sauveagrde">
+            <Button x:Name="DeleteButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Supprimer une sauveagrde" Click="OnDeleteButtonClick">
                 <Image Source="/Assets/trash.png" Width="20" Height="20"/>
             </Button>
-            <Button x:Name="ExecuteButton" Width="100" Height="40" Cursor="Hand" ToolTip.Tip="Lancer une sauvegarde">
+            <Image Source="/Assets/separator3.png" Width="150" Height="100"/>
+            <Button x:Name="ExecuteButton" Width="150" Height="40" Cursor="Hand" ToolTip.Tip="Lancer une sauvegarde" Click="OnExecuteButtonClick">
                 <Image Source="/Assets/play.png" Width="20" Height="20"/>
             </Button>
-            <Button x:Name="PauseButton" Width="100" Height="40" Cursor="Hand" ToolTip.Tip="Mettre en pause la sauvegarde">
-                <Image Source="/Assets/pause.png" Width="20" Height="20"/>
-            </Button>
-            <Button x:Name="PlayButton" Width="100" Height="40" Cursor="Hand" ToolTip.Tip="Reprendre la sauveagrde">
+            <Image Source="/Assets/separator3.png" Width="150" Height="100"/>
+            <Button x:Name="PlayButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Reprendre la sauveagrde" Click="OnPlayButtonClick">
                 <Image Source="/Assets/redo.png" Width="20" Height="20"/>
             </Button>
-            <Button x:Name="StopeButton" Width="100" Height="40" Cursor="Hand" ToolTip.Tip="Arrêter la sauvegarde">
+            <Button x:Name="PauseButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Mettre en pause la sauvegarde" Click="OnPauseButtonClick">
+                <Image Source="/Assets/pause.png" Width="20" Height="20"/>
+            </Button>
+            <Button x:Name="StopButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Arrêter la sauvegarde" Click="OnStopButtonClick">
                 <Image Source="/Assets/stop.png" Width="20" Height="20"/>
             </Button>
         </StackPanel>
