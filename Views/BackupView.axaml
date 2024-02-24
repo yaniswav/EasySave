@@ -34,10 +34,10 @@
         
         <Grid Margin="15, 10" HorizontalAlignment="Stretch" VerticalAlignment="Top" RowDefinitions="Auto" ColumnDefinitions="2*, Auto, 2*, Auto, 2*, 2*">
             <TextBox Grid.Column="0" Margin="5" Watermark="Nom de la sauvegarde"/>
-            <TextBox Grid.Column="2" Margin="5" Watermark="Répertoire source"/>
-            <Button Grid.Column="3" Margin="5" Width="40" Height="40" Content="..."/>
-            <TextBox Grid.Column="4" Margin="5" Watermark="Répertoire de destination"/>
-            <Button Grid.Column="5" Margin="5" Width="40" Height="40" Content="..."/>
+            <TextBox Grid.Column="2" x:Name="SourceDirectoryTextBox" Margin="5" Watermark="Répertoire source"/>
+            <Button Width="30" Height="30" Margin="5,0,0,0" Click="OnSelectSourceDirectoryClick">...</Button>
+            <TextBox Grid.Column="4" x:Name="TargetDirectoryTextBox" Margin="5" Watermark="Répertoire de destination"/>
+            <Button Width="30" Height="30" Margin="5,0,0,0" Click="OnSelectTargetDirectoryClick">...</Button>
             <ComboBox Grid.Column="6" Margin="5" PlaceholderText="Type">
                 <ComboBoxItem Content="Complète"/>
                 <ComboBoxItem Content="Différentielle"/>
