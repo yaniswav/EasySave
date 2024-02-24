@@ -16,9 +16,11 @@ public class BackupJob
     public string DestinationDir { get; set; }
     public string Type { get; set; }
 
-    protected int TotalFilesToCopy = 0;
-    protected long TotalFilesSize = 0;
-    protected int NbFilesLeftToDo = 0;
+    public string State { get; private set; }
+
+    public int TotalFilesToCopy = 0;
+    public long TotalFilesSize = 0;
+    public int NbFilesLeftToDo = 0;
     public double Progression = 0;
 
     // Constructor to initialize a new BackupJob with basic details
@@ -132,7 +134,7 @@ public class BackupJob
     // Updates the state of the backup job with progress and other details
     protected void UpdateState(string state)
     {
-        StateModel.UpdateBackupState(this, state, TotalFilesToCopy, TotalFilesSize, NbFilesLeftToDo, Progression,
-            "state.json");
+        State = state;
+        StateModel.UpdateBackupState(this);
     }
 }

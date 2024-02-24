@@ -9,6 +9,11 @@ namespace EasySave
     // Represents the state of a backup job including details like file paths, progress, etc.
     public class StateModel
     {
+        private static readonly object _queueLock = new object();
+        private static Queue<StateModel> _updateQueue = new Queue<StateModel>();
+        private static Thread _updateThread;
+
+
         // Properties to store state information
         public string Name { get; set; }
         public string SourceFilePath { get; set; }
@@ -18,6 +23,13 @@ namespace EasySave
         public long TotalFilesSize { get; set; }
         public int NbFilesLeftToDo { get; set; }
         public double Progression { get; set; }
+
+        static StateModel()
+        {
+            _updateThread = new Thread(ProcessQueue);
+            _updateThread.Start();
+        }
+
 
         // Loads state data from a JSON file, returning a list of StateModel instances
         public static List<StateModel> LoadFromJson(string filePath)
@@ -55,42 +67,58 @@ namespace EasySave
 
 
         // Method to update the state of a backup job
-        public static void UpdateBackupState(BackupJob job, string state, int totalFilesToCopy, long totalFilesSize,
-            int nbFilesLeftToDo, double progression, string stateFilePath)
+        public static void UpdateBackupState(BackupJob job)
         {
-            // Create or update a StateModel instance with the current job's state
             StateModel stateModel = new StateModel
             {
                 Name = job.Name,
                 SourceFilePath = job.SourceDir,
                 TargetFilePath = job.DestinationDir,
-                State = state,
-                TotalFilesToCopy = totalFilesToCopy,
-                TotalFilesSize = totalFilesSize,
-                NbFilesLeftToDo = nbFilesLeftToDo,
-                Progression = progression
+                State = job.State,
+                TotalFilesToCopy = job.TotalFilesToCopy,
+                TotalFilesSize = job.TotalFilesSize,
+                NbFilesLeftToDo = job.NbFilesLeftToDo,
+                Progression = job.Progression
             };
 
-            // Load existing state data from JSON
-            List<StateModel> stateModels = LoadFromJson(stateFilePath);
-
-            // Update or add the current job's state in the list
-            var existingStateModel = stateModels.FirstOrDefault(s => s.Name == job.Name);
-            if (existingStateModel != null)
+            lock (_queueLock)
             {
-                existingStateModel.State = state;
-                existingStateModel.TotalFilesToCopy = totalFilesToCopy;
-                existingStateModel.TotalFilesSize = totalFilesSize;
-                existingStateModel.NbFilesLeftToDo = nbFilesLeftToDo;
-                existingStateModel.Progression = progression;
+                _updateQueue.Enqueue(stateModel);
+                Monitor.Pulse(_queueLock);
             }
-            else
-            {
-                stateModels.Add(stateModel);
-            }
+        }
 
-            // Save updated state to JSON file using the new method
-            SaveToJson(stateModels, stateFilePath);
+
+        private static void ProcessQueue()
+        {
+            while (true)
+            {
+                StateModel stateModel = null;
+
+                lock (_queueLock)
+                {
+                    while (_updateQueue.Count == 0)
+                        Monitor.Wait(_queueLock);
+
+                    stateModel = _updateQueue.Dequeue();
+                }
+
+                if (stateModel != null)
+                {
+                    try
+                    {
+                        string stateFilePath = "State/state.json"; // Update with the actual file path
+                        List<StateModel> existingData = LoadFromJson(stateFilePath) ?? new List<StateModel>();
+                        existingData.Add(stateModel);
+                        SaveToJson(existingData, stateFilePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log or handle exceptions related to file writing or JSON serialization
+                        Console.WriteLine($"Error while updating state file: {ex.Message}");
+                    }
+                }
+            }
         }
     }
 }
