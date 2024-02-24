@@ -38,8 +38,8 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Classes="MainButton" x:Name="BackupButton" Content="SAUVEGARDE" Grid.Column="1" Width="595" Height="70" Margin="15, 30" Click="BackupButton_Click"/>
-            <Button Classes="MainButton" x:Name="SettingsButton" Content="PARAMÈTRES" Grid.Column="2" Width="595" Height="70" Margin="15, 30" Click="SettingsButton_Click"/>
+            <Button Classes="MainButton" x:Name="BackupButton" Content="SAUVEGARDE" Grid.Column="1" Width="600" Height="70" Margin="15, 20" Click="BackupButton_Click"/>
+            <Button Classes="MainButton" x:Name="SettingsButton" Content="PARAMÈTRES" Grid.Column="2" Width="600" Height="70" Margin="15, 20" Click="SettingsButton_Click"/>
         </Grid>
         <ContentControl Grid.Row="1" x:Name="MainContent" />
     </Grid>
