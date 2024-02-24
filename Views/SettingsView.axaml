@@ -1,8 +1,59 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="EasySave.Views.SettingsView">
-    <StackPanel>
-        <TextBlock Text="Paramètres de l'application" FontWeight="Bold"/>
-        <!-- Ajoutez ici d'autres contrôles pour les paramètres -->
+    <UserControl.Styles>
+        <!-- Add your styles here -->
+    </UserControl.Styles>
+
+    <StackPanel Orientation="Vertical" Background="#dad7fc" Margin="25">
+        <!-- First Line -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <TextBlock Text="Langue" FontWeight="Bold" />
+            <ComboBox SelectedIndex="1">
+                <ComboBoxItem Content="Français"/>
+                <ComboBoxItem Content="English"/>
+            </ComboBox>
+            
+            <TextBlock Text="Format du fichier log" FontWeight="Bold" />
+            <ComboBox SelectedIndex="0">
+                <ComboBoxItem Content="JSON"/>
+                <ComboBoxItem Content="XML"/>
+            </ComboBox>
+            
+            <TextBlock Text="Taille du fichier" FontWeight="Bold" />
+            <TextBox Text="10000" />
+        </StackPanel>
+
+        <!-- Second Line -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <TextBlock Text="Logiciel métier" FontWeight="Bold" />
+            <TextBox Text="notepad" />
+
+            <TextBlock Text="Répertoir du fichier log" FontWeight="Bold" />
+            <TextBox Text="Chemin/Par/Défaut" />
+
+            <TextBlock Text="Répertoir du fichioer état" FontWeight="Bold" />
+            <TextBox Text="Chemin/Par/Défaut" />
+        </StackPanel>
+
+        <!-- Third Line -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <TextBlock Text="Extension à prioriser" FontWeight="Bold" />
+            <!-- Implement a custom control or logic for multiple selections -->
+
+            <TextBlock Text="Extension à chiffrer" FontWeight="Bold" />
+            <!-- Implement a custom control or logic for multiple selections -->
+        </StackPanel>
+
+        <!-- Multiple choice selections -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <!-- Insert multi-select controls here -->
+        </StackPanel>
+
+        <!-- Buttons -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Réinitialisé" />
+            <Button Content="Appliquer les changements" />
+        </StackPanel>
     </StackPanel>
 </UserControl>
