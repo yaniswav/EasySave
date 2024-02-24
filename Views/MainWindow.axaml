@@ -3,9 +3,29 @@
         x:Class="EasySave.Views.MainWindow"
         Title="EasySave"
         Width="1280" Height="720"
-        CanResize="false">
+        Background="#F3F2FF"
+        CanResize="False">
+    
+    <Window.Styles>
+        <Style Selector="Button.MainButton">
+            <Setter Property="Background" Value="#B4BAFF" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+
+        <!-- Ne fonctionne pas encore -->
+        <Style Selector="Button.MainButton:pointerover">
+            <Setter Property="Background" Value="#857DFF" />
+        </Style>
+        <Style Selector="Button.MainButton:pressed">
+            <Setter Property="Background" Value="#857DFF" />
+        </Style>
+    </Window.Styles>
+    
     <Grid>
-        <!-- Grid pour centrer les boutons et ajouter de l'espace -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -18,10 +38,9 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="BackupButton" Content="SAUVEGARDE" Grid.Column="1" Width="600" Height="60" Margin="10" Click="BackupButton_Click"/>
-            <Button x:Name="SettingsButton" Content="PARAMÈTRES" Grid.Column="2" Width="600" Height="60" Margin="10" Click="SettingsButton_Click"/>
+            <Button Classes="MainButton" x:Name="BackupButton" Content="SAUVEGARDE" Grid.Column="1" Width="595" Height="70" Margin="15, 30" Click="BackupButton_Click"/>
+            <Button Classes="MainButton" x:Name="SettingsButton" Content="PARAMÈTRES" Grid.Column="2" Width="595" Height="70" Margin="15, 30" Click="SettingsButton_Click" />
         </Grid>
-        <!-- Zone de contenu principal -->
         <ContentControl Grid.Row="1" x:Name="MainContent" />
     </Grid>
 </Window>
