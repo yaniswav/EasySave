@@ -2,15 +2,26 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="EasySave.Views.MainWindow"
         Title="EasySave"
-        Width="1280" Height="720">
-    <DockPanel>
-        <!-- Barre latérale pour la navigation -->
-        <StackPanel DockPanel.Dock="Left" Width="200" Background="#333">
-            <Button x:Name="BackupButton" Content="SAUVEGARDE" Click="BackupButton_Click"/>
-            <Button x:Name="SettingsButton" Content="PARAMÈTRES" Click="SettingsButton_Click"/>
-        </StackPanel>
-
+        Width="1280" Height="720"
+        CanResize="false">
+    <Grid>
+        <!-- Grid pour centrer les boutons et ajouter de l'espace -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="BackupButton" Content="SAUVEGARDE" Grid.Column="1" Width="600" Height="60" Margin="10" Click="BackupButton_Click"/>
+            <Button x:Name="SettingsButton" Content="PARAMÈTRES" Grid.Column="2" Width="600" Height="60" Margin="10" Click="SettingsButton_Click"/>
+        </Grid>
         <!-- Zone de contenu principal -->
-        <ContentControl x:Name="MainContent" />
-    </DockPanel>
+        <ContentControl Grid.Row="1" x:Name="MainContent" />
+    </Grid>
 </Window>
