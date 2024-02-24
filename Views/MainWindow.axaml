@@ -3,7 +3,7 @@
         x:Class="EasySave.Views.MainWindow"
         Title="EasySave"
         Width="1280" Height="720"
-        Background="#F3F2FF"
+        Background="#e3e0ff"
         CanResize="False">
     
     <Window.Styles>
@@ -39,7 +39,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Classes="MainButton" x:Name="BackupButton" Content="SAUVEGARDE" Grid.Column="1" Width="595" Height="70" Margin="15, 30" Click="BackupButton_Click"/>
-            <Button Classes="MainButton" x:Name="SettingsButton" Content="PARAMÈTRES" Grid.Column="2" Width="595" Height="70" Margin="15, 30" Click="SettingsButton_Click" />
+            <Button Classes="MainButton" x:Name="SettingsButton" Content="PARAMÈTRES" Grid.Column="2" Width="595" Height="70" Margin="15, 30" Click="SettingsButton_Click"/>
         </Grid>
         <ContentControl Grid.Row="1" x:Name="MainContent" />
     </Grid>

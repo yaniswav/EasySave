@@ -37,7 +37,5 @@ namespace EasySave.Views
             SettingsButton.Background = activeButton == "Settings" ? activeColor : inactiveColor;
         }
         
-        
-
     }
 }

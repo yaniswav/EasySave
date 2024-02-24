@@ -1,15 +1,50 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="EasySave.Views.BackupView">
-    <StackPanel Orientation="Horizontal">
-        <Button Content="Créer"/>
-        <Button Content="Modifier"/>
-        <Button Content="Supprimer"/>
-        <Button Content="Exécuter"/>
-        <Button Content="Pause"/>
-        <Button Content="Reprendre"/>
-        <Button Content="Stop"/>
-        <DataGrid>
+    <UserControl.Styles>
+        <Style Selector="Button">
+            <Setter Property="Background" Value="#857DFF" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Width" Value="120" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="ComboBox">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+    </UserControl.Styles>
+    
+    <StackPanel Orientation="Vertical" Background="#dad7fc" Margin="30, 0, 30, 30" >
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15, 30" Spacing="10">
+            <Button Content="Créer"/>
+            <Button Content="Modifier"/>
+            <Button Content="Supprimer"/>
+            <Button Content="Exécuter"/>
+            <StackPanel Width="15"/> 
+            <Button Content="Pause"/>
+            <Button Content="Reprendre"/>
+            <Button Content="Stop"/>
+        </StackPanel>
+        
+        <Grid Margin="15, 10" HorizontalAlignment="Stretch" VerticalAlignment="Top" RowDefinitions="Auto" ColumnDefinitions="2*, Auto, 2*, Auto, 2*, 2*">
+            <TextBox Grid.Column="0" Margin="5" Watermark="Nom de la sauvegarde"/>
+            <TextBox Grid.Column="2" Margin="5" Watermark="Répertoire source"/>
+            <Button Grid.Column="3" Margin="5" Width="40" Height="40" Content="..."/>
+            <TextBox Grid.Column="4" Margin="5" Watermark="Répertoire de destination"/>
+            <Button Grid.Column="5" Margin="5" Width="40" Height="40" Content="..."/>
+            <ComboBox Grid.Column="6" Margin="5" PlaceholderText="Type">
+                <ComboBoxItem Content="Complète"/>
+                <ComboBoxItem Content="Différentielle"/>
+            </ComboBox>
+        </Grid>
+        
+        <DataGrid Margin="15, 10, 15, 0" VerticalAlignment="Top">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Header="Sélectionner"/>
                 <DataGridTextColumn Header="Nom"/>
