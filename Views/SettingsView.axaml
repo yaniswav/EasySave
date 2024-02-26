@@ -3,13 +3,11 @@
              x:Class="EasySave.Views.SettingsView">
     
     <UserControl.Styles>
-        <Style Selector="TextBlock">
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Foreground" Value="White" />
+        <Style Selector="ComboBox /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
         <Style Selector="ComboBox, TextBox">
-            <Setter Property="Width" Value="200" />
+            <Setter Property="Width" Value="250" />
             <Setter Property="Foreground" Value="Black" />
         </Style>
         <Style Selector="Button">
@@ -17,98 +15,103 @@
             <Setter Property="Foreground" Value="White" />
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
+        <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#6552d1"/>
+            <Setter Property="Foreground" Value="White" />
+        </Style>
     </UserControl.Styles>
 
     <StackPanel Orientation="Vertical" Background="#dad7fc" Margin="25">
         
         <!-- Première ligne -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Spacing="20">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="40" Spacing="100">
             
             <!-- Langue -->
-            <StackPanel Orientation="Vertical">
-                <StackPanel Orientation="Horizontal" Background="#857DFF" Margin="10">
-                <TextBlock Text="Langue" FontWeight="Bold"/>
-            </StackPanel>
-            <ComboBox SelectedIndex="1">
-                <ComboBoxItem>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/french_flag.png" Width="20" Height="20"/>
-                        <TextBlock Text="Français" Margin="5,0,0,0" Foreground="Black"/>
-                    </StackPanel>
-                </ComboBoxItem>
-                <ComboBoxItem>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/uk_flag.png" Width="20" Height="20"/>
-                        <TextBlock Text="English" Margin="5,0,0,0" Foreground="Black"/>
-                    </StackPanel>
-                </ComboBoxItem>
-            </ComboBox>
+            <StackPanel Orientation="Vertical" Width="250"> 
+                <StackPanel Background="#857DFF" Margin="0,0,0,10">
+                    <TextBlock Text="Langue" FontWeight="Bold" Foreground="White" FontSize="20" TextAlignment="Center" />
+                </StackPanel>
+                <ComboBox SelectedIndex="1">
+                    <ComboBoxItem>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Image Source="/Assets/french_flag.png" Width="20" Height="20"/>
+                            <TextBlock Text="Français" Margin="5,0,0,0" Foreground="Black" FontSize="16"/>
+                        </StackPanel>
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Image Source="/Assets/uk_flag.png" Width="20" Height="20"/>
+                            <TextBlock Text="English" Margin="5,0,0,0" Foreground="Black" FontSize="16"/>
+                        </StackPanel>
+                    </ComboBoxItem>
+                </ComboBox>
             </StackPanel>
             
             <!-- Format du fichier log -->
-            <StackPanel Orientation="Vertical">
-                <StackPanel Background="#857DFF" Margin="10">
-                    <TextBlock Text="Format du fichier log" FontWeight="Bold"/>
+            <StackPanel Orientation="Vertical" Width="250">
+                <StackPanel Background="#857DFF" Margin="0,0,0,10">
+                    <TextBlock Text="Format du fichier log" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
                 </StackPanel>
-            <ComboBox SelectedIndex="0">
-                <ComboBoxItem Content="JSON"/>
-                <ComboBoxItem Content="XML"/>
-            </ComboBox>
+                <ComboBox SelectedIndex="0">
+                    <ComboBoxItem Content="JSON" />
+                    <ComboBoxItem Content="XML" />
+                </ComboBox>
             </StackPanel>
-            
+
             <!-- Taille max du fichier -->
-            <StackPanel Orientation="Vertical">
-                <StackPanel Background="#857DFF" Margin="10">
-                    <TextBlock Text="Taille max du fichier" FontWeight="Bold"/>
+            <StackPanel Orientation="Vertical" Width="250">
+                <StackPanel Background="#857DFF" Margin="0,0,0,10">
+                    <TextBlock Text="Taille max du fichier" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
                 </StackPanel>
-            <TextBox Text="10000" />
-        </StackPanel>
+                <TextBox Text="10000" />
+            </StackPanel>
         </StackPanel>
         
 
         <!-- Deuxième ligne -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Spacing="10">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="40" Spacing="100">
             
             <!-- Logiciel métier -->
-            <StackPanel Orientation="Vertical">
-            <StackPanel Background="#857DFF" Margin="10">
-                <TextBlock Text="Logiciel métier" FontWeight="Bold"/>
-            </StackPanel>
-            <TextBox Text="notepad" />
+            <StackPanel Orientation="Vertical" Width="250">
+                <StackPanel Background="#857DFF" Margin="0,0,0,10">
+                    <TextBlock Text="Logiciel métier" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
+                </StackPanel>
+                <TextBox Text="notepad" />
             </StackPanel>
 
             <!-- Répertoire du fichier log -->
-            <StackPanel Orientation="Vertical">
-            <StackPanel Background="#857DFF" Margin="10">
-                <TextBlock Text="Répertoire du fichier log" FontWeight="Bold"/>
+            <StackPanel Orientation="Vertical" Width="250">
+                <StackPanel Background="#857DFF" Margin="0,0,0,10">
+                    <TextBlock Text="Répertoire du fichier log" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
+                </StackPanel>
+                <TextBox Text="Chemin/Par/Défaut" />
             </StackPanel>
-            <TextBox Text="Chemin/Par/Défaut" />
-            </StackPanel>
-            
+    
             <!-- Répertoire du fichier état -->
-            <StackPanel Orientation="Vertical">
-            <StackPanel Background="#857DFF" Margin="10">
-                <TextBlock Text="Répertoire du fichier état" FontWeight="Bold"/>
+            <StackPanel Orientation="Vertical" Width="250">
+                <StackPanel Background="#857DFF" Margin="0,0,0,10">
+                    <TextBlock Text="Répertoire du fichier état" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
+                </StackPanel>
+                <TextBox Text="Chemin/Par/Défaut" />
             </StackPanel>
-            <TextBox Text="Chemin/Par/Défaut" />
         </StackPanel>
-        </StackPanel>
+
         
             
 
-        <!-- Troisième ligne pour choix multiples -->
+        <!-- Troisième ligne -->
         
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10">
-            <TextBlock Text="Extension à prioriser" FontSize="20" Background="#857DFF" TextAlignment="Center"/>
-            <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+            <TextBlock Text="Extension à prioriser" FontWeight="Bold" Foreground="White" FontSize="20" Background="#857DFF" TextAlignment="Center"/>
+            <StackPanel Orientation="Horizontal" Margin="10">
                 <CheckBox Content=".exe" Margin="5"/>
                 <CheckBox Content=".docx" Margin="5"/>
                 <CheckBox Content=".pdf" Margin="5"/>
                 <CheckBox Content=".txt" Margin="5"/>
             </StackPanel>
 
-            <TextBlock Text="Extension à chiffrer" FontSize="20" Background="#857DFF" TextAlignment="Center"/>
-            <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Extension à chiffrer" FontWeight="Bold" Foreground="White" FontSize="20" Background="#857DFF" TextAlignment="Center"/>
+            <StackPanel Orientation="Horizontal" Margin="10">
                 <CheckBox Content=".exe" Margin="5"/>
                 <CheckBox Content=".docx" Margin="5"/>
                 <CheckBox Content=".pdf" Margin="5"/>
@@ -118,8 +121,8 @@
 
         <!-- Boutons -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Réinitialiser" FontSize="20" Margin="10"/>
-            <Button Content="Appliquer les changements" FontSize="20" Margin="10" />
+            <Button Content="Réinitialiser" Cursor="Hand" FontSize="20" Margin="10"/>
+            <Button Content="Appliquer les changements" Cursor="Hand" FontSize="20" Margin="10" />
         </StackPanel>
     </StackPanel>
 </UserControl>
