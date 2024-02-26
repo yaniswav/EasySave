@@ -1,64 +1,55 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.CompilerServices; // Nécessaire pour [CallerMemberName]
+using System.Runtime.CompilerServices;
 
 namespace EasySave.ViewModels
 {
-    // Correction du nom de classe selon la convention de nommage suggérée
-    public class BackupVm : INotifyPropertyChanged
+    public class BackupVM : INotifyPropertyChanged
     {
-        // Initialisation des champs comme nullable pour gérer la non-assignation initiale
-        private string? _name;
-        private string? _sourceDirectory;
-        private string? _targetDirectory;
-        private string? _backupType;
+        private readonly ConfigModel _configModel;
+        private List<BackupJobConfig> _backupJobs;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public string? Name
+        public List<BackupJobConfig> BackupJobs
         {
-            get => _name;
-            set
+            get => _backupJobs;
+            private set
             {
-                _name = value;
+                _backupJobs = value;
                 OnPropertyChanged();
             }
         }
 
-        public string? SourceDirectory
+        public BackupVM(ConfigModel configModel)
         {
-            get => _sourceDirectory;
-            set
-            {
-                _sourceDirectory = value;
-                OnPropertyChanged();
-            }
+            _configModel = configModel ?? throw new ArgumentNullException(nameof(configModel));
+            _backupJobs = new List<BackupJobConfig>();
         }
 
-        public string? TargetDirectory
-        {
-            get => _targetDirectory;
-            set
-            {
-                _targetDirectory = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string? BackupType
-        {
-            get => _backupType;
-            set
-            {
-                _backupType = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // Utilisation de [CallerMemberName] pour éviter de devoir spécifier le nom de la propriété manuellement
-        // Cela rend le code moins sujet aux erreurs et plus facile à maintenir
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        // Method to notify the UI (or console) of property changes
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        // Method to load and display backup jobs
+        public void ListBackups()
+        {
+            Console.WriteLine();
+            BackupJobs = _configModel.LoadBackupJobs(); // Load the backup jobs
+            if (BackupJobs.Count == 0)
+            {
+                Console.WriteLine("No backup jobs configured.");
+            }
+            else
+            {
+                foreach (var job in BackupJobs)
+                {
+                    Console.WriteLine($"Name: {job.Name}, Source: {job.SourceDir}, Destination: {job.DestinationDir}, Type: {job.Type}");
+                }
+            }
         }
     }
 }

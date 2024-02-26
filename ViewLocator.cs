@@ -12,7 +12,7 @@ public class ViewLocator : IDataTemplate
         if (data is null)
             return null;
 
-        var name = data.GetType().FullName!.Replace("ViewModel", "View", StringComparison.Ordinal);
+        var name = data.GetType().FullName!.Replace("ViewModels", "Views", StringComparison.Ordinal);
         var type = Type.GetType(name);
 
         if (type != null)
@@ -27,6 +27,7 @@ public class ViewLocator : IDataTemplate
 
     public bool Match(object? data)
     {
-        return data is BackupVm;
+        return data is BackupVM;
     }
+    
 }
