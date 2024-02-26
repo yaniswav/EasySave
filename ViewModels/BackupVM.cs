@@ -1,55 +1,65 @@
-using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using EasySave; // Assurez-vous que le chemin d'accès est correct
+using System;
 
 namespace EasySave.ViewModels
 {
     public class BackupVM : INotifyPropertyChanged
     {
-        private readonly ConfigModel _configModel;
-        private List<BackupJobConfig> _backupJobs;
+        private ConfigModel _configModel;
+        private ObservableCollection<BackupJobConfig> _backupJobs;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public List<BackupJobConfig> BackupJobs
+        public BackupVM()
+        {
+            _configModel = new ConfigModel();
+            BackupJobs = new ObservableCollection<BackupJobConfig>(_configModel.LoadBackupJobs());
+        }
+
+        public ObservableCollection<BackupJobConfig> BackupJobs
         {
             get => _backupJobs;
-            private set
+            set
             {
                 _backupJobs = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(BackupJobs));
             }
         }
 
-        public BackupVM(ConfigModel configModel)
+        // Command pour rafraîchir la liste des travaux de sauvegarde
+        public void RefreshBackupJobs()
         {
-            _configModel = configModel ?? throw new ArgumentNullException(nameof(configModel));
-            _backupJobs = new List<BackupJobConfig>();
+            BackupJobs.Clear();
+            var jobs = _configModel.LoadBackupJobs();
+            foreach (var job in jobs)
+            {
+                BackupJobs.Add(job);
+            }
         }
 
-        // Method to notify the UI (or console) of property changes
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        // Method to load and display backup jobs
+        // Affiche une liste des travaux de sauvegarde configurés
         public void ListBackups()
         {
             Console.WriteLine();
-            BackupJobs = _configModel.LoadBackupJobs(); // Load the backup jobs
-            if (BackupJobs.Count == 0)
+            var backupJobs = _configModel.LoadBackupJobs();
+            if (backupJobs.Count == 0)
             {
                 Console.WriteLine("No backup jobs configured.");
             }
             else
             {
-                foreach (var job in BackupJobs)
+                foreach (var job in backupJobs)
                 {
                     Console.WriteLine($"Name: {job.Name}, Source: {job.SourceDir}, Destination: {job.DestinationDir}, Type: {job.Type}");
                 }
             }
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
