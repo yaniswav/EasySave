@@ -50,13 +50,6 @@ namespace EasySave
         public bool TryCreateBackup(string name, string sourceDir, string destinationDir, string type,
             out string errorMessage)
         {
-            // Validate unique job name, valid paths, and backup type
-            if (_configModel.BackupJobExists(name))
-            {
-                errorMessage = "JobAlreadyExists";
-                return false;
-            }
-
             if (!IsValidPath(sourceDir) || !IsValidPath(destinationDir))
             {
                 errorMessage = "InvalidPath";

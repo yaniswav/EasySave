@@ -7,7 +7,7 @@ public partial class ConfigModel
 {
     private static ConfigModel _instance;
 
-    public ConfigModel()
+    private ConfigModel()
     {
         // Constructor is private to prevent instantiation
     }
@@ -40,10 +40,15 @@ public partial class ConfigModel
             ? maxFileSize
             : 0;
 
-        // Chargement des paramètres pour les extensions de fichiers
-        ExtToEncrypt = ConfigurationManager.AppSettings["ExtToEncrypt"] ?? string.Empty;
+        // Chargement et conversion de ExtToEncrypt en liste
+        var extToEncryptValue = ConfigurationManager.AppSettings["ExtToEncrypt"] ?? string.Empty;
+        ExtToEncrypt = extToEncryptValue.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+        // Chargement et conversion de ExtPrio en liste
+        var extPrioValue = ConfigurationManager.AppSettings["ExtPrio"] ?? string.Empty;
+        ExtPrio = extPrioValue.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
         CryptoSoftPath = ConfigurationManager.AppSettings["CryptoSoftPath"] ?? string.Empty;
-        ExtPrio = ConfigurationManager.AppSettings["ExtPrio"] ?? string.Empty;
 
         // Chargement des paramètres pour le logiciel d'entreprise
         BusinessSoftware = ConfigurationManager.AppSettings["BusinessSoftwareKey"] ?? string.Empty;

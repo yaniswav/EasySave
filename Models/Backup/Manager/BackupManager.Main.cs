@@ -6,7 +6,6 @@ namespace EasySave
 {
     public partial class BackupManager
     {
-        private ConfigModel _configModel = new ConfigModel();
         private List<BackupJob> _backupJobs = new List<BackupJob>();
 
         public BackupManager()
@@ -16,7 +15,7 @@ namespace EasySave
 
         public async Task LoadBackupJobs()
         {
-            var jobConfigs = await Task.Run(() => _configModel.LoadBackupJobs());
+            var jobConfigs = await Task.Run(() => ConfigModel.Instance.LoadBackupJobs());
             foreach (var jobConfig in jobConfigs)
             {
                 await AddBackupJobBasedOnType(jobConfig);
