@@ -14,7 +14,6 @@ namespace EasySave
             {
                 if (JobExists(jobName))
                 {
-
                     if (!_backupThreads.ContainsKey(jobName) || !_backupThreads[jobName].IsAlive)
                     {
                         StartNewBackupJob(jobName);
@@ -68,7 +67,6 @@ namespace EasySave
                     jobToExecute.Start(cancellationTokenSource.Token, pauseEvent);
                     Console.WriteLine(
                         $"[{DateTime.Now}] Backup job '{jobName}' completed on thread {Thread.CurrentThread.ManagedThreadId}.");
-                    
                 }
                 catch (Exception ex)
                 {
@@ -78,7 +76,6 @@ namespace EasySave
                 {
                     ThreadCleanup(jobName);
                     ListActiveThreads();
-
                 }
             });
         }
