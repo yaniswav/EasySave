@@ -4,6 +4,8 @@ using System.Resources;
 using System.Reflection;
 using EasySave.ViewModels;
 using System.Collections.Generic;
+using Avalonia.VisualTree;
+
 
 
 namespace EasySave.Views;
@@ -46,23 +48,27 @@ public partial class BackupView : UserControl
 
     private async void OnSelectSourceDirectoryClick(object sender, RoutedEventArgs e)
     {
-        var dialog = new OpenFolderDialog();
-        var result = await dialog.ShowAsync(new Window());
-        if (!string.IsNullOrEmpty(result))
+        var selectionWindow = new FileTypeView();
+        var mainWindow = this.VisualRoot as Window;
+        await selectionWindow.ShowDialog(mainWindow); 
+        if (!string.IsNullOrEmpty(selectionWindow.SelectedPath))
         {
-            SourceDirectoryTextBox.Text = result;
+            SourceDirectoryTextBox.Text = selectionWindow.SelectedPath;
         }
     }
 
     private async void OnSelectTargetDirectoryClick(object sender, RoutedEventArgs e)
     {
-        var dialog = new OpenFolderDialog();
-        var result = await dialog.ShowAsync(new Window());
-        if (!string.IsNullOrEmpty(result))
+        var selectionWindow = new FileTypeView();
+        var mainWindow = this.VisualRoot as Window;
+        await selectionWindow.ShowDialog(mainWindow);
+        if (!string.IsNullOrEmpty(selectionWindow.SelectedPath))
         {
-            TargetDirectoryTextBox.Text = result;
+            TargetDirectoryTextBox.Text = selectionWindow.SelectedPath;
         }
     }
+
+
     
     private void OnCreateButtonClick(object sender, RoutedEventArgs e)
     {

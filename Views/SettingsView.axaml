@@ -10,8 +10,18 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
             <TextBlock Text="Langue" FontWeight="Bold" />
             <ComboBox SelectedIndex="1">
-                <ComboBoxItem Content="Français"/>
-                <ComboBoxItem Content="English"/>
+                <ComboBoxItem>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/french_flag.png" Width="20" Height="20"/>
+                        <TextBlock Text="Français" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/uk_flag.png" Width="20" Height="20"/>
+                        <TextBlock Text="English" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </ComboBoxItem>
             </ComboBox>
             
             <TextBlock Text="Format du fichier log" FontWeight="Bold" />
@@ -52,7 +62,7 @@
 
         <!-- Buttons -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Réinitialisé" />
+            <Button Content="Réinitialiser" />
             <Button Content="Appliquer les changements" />
         </StackPanel>
     </StackPanel>
