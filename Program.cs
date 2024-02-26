@@ -23,13 +23,37 @@ namespace EasySave
             Utilities messageDisplay = new Utilities(resourceManager);
 
             //Create ViewModel instance to provide access to business logic and interaction with the model
-            ViewModel viewModel = new ViewModel(configModel, messageDisplay);
+            BackupVM backupVm = new BackupVM(configModel, messageDisplay);
 
             // Create View instance, responsible for user interface logic and user interactions
-            View view = new View(configModel, viewModel, messageDisplay);
+            View view = new View(configModel, backupVm, messageDisplay);
 
             // Menu display
             view.DisplayMenu();
+        }
+    }
+
+    public class View
+    {
+        public View(ConfigModel configModel, BackupVM backupVm, Utilities messageDisplay)
+        {
+            // Example of setting class members
+            this.ConfigModel = configModel;
+            this.BackupVm = backupVm;
+            this.MessageDisplay = messageDisplay;
+
+            // Initialize your view components here
+        }
+
+        public Utilities MessageDisplay { get; set; }
+
+        public BackupVM BackupVm { get; set; }
+
+        public ConfigModel ConfigModel { get; set; }
+
+        public void DisplayMenu()
+        {
+            throw new NotImplementedException();
         }
     }
 }
