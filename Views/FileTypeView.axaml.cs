@@ -13,8 +13,11 @@ namespace EasySave
         public FileTypeView()
         {
             InitializeComponent();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
+        
 
+        
         private async void SelectFolderButton_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             var dialog = new OpenFolderDialog();

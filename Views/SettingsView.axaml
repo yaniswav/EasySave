@@ -21,7 +21,7 @@
         </Style>
     </UserControl.Styles>
 
-    <StackPanel Orientation="Vertical" Background="#dad7fc" Margin="25">
+    <StackPanel Orientation="Vertical" Background="#dad7fc" Margin="25, 0, 25, 25" >
         
         <!-- Première ligne -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="40" Spacing="100">

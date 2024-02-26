@@ -11,6 +11,7 @@ namespace EasySave.Views
         public MainWindow()
         {
             InitializeComponent();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
             UpdateButtonColor();
         }
 

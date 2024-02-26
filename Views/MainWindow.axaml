@@ -4,7 +4,9 @@
         Title="EasySave"
         Width="1280" Height="720"
         Background="#e3e0ff"
-        CanResize="False">
+        CanResize="False"
+        Icon="/Assets/logo-easy-save.ico">
+        
     
     <Window.Styles>
         <Style Selector="Button.MainButton">
