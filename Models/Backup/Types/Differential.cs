@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Configuration;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace EasySave;
 
@@ -77,7 +78,7 @@ public class DifferentialBackup : BackupJob
         if (!Directory.Exists(destinationDir))
             Directory.CreateDirectory(destinationDir);
 
-        foreach (var sourceFile in Directory.GetFiles(sourceDir))
+        Parallel.ForEach(Directory.GetFiles(sourceDir), sourceFile =>
         {
             var destFile = Path.Combine(destinationDir, Path.GetFileName(sourceFile));
             if (ShouldCopyFile(sourceFile, destFile))
@@ -88,15 +89,15 @@ public class DifferentialBackup : BackupJob
             {
                 Console.WriteLine($"Unchanged: {sourceFile}");
             }
-        }
+        });
 
         // Dans la méthode PerformDifferentialBackup
-        foreach (var directory in Directory.GetDirectories(sourceDir))
+        Parallel.ForEach(Directory.GetDirectories(sourceDir), directory =>
         {
             var destDir = Path.Combine(destinationDir, Path.GetFileName(directory));
             PerformDifferentialBackup(directory, destDir, cancellationToken,
                 pauseEvent); // Utiliser directement les paramètres existants
-        }
+        });
     }
 
     // Determines if a file should be copied based on modification date and size

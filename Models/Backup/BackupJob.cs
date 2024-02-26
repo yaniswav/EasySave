@@ -23,6 +23,16 @@ public class BackupJob
     public int NbFilesLeftToDo = 0;
     public double Progression = 0;
 
+    private static readonly LoggingModel logger = CreateLogger();
+
+    // Constructeur statique pour initialiser le logger basé sur la configuration
+    private static LoggingModel CreateLogger()
+    {
+        string loggerType = ConfigModel.OutputFormat;
+        Console.WriteLine($"loggerType : {loggerType}");
+        return loggerType == "XML" ? (LoggingModel)new XmlLogger() : new JsonLogger();
+    }
+
     // Constructor to initialize a new BackupJob with basic details
     public BackupJob(string name, string sourceDir, string destinationDir, string type)
     {
@@ -63,6 +73,9 @@ public class BackupJob
     // Copy a file from source to destination with a buffer to optimize performance
     protected void CopyFileWithBuffer(string sourceFile, string destinationFile)
     {
+        
+        Console.WriteLine($"Logger : {logger}");
+
         long fileSize = new FileInfo(sourceFile).Length;
         int bufferSize = DetermineBufferSize(fileSize);
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
