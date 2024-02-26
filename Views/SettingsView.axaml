@@ -24,7 +24,7 @@
     <StackPanel Orientation="Vertical" Background="#dad7fc" Margin="25, 0, 25, 25" >
         
         <!-- Première ligne -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="40" Spacing="100">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="50" Spacing="100">
             
             <!-- Langue -->
             <StackPanel Orientation="Vertical" Width="250"> 
@@ -33,13 +33,13 @@
                 </StackPanel>
                 <ComboBox SelectedIndex="1">
                     <ComboBoxItem>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
                             <Image Source="/Assets/french_flag.png" Width="20" Height="20"/>
                             <TextBlock Text="Français" Margin="5,0,0,0" Foreground="Black" FontSize="16"/>
                         </StackPanel>
                     </ComboBoxItem>
                     <ComboBoxItem>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
                             <Image Source="/Assets/uk_flag.png" Width="20" Height="20"/>
                             <TextBlock Text="English" Margin="5,0,0,0" Foreground="Black" FontSize="16"/>
                         </StackPanel>
@@ -52,9 +52,13 @@
                 <StackPanel Background="#857DFF" Margin="0,0,0,10">
                     <TextBlock Text="Format du fichier log" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
                 </StackPanel>
-                <ComboBox SelectedIndex="0">
+                <ComboBox Height="20" SelectedIndex="0">
+                    <StackPanel Orientation="Horizontal">
                     <ComboBoxItem Content="JSON" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
                     <ComboBoxItem Content="XML" />
+                    </StackPanel>
                 </ComboBox>
             </StackPanel>
 
@@ -69,7 +73,7 @@
         
 
         <!-- Deuxième ligne -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="40" Spacing="100">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="50" Spacing="100">
             
             <!-- Logiciel métier -->
             <StackPanel Orientation="Vertical" Width="250">
@@ -101,26 +105,30 @@
 
         <!-- Troisième ligne -->
         
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-            <TextBlock Text="Extension à prioriser" FontWeight="Bold" Foreground="White" FontSize="20" Background="#857DFF" TextAlignment="Center"/>
-            <StackPanel Orientation="Horizontal" Margin="10">
-                <CheckBox Content=".exe" Margin="5"/>
-                <CheckBox Content=".docx" Margin="5"/>
-                <CheckBox Content=".pdf" Margin="5"/>
-                <CheckBox Content=".txt" Margin="5"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="25" Spacing="75">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                <TextBlock Text="Extension à prioriser" FontWeight="Bold" Foreground="White" FontSize="20" Background="#857DFF" TextAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <CheckBox Content=".exe" Cursor="Hand" Margin="5"/>
+                    <CheckBox Content=".docx" Cursor="Hand" Margin="5"/>
+                    <CheckBox Content=".pdf" Cursor="Hand" Margin="5"/>
+                    <CheckBox Content=".txt" Cursor="Hand" Margin="5"/>
+                </StackPanel>
             </StackPanel>
 
-            <TextBlock Text="Extension à chiffrer" FontWeight="Bold" Foreground="White" FontSize="20" Background="#857DFF" TextAlignment="Center"/>
-            <StackPanel Orientation="Horizontal" Margin="10">
-                <CheckBox Content=".exe" Margin="5"/>
-                <CheckBox Content=".docx" Margin="5"/>
-                <CheckBox Content=".pdf" Margin="5"/>
-                <CheckBox Content=".txt" Margin="5"/>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                <TextBlock Text="Extension à chiffrer" FontWeight="Bold" Foreground="White" FontSize="20" Background="#857DFF" TextAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <CheckBox Content=".exe" Cursor="Hand" Margin="5"/>
+                    <CheckBox Content=".docx" Cursor="Hand" Margin="5"/>
+                    <CheckBox Content=".pdf" Cursor="Hand" Margin="5"/>
+                    <CheckBox Content=".txt" Cursor="Hand" Margin="5"/>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
 
         <!-- Boutons -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Spacing="20">
             <Button Content="Réinitialiser" Cursor="Hand" FontSize="20" Margin="10"/>
             <Button Content="Appliquer les changements" Cursor="Hand" FontSize="20" Margin="10" />
         </StackPanel>
