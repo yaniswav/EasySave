@@ -14,8 +14,8 @@ namespace EasySave
         public static void Main(string[] args)
         {
             // Initialize the configuration model to manage application settings
-            ConfigModel configModel = new ConfigModel();
-
+            var configModel = ConfigModel.Instance;
+            
             // Create ResourceManager for message
             var resourceManager = new ResourceManager("EasySave.Resources.Languages.Messages", typeof(Program).Assembly);
 

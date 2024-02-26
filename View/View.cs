@@ -18,9 +18,7 @@ public class View
     // Constructor initializes the view with necessary models and utilities
     public View(ConfigModel configModel, ViewModel viewModel, Utilities messageDisplay)
     {
-        _configModel = configModel;
         _viewModel = viewModel;
-        _configModel.LoadCurrentLocale(); // Load the current locale based on application settings
         // Initialize ResourceManager for accessing localized strings
         var resourceManager = new ResourceManager("EasySave.Resources.Languages.Messages", typeof(Program).Assembly);
         _messageDisplay = new Utilities(resourceManager); // Utilities for displaying messages to the user
@@ -85,19 +83,23 @@ public class View
         }
     }
 
-    // Allows the user to change the application's language/locale
     private void ChangeLocale()
     {
         Console.WriteLine();
         Console.WriteLine("Choose your new default language / Choisissez votre nouvelle langue par défaut (en/fr):");
         string newLocale = Console.ReadLine();
         CultureInfo newCulture = newLocale == "fr" ? new CultureInfo("fr-FR") : new CultureInfo("en-US");
-        _configModel.SetLocale(newCulture.Name);
-        CultureInfo.CurrentUICulture = newCulture;
+
+        // Mise à jour de la locale via la propriété CurrentLocale
+        ConfigModel.CurrentLocale = newCulture.Name;
+
+        // Inutile de mettre à jour CultureInfo.CurrentUICulture ici car SetCulture est appelé dans CurrentLocale
+
         _resourceManager = new ResourceManager("EasySave.Resources.Messages", typeof(Program).Assembly);
         _messageDisplay.DisplayMessage("ChangedLanguage");
         Console.WriteLine($"{newCulture.DisplayName}");
     }
+    
 
     // Displays a list of configured backup jobs
     private void ListBackups()
@@ -200,7 +202,6 @@ public class View
                 Console.WriteLine($"Progression de {kvp.Key}: {kvp.Value}%");
                 Thread.Sleep(1000);
             }
-
         }
     }
 }
