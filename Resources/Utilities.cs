@@ -1,23 +1,31 @@
 ﻿using System;
 using System.Globalization;
 using System.Resources;
+using EasySave.ViewModels;
 
 public class Utilities
 {
-    public ResourceManager _resourceManager;
+    public ResourceManager ResourceManager { get; private set; }
 
     public Utilities(ResourceManager resourceManager)
     {
-        _resourceManager = resourceManager;
+        ResourceManager = resourceManager;
     }
     
     public string GetMessage(string resourceKey)
     {
-        return _resourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture);
+        return ResourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture);
     }
 
     public void DisplayMessage(string resourceKey)
     {
-        Console.WriteLine(_resourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture));
+        Console.WriteLine(ResourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture));
+    }
+
+    public void ChangeCulture(string culture)
+    {
+        CultureInfo newCultureInfo = new CultureInfo(culture);
+        CultureInfo.CurrentUICulture = newCultureInfo;
+        CultureInfo.CurrentCulture = newCultureInfo;
     }
 }
