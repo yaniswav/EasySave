@@ -1,129 +1,76 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Configuration;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace EasySave;
-
-// Derived class for performing a differential backup
-public class DifferentialBackup : BackupJob
+﻿namespace EasySave
 {
-    public DifferentialBackup(string name, string sourceDir, string destinationDir)
-        : base(name, sourceDir, destinationDir, "Differential")
+    public class DifferentialBackup : BackupJob
     {
-    }
-
-    // Overrides the Start method to perform a differential backup
-    public override void Start(CancellationToken cancellationToken, ManualResetEvent pauseEvent)
-    {
-        InitializeTrackingProperties();
-        UpdateState("ACTIVE");
-
-        try
+        public DifferentialBackup(string name, string sourceDir, string destinationDir)
+            : base(name, sourceDir, destinationDir, "Differential")
         {
-            PerformDifferentialBackup(SourceDir, DestinationDir, cancellationToken, pauseEvent);
-            UpdateProgress(null);
-            UpdateState("END");
         }
 
-        catch (OperationCanceledException)
+
+        protected override void PerformBackup(string sourceDir, string destinationDir,
+            CancellationToken cancellationToken,
+            ManualResetEvent pauseEvent)
         {
-            Console.WriteLine("Backup cancelled.");
-            UpdateState("CANCELLED");
+            CopyDirectory(sourceDir, destinationDir, cancellationToken, pauseEvent);
         }
 
-        catch (Exception ex)
+        protected override void CopyDirectory(string sourceDir, string destinationDir,
+            CancellationToken cancellationToken, ManualResetEvent pauseEvent)
         {
-            Console.WriteLine($"Error during backup: {ex.Message}");
-            UpdateState("ERROR");
-        }
-    }
-
-
-    // Initializes properties for tracking which files need to be copied
-    private void InitializeTrackingProperties()
-    {
-        var allFiles = Directory.GetFiles(SourceDir, "*", SearchOption.AllDirectories);
-        TotalFilesSize = allFiles.Sum(file => new FileInfo(file).Length);
-
-        TotalFilesToCopy = allFiles.Count(file =>
-        {
-            string destFile = Path.Combine(DestinationDir, file.Substring(SourceDir.Length + 1));
-            return ShouldCopyFile(file, destFile);
-        });
-
-        NbFilesLeftToDo = TotalFilesToCopy;
-    }
-
-    // Updates the progress of the backup process
-    private void UpdateProgress(string fileCopied)
-    {
-        if (NbFilesLeftToDo > 0)
-        {
-            NbFilesLeftToDo--;
-        }
-
-        Progression = TotalFilesToCopy > 0 ? 100.0 * (TotalFilesToCopy - NbFilesLeftToDo) / TotalFilesToCopy : 100;
-        UpdateState("ACTIVE");
-    }
-
-
-    // Performs the differential backup by copying only modified or new files
-    private void PerformDifferentialBackup(string sourceDir, string destinationDir, CancellationToken cancellationToken,
-        ManualResetEvent pauseEvent)
-    {
-        if (!Directory.Exists(destinationDir))
-            Directory.CreateDirectory(destinationDir);
-
-        Parallel.ForEach(Directory.GetFiles(sourceDir), sourceFile =>
-        {
-            var destFile = Path.Combine(destinationDir, Path.GetFileName(sourceFile));
-            if (ShouldCopyFile(sourceFile, destFile))
+            if (!Directory.Exists(destinationDir))
             {
-                CopyFileWithBuffer(sourceFile, destFile);
+                Directory.CreateDirectory(destinationDir);
             }
-            else
+
+            // Filtre les fichiers en fonction de leur priorité et de la taille
+            var sourceFiles = Directory.GetFiles(sourceDir);
+            var priorityFiles = sourceFiles.Where(file => config.ExtPrio.Contains(Path.GetExtension(file).ToLower()))
+                .ToList();
+            var nonPriorityFiles = sourceFiles
+                .Where(file => !config.ExtPrio.Contains(Path.GetExtension(file).ToLower())).ToList();
+
+            // Copie d'abord les fichiers prioritaires
+            foreach (var sourceFile in priorityFiles)
             {
-                Console.WriteLine($"Unchanged: {sourceFile}");
+                cancellationToken.ThrowIfCancellationRequested();
+                pauseEvent.WaitOne();
+
+                var destFile = Path.Combine(destinationDir, Path.GetFileName(sourceFile));
+                if (ShouldCopyFile(sourceFile, destFile))
+                {
+                    CopyFileWithBuffer(sourceFile, destFile);
+                    UpdateProgress(sourceFile);
+                }
             }
-        });
 
-        // Dans la méthode PerformDifferentialBackup
-        Parallel.ForEach(Directory.GetDirectories(sourceDir), directory =>
-        {
-            var destDir = Path.Combine(destinationDir, Path.GetFileName(directory));
-            PerformDifferentialBackup(directory, destDir, cancellationToken,
-                pauseEvent); // Utiliser directement les paramètres existants
-        });
-    }
+            // Copie ensuite les fichiers non prioritaires, en respectant la restriction de taille
+            foreach (var sourceFile in nonPriorityFiles)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                pauseEvent.WaitOne();
 
-    // Determines if a file should be copied based on modification date and size
-    private bool ShouldCopyFile(string sourceFile, string destinationFile)
-    {
-        if (!File.Exists(destinationFile))
-        {
-            Console.WriteLine($"New file: {sourceFile}");
-            return true;
+                long fileSize = new FileInfo(sourceFile).Length;
+                if (fileSize <= config.MaxBackupFileSize * 1024)
+                {
+                    var destFile = Path.Combine(destinationDir, Path.GetFileName(sourceFile));
+                    if (ShouldCopyFile(sourceFile, destFile))
+                    {
+                        CopyFileWithBuffer(sourceFile, destFile);
+                        UpdateProgress(sourceFile);
+                    }
+                }
+            }
+
+            // Récursion pour les sous-dossiers
+            foreach (var dir in Directory.GetDirectories(sourceDir))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                pauseEvent.WaitOne();
+
+                var destDir = Path.Combine(destinationDir, Path.GetFileName(dir));
+                CopyDirectory(dir, destDir, cancellationToken, pauseEvent);
+            }
         }
-
-        var sourceFileInfo = new FileInfo(sourceFile);
-        var destFileInfo = new FileInfo(destinationFile);
-
-        bool isModified = sourceFileInfo.LastWriteTime > destFileInfo.LastWriteTime ||
-                          sourceFileInfo.Length != destFileInfo.Length;
-
-        if (isModified)
-        {
-            Console.WriteLine($"Replacing: {sourceFile}");
-            Console.WriteLine(
-                $"  Source Last Modified: {sourceFileInfo.LastWriteTime}, Size: {sourceFileInfo.Length} bytes");
-            Console.WriteLine(
-                $"  Dest. Last Modified: {destFileInfo.LastWriteTime}, Size: {destFileInfo.Length} bytes");
-        }
-
-        return isModified;
     }
 }

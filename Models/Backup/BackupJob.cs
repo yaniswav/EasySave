@@ -1,155 +1,166 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Configuration;
 using System.Threading;
+using System.Threading.Tasks;
 
-namespace EasySave;
-
-// Class representing a backup job with properties
-
-public class BackupJob
+namespace EasySave
 {
-    public string Name { get; set; }
-    public string SourceDir { get; set; }
-    public string DestinationDir { get; set; }
-    public string Type { get; set; }
-
-    public string State { get; private set; }
-
-    public int TotalFilesToCopy = 0;
-    public long TotalFilesSize = 0;
-    public int NbFilesLeftToDo = 0;
-    public double Progression = 0;
-
-    private static readonly LoggingModel logger = CreateLogger();
-
-    // Constructeur statique pour initialiser le logger basé sur la configuration
-    private static LoggingModel CreateLogger()
+    public abstract class BackupJob
     {
-        string loggerType = ConfigModel.OutputFormat;
-        Console.WriteLine($"loggerType : {loggerType}");
-        return loggerType == "XML" ? (LoggingModel)new XmlLogger() : new JsonLogger();
-    }
+        public string Name { get; }
+        public string SourceDir { get; }
+        public string DestinationDir { get; }
+        public string Type { get; protected set; }
 
-    // Constructor to initialize a new BackupJob with basic details
-    public BackupJob(string name, string sourceDir, string destinationDir, string type)
-    {
-        Name = name;
-        SourceDir = sourceDir;
-        DestinationDir = destinationDir;
-        Type = type;
-    }
+        public string State { get; private set; }
 
-    public List<string> ExtensionsToEncrypt { get; set; }
-    private List<string> FilesToEncrypt;
+        public long TotalFilesSize;
+        public int TotalFilesToCopy;
+        public int NbFilesLeftToDo;
+        public double Progression { get; protected set; }
+        private static LoggingModel logger;
 
-    public BackupJob(string name, string sourceDir, string destinationDir, string type,
-        List<string> extensionsToEncrypt)
-        : this(name, sourceDir, destinationDir, type) // Appel du constructeur existant
-    {
-        ExtensionsToEncrypt = extensionsToEncrypt ?? new List<string>();
-        FilesToEncrypt = new List<string>();
-    }
+        protected ConfigModel config = ConfigModel.Instance;
 
-    protected void PrepareEncryptionList()
-    {
-        FilesToEncrypt = Directory.GetFiles(SourceDir, "*.*", SearchOption.AllDirectories)
-            .Where(file => ExtensionsToEncrypt.Contains(Path.GetExtension(file).ToLower()))
-            .ToList();
-    }
-
-
-    // Starts the backup process
-    public virtual void Start(CancellationToken cancellationToken, ManualResetEvent pauseEvent)
-    {
-        PrepareEncryptionList();
-        Console.WriteLine($"Starting backup: {Name}");
-    }
-
-    protected const int MaxBufferSize = 1024 * 1024; // 1 MB
-
-    // Copy a file from source to destination with a buffer to optimize performance
-    protected void CopyFileWithBuffer(string sourceFile, string destinationFile)
-    {
-        
-        Console.WriteLine($"Logger : {logger}");
-
-        long fileSize = new FileInfo(sourceFile).Length;
-        int bufferSize = DetermineBufferSize(fileSize);
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-
-        try
+        protected BackupJob(string name, string sourceDir, string destinationDir, string type)
         {
-            using (FileStream sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read))
+            Name = name;
+            SourceDir = sourceDir;
+            DestinationDir = destinationDir;
+            Type = type;
+            InitializeLogger();
+        }
+
+        private void InitializeLogger()
+        {
+            // Suppose ConfigModel.OutputFormat retourne "XML" ou "JSON"
+            string outputFormat = config.OutputFormat;
+            logger = outputFormat == "XML" ? new XmlLogger() : new JsonLogger();
+        }
+
+        protected void InitializeTrackingProperties()
+        {
+            var allFiles = Directory.GetFiles(SourceDir, "*", SearchOption.AllDirectories);
+            TotalFilesSize = allFiles.Sum(file => new FileInfo(file).Length);
+            TotalFilesToCopy = allFiles.Length;
+            NbFilesLeftToDo = TotalFilesToCopy;
+        }
+
+
+        public virtual void Start(CancellationToken cancellationToken, ManualResetEvent pauseEvent)
+        {
+            InitializeTrackingProperties();
+
+            try
             {
-                using (FileStream destStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
+                UpdateState("ACTIVE");
+                Console.WriteLine($"Starting {Name} backup: from {SourceDir} to {DestinationDir}");
+                PerformBackup(SourceDir, DestinationDir, cancellationToken, pauseEvent);
+                Console.WriteLine($"{Name} backup completed.");
+                UpdateState("END");
+            }
+            catch (OperationCanceledException)
+            {
+                UpdateState("CANCELLED");
+            }
+            catch (Exception)
+            {
+                UpdateState("ERROR");
+            }
+        }
+
+        protected abstract void PerformBackup(string sourceDir, string destinationDir,
+            CancellationToken cancellationToken, ManualResetEvent pauseEvent);
+
+
+        protected abstract void CopyDirectory(string sourceDir, string destinationDir,
+            CancellationToken cancellationToken,
+            ManualResetEvent pauseEvent);
+
+
+        protected int MaxBufferSize = 1024 * 1024;
+
+        // Copy a file from source to destination with a buffer to optimize performance
+        protected void CopyFileWithBuffer(string sourceFile, string destinationFile)
+        {
+            long fileSize = new FileInfo(sourceFile).Length;
+            int bufferSize = DetermineBufferSize(fileSize);
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
+            try
+            {
+                if (!config.ExtToEncrypt.Contains(Path.GetExtension(sourceFile).ToLower()))
                 {
-                    byte[] buffer = new byte[bufferSize];
-                    int bytesRead;
-                    while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
+                    using (FileStream sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read))
                     {
-                        destStream.Write(buffer, 0, bytesRead);
+                        using (FileStream destStream =
+                               new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
+                        {
+                            byte[] buffer = new byte[bufferSize];
+                            int bytesRead;
+                            while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                destStream.Write(buffer, 0, bytesRead);
+                            }
+                        }
                     }
                 }
+
+                else
+                {
+                    EncryptFile(sourceFile); // Cryptez le fichier source sans le copier
+                }
+
+                stopwatch.Stop();
             }
-
-            stopwatch.Stop();
-
-
-            var logEntry = new XmlLogger
+            catch (Exception ex)
             {
-                Name = this.Name,
-                FileSource = sourceFile,
-                FileTarget = destinationFile,
-                FileSize = fileSize,
-                FileTransferTime = stopwatch.ElapsedMilliseconds,
-                Time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
-                Error = false
-            };
-
-
-            LoggingModel.EnqueueLog(logEntry);
-            // Console.WriteLine(
-            // $"Transfert log for {sourceFile} done. Transert time : {stopwatch.ElapsedMilliseconds} ms.");
+                stopwatch.Stop();
+                Console.WriteLine($"Error during the file copying : {ex.Message}");
+            }
         }
-        catch (Exception ex)
+
+        // Determines the buffer size based on the file size
+        protected int DetermineBufferSize(long fileSize)
         {
-            stopwatch.Stop();
-            Console.WriteLine($"Error during the file copying : {ex.Message}");
-
-            // Configurer et écrire le log en cas d'erreur
-
-            var logEntry = new XmlLogger
-            {
-                Name = this.Name,
-                FileSource = sourceFile,
-                FileTarget = destinationFile,
-                FileSize = fileSize,
-                FileTransferTime = stopwatch.ElapsedMilliseconds,
-                Time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
-                Error = false
-            };
-
-
-            LoggingModel.EnqueueLog(logEntry);
+            if (fileSize <= MaxBufferSize)
+                return (int)fileSize;
+            else
+                return MaxBufferSize;
         }
-    }
 
-    // Determines the buffer size based on the file size
-    protected int DetermineBufferSize(long fileSize)
-    {
-        if (fileSize <= MaxBufferSize)
-            return (int)fileSize;
-        else
-            return MaxBufferSize;
-    }
 
-    // Updates the state of the backup job with progress and other details
-    protected void UpdateState(string state)
-    {
-        State = state;
-        StateModel.UpdateBackupState(this);
+        protected void UpdateProgress(string fileCopied)
+        {
+            NbFilesLeftToDo--;
+            Progression = TotalFilesToCopy > 0 ? 100.0 * (TotalFilesToCopy - NbFilesLeftToDo) / TotalFilesToCopy : 100;
+        }
+
+        // Méthode pour vérifier si des fichiers prioritaires sont en attente
+        private bool HasPriorityFilesWaiting(string[] files)
+        {
+            return files.Any(file => config.ExtPrio.Contains(Path.GetExtension(file).ToLower()));
+        }
+
+        private void EncryptFile(string filePath)
+        {
+
+        }
+
+        protected bool ShouldCopyFile(string sourceFile, string destinationFile)
+        {
+            if (!File.Exists(destinationFile)) return true;
+            var sourceFileInfo = new FileInfo(sourceFile);
+            var destFileInfo = new FileInfo(destinationFile);
+            return sourceFileInfo.LastWriteTime > destFileInfo.LastWriteTime ||
+                   sourceFileInfo.Length != destFileInfo.Length;
+        }
+
+        protected void UpdateState(string state)
+        {
+            State = state;
+            StateModel.UpdateBackupState(this);
+        }
     }
 }
