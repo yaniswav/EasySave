@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Interactivity;
+using System.Globalization;
 
 
 namespace EasySave.Views;
@@ -19,6 +20,7 @@ public partial class SettingsView : UserControl
     
     private void OnApplyButtonClick(object sender, RoutedEventArgs e)
     {
-        // TODO: Add logic for applying settings
+        Assets.Resources.Culture = new CultureInfo("fr");
+        
     }
 }

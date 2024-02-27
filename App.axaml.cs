@@ -16,7 +16,7 @@ namespace EasySave
 
         public override void OnFrameworkInitializationCompleted()
         {
-            Assets.Resources.Culture = new CultureInfo("fr");
+            Assets.Resources.Culture = new CultureInfo("en");
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 var mainWindow = new MainWindow();
