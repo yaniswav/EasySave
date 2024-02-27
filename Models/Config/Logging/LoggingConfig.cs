@@ -7,7 +7,7 @@ public partial class ConfigModel
 {
     private const string OutputFormatKey = "OutputFormat";
 
-    public static string OutputFormat
+    public string OutputFormat
     {
         get => ConfigurationManager.AppSettings[OutputFormatKey];
         set => UpdateAppSettings(OutputFormatKey, value);

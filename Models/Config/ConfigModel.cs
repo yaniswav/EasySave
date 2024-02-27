@@ -20,14 +20,14 @@ public partial class ConfigModel
             {
                 _instance = new ConfigModel();
                 // Load initial configuration settings
-                LoadConfiguration();
+                _instance.LoadConfiguration();
             }
 
             return _instance;
         }
     }
 
-    private static void LoadConfiguration()
+    public void LoadConfiguration()
     {
         // Chargement de la configuration locale
         CurrentLocale = ConfigurationManager.AppSettings["CurrentLocale"] ?? "en-US";
@@ -54,7 +54,7 @@ public partial class ConfigModel
         BusinessSoftware = ConfigurationManager.AppSettings["BusinessSoftwareKey"] ?? string.Empty;
     }
 
-    public static void UpdateAppSettings(string key, string value)
+    public void UpdateAppSettings(string key, string value)
     {
         try
         {

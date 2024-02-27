@@ -8,7 +8,7 @@ public partial class ConfigModel
 {
     private const string CurrentLocaleKey = "CurrentLocale";
 
-    public static string CurrentLocale
+    public string CurrentLocale
     {
         get => ConfigurationManager.AppSettings[CurrentLocaleKey] ?? "en-US";
         set

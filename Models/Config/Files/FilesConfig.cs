@@ -7,7 +7,7 @@ public partial class ConfigModel
 {
     private const string MaxBackupFileSizeKey = "MaxBackupFileSize";
 
-    public static int MaxBackupFileSize
+    public int MaxBackupFileSize
     {
         get
         {
