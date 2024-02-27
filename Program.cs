@@ -1,59 +1,23 @@
-﻿using System;
-using System.Globalization;
-using System.Resources;
-using System.Configuration;
-using System.Collections;
-using System.Collections.Specialized;
+﻿using Avalonia;
+using Avalonia.ReactiveUI;
+using System;
 
+namespace EasySave;
 
-namespace EasySave
+sealed class Program
 {
-    // Class for entry point of the EasySaveConsole application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            // Initialize the configuration model to manage application settings
-            ConfigModel configModel = new ConfigModel();
+    // Initialization code. Don't use any Avalonia, third-party APIs or any
+    // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
+    // yet and stuff might break.
+    [STAThread]
+    public static void Main(string[] args) => BuildAvaloniaApp()
+        .StartWithClassicDesktopLifetime(args);
 
-            // Create ResourceManager for message
-            var resourceManager = new ResourceManager("EasySave.Resources.Languages.Messages", typeof(Program).Assembly);
-
-            //Initialize Utilities with ResourceManager to display message to the user
-            Utilities messageDisplay = new Utilities(resourceManager);
-
-            //Create ViewModel instance to provide access to business logic and interaction with the model
-            BackupVM backupVm = new BackupVM(configModel, messageDisplay);
-
-            // Create View instance, responsible for user interface logic and user interactions
-            View view = new View(configModel, backupVm, messageDisplay);
-
-            // Menu display
-            view.DisplayMenu();
-        }
-    }
-
-    public class View
-    {
-        public View(ConfigModel configModel, BackupVM backupVm, Utilities messageDisplay)
-        {
-            // Example of setting class members
-            this.ConfigModel = configModel;
-            this.BackupVm = backupVm;
-            this.MessageDisplay = messageDisplay;
-
-            // Initialize your view components here
-        }
-
-        public Utilities MessageDisplay { get; set; }
-
-        public BackupVM BackupVm { get; set; }
-
-        public ConfigModel ConfigModel { get; set; }
-
-        public void DisplayMenu()
-        {
-            throw new NotImplementedException();
-        }
-    }
+    // Avalonia configuration, don't remove; also used by visual designer.
+    public static AppBuilder BuildAvaloniaApp()
+        => AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .WithInterFont()
+            .LogToTrace()
+            .UseReactiveUI();
 }

@@ -1,17 +1,17 @@
-// Ensure the ReactiveUI and System.Reactive namespaces are imported
-using ReactiveUI;
-using System;
-using System.Reactive;
-
+// Supposition : Le fichier est placé dans un dossier correspondant à cet espace de noms.
 namespace EasySave.ViewModels
 {
+    using ReactiveUI;
+    using System;
+    using System.Reactive;
+
     public class CreateBackupVM : ReactiveObject
     {
         private string _backupName = string.Empty;
         private string _sourceDirectory = string.Empty;
         private string _targetDirectory = string.Empty;
         private string _backupType = string.Empty;
-        private ReactiveCommand<Unit, Unit> _createBackupCommand;
+        private readonly ReactiveCommand<Unit, Unit> _createBackupCommand;
 
         public string BackupName
         {
@@ -46,9 +46,9 @@ namespace EasySave.ViewModels
                 x => x.SourceDirectory,
                 x => x.TargetDirectory,
                 x => x.BackupType,
-                (name, source, target, type) =>
-                    !string.IsNullOrWhiteSpace(name) &&
-                    !string.IsNullOrWhiteSpace(source) &&
+                (name, source, target, type) => 
+                    !string.IsNullOrWhiteSpace(name) && 
+                    !string.IsNullOrWhiteSpace(source) && 
                     !string.IsNullOrWhiteSpace(target) &&
                     !string.IsNullOrWhiteSpace(type));
 
@@ -57,8 +57,8 @@ namespace EasySave.ViewModels
 
         private void CreateBackup()
         {
-            // Implement the logic to create the backup.
-            Console.WriteLine($"Creating a backup: {BackupName}");
+            // Implémentez ici la logique pour créer la sauvegarde.
+            Console.WriteLine($"Création d'une sauvegarde: {BackupName}");
         }
     }
 }

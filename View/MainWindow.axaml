@@ -1,0 +1,48 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:EasySave.ViewModels"
+        xmlns:assets="clr-namespace:EasySave.Assets"
+        x:Class="EasySave.Views.MainWindow"
+        Title="EasySave"
+        Width="1280" Height="720"
+        Background="#e3e0ff"
+        CanResize="False"
+        Icon="/Assets/pictures/logo-easy-save.ico">
+        
+    
+    <Window.Styles>
+        <Style Selector="Button.MainButton">
+            <Setter Property="Background" Value="#B4BAFF" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+
+        <!-- Ne fonctionne pas encore -->
+        <Style Selector="Button.MainButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#6552d1"/>
+            <Setter Property="Foreground" Value="white"/>
+        </Style>
+    </Window.Styles>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Classes="MainButton" x:Name="BackupButton" Content="{x:Static assets:Resources.Backup}" Grid.Column="1" Width="600" Height="70" Margin="15, 20" Cursor="Hand" Click="BackupButton_Click"/>
+            <Button Classes="MainButton" x:Name="SettingsButton" Content="PARAMÈTRES" Grid.Column="2" Width="600" Height="70" Margin="15, 20" Cursor="Hand" Click="SettingsButton_Click"/>
+        </Grid>
+        <ContentControl Grid.Row="1" x:Name="MainContent" />
+    </Grid>
+</Window>
