@@ -1,0 +1,101 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="Backup" xml:space="preserve">
+        <value>SAUVEGARDE</value>
+    </data>
+    <data name="Settings" xml:space="preserve">
+        <value>PARAMÈTRES</value>
+    </data>
+    <data name="CreateBackup" xml:space="preserve">
+        <value>Créer une sauvegarde</value>
+    </data>
+    <data name="EditBackup" xml:space="preserve">
+        <value>Modifier une sauvegarde</value>
+    </data>
+    <data name="DeleteBackup" xml:space="preserve">
+        <value>Supprimer une sauvegarde</value>
+    </data>
+    <data name="ExecuteBackup" xml:space="preserve">
+        <value>Lancer une sauvegarde</value>
+    </data>
+    <data name="ResumeBackup" xml:space="preserve">
+        <value>Reprendre la sauveagrde</value>
+    </data>
+    <data name="PauseBackup" xml:space="preserve">
+        <value>Mettre la sauvegarde en pause</value>
+    </data>
+    <data name="StopBackup" xml:space="preserve">
+        <value>Arrêter la sauvegarde</value>
+    </data>
+    <data name="BackupName" xml:space="preserve">
+        <value>Nom de la sauvegarde</value>
+    </data>
+    <data name="SourceDirectory" xml:space="preserve">
+        <value>Répertoire source</value>
+    </data>
+    <data name="TargetDirectory" xml:space="preserve">
+        <value>Répertoire cible</value>
+    </data>
+    <data name="CompleteType" xml:space="preserve">
+        <value>Complète</value>
+    </data>
+    <data name="DifferentialType" xml:space="preserve">
+        <value>Différentielle</value>
+    </data>
+    <data name="BackupType" xml:space="preserve">
+        <value>Type de sauvegarde</value>
+    </data>
+    <data name="BrowseFolders" xml:space="preserve">
+        <value>Parcourir vos dossiers</value>
+    </data>
+    <data name="Language" xml:space="preserve">
+        <value>Langue</value>
+    </data>
+    <data name="LogFileFormat" xml:space="preserve">
+        <value>Format du fichier log</value>
+    </data>
+    <data name="FileMaxSize" xml:space="preserve">
+        <value>Taille max du fichier</value>
+    </data>
+    <data name="BuisnessSoftware" xml:space="preserve">
+        <value>Logiciel métier </value>
+    </data>
+    <data name="LogFileDirectory" xml:space="preserve">
+        <value>Répertoire du fichier log</value>
+    </data>
+    <data name="StateFileDirectory" xml:space="preserve">
+        <value>Répertoire du fichier état</value>
+    </data>
+    <data name="PrioritizedExtensions" xml:space="preserve">
+        <value>Extensions à prioriser</value>
+    </data>
+    <data name="EncryptedExtensions" xml:space="preserve">
+        <value>Extensions à chiffrer</value>
+    </data>
+    <data name="ApplyChanges" xml:space="preserve">
+        <value>Appliquer les changements</value>
+    </data>
+    <data name="Reset" xml:space="preserve">
+        <value>Réinitialiser</value>
+    </data>
+    <data name="SelectFileOrFolder" xml:space="preserve">
+        <value>Dossier ou Fichier</value>
+    </data>
+    <data name="SelectFolder" xml:space="preserve">
+        <value>Sélectionner un dossier</value>
+    </data>
+    <data name="SelectFile" xml:space="preserve">
+        <value>Sélectinner un fichier</value>
+    </data>
+</root>

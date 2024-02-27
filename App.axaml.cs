@@ -1,14 +1,8 @@
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using EasySave.ViewModels;
-using EasySave.Views;
-
-
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Markup.Xaml;
-using EasySave.ViewModels; // Assurez-vous que cet espace de noms est correct
 using EasySave.Views;
 
 namespace EasySave
@@ -22,6 +16,7 @@ namespace EasySave
 
         public override void OnFrameworkInitializationCompleted()
         {
+            Assets.Resources.Culture = new CultureInfo("fr");
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 var mainWindow = new MainWindow();

@@ -11,129 +11,32 @@ namespace EasySave.Views
         public MainWindow()
         {
             InitializeComponent();
-            // Cache initialement les panels pour créer/modifier et supprimer/exécuter
-            ShowCreateEditFields(false);
-            ShowDeleteExecuteFields(false);
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            UpdateButtonColor();
         }
 
-        private void OnCreateBackupClick(object sender, RoutedEventArgs e)
+        private void BackupButton_Click(object sender, RoutedEventArgs e)
         {
-            SetActionTitle("Créer une sauvegarde");
-            ShowCreateEditFields(true);
-            ShowDeleteExecuteFields(false);
-            // Cache le message de confirmation pour les autres actions
-            HideConfirmationMessages();
-            ActionCreateEditButton.Content = "Créer";
+            // Logique pour charger BackupView
+            MainContent.Content = new BackupView();
+            UpdateButtonColor(activeButton: "Backup");
         }
 
-        private void OnEditBackupClick(object sender, RoutedEventArgs e)
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            SetActionTitle("Modifier une sauvegarde");
-            ShowCreateEditFields(true);
-            ShowDeleteExecuteFields(false);
-            // Cache le message de confirmation pour les autres actions
-            HideConfirmationMessages();
-            ActionCreateEditButton.Content = "Modifier";
+            // Logique pour charger SettingsView
+            MainContent.Content = new SettingsView();
+            UpdateButtonColor(activeButton: "Settings");
         }
 
-        private void OnDeleteBackupClick(object sender, RoutedEventArgs e)
+        private void UpdateButtonColor(string activeButton = "")
         {
-            SetActionTitle("Supprimer une sauvegarde");
-            ShowCreateEditFields(false);
-            ShowDeleteExecuteFields(true);
-            // Cache le message de confirmation pour les autres actions
-            HideConfirmationMessages();
-        }
+            var activeColor = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#857DFF"));
+            var inactiveColor = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#B4BAFF"));
 
-        private void OnExecuteBackupClick(object sender, RoutedEventArgs e)
-        {
-            SetActionTitle("Executer une sauvegarde");
-            ShowCreateEditFields(false);
-            ShowDeleteExecuteFields(true);
-            // Cache le message de confirmation pour les autres actions
-            HideConfirmationMessages();
-            ActionDeleteExecuteButton.Content = "Executer";
+            BackupButton.Background = activeButton == "Backup" ? activeColor : inactiveColor;
+            SettingsButton.Background = activeButton == "Settings" ? activeColor : inactiveColor;
         }
         
-        private void HideConfirmationMessages()
-        {
-            CreateEditConfirmationTextBlock.IsVisible = false;
-            DeleteExecuteConfirmationTextBlock.IsVisible = false;
-        }
-
-        private void SetActionTitle(string title)
-        {
-            ActionTitleTextBlock.Text = title;
-            ActionTitlePanel.IsVisible = true;
-        }
-
-        private void ShowCreateEditFields(bool isVisible)
-        {
-            CreateEditInputFieldsPanel.IsVisible = isVisible;
-            if (!isVisible)
-            {
-                // Clear fields if we are hiding them
-                BackupNameTextBox.Text = "";
-                SourceDirectoryTextBox.Text = "";
-                TargetDirectoryTextBox.Text = "";
-                BackupTypeComboBox.SelectedIndex = -1;
-            }
-        }
-
-        private void ShowDeleteExecuteFields(bool isVisible)
-        {
-            DeleteExecuteInputFieldsPanel.IsVisible = isVisible;
-            if (!isVisible)
-            {
-                // Clear the field if we are hiding it
-                SingleBackupNameTextBox.Text = "";
-            }
-        }
-
-        private void OnQuitClick(object sender, RoutedEventArgs e)
-        {
-            this.Close(); // Ferme l'application
-        }
-
-        private void OnListBackupsClick(object sender, RoutedEventArgs e)
-        {
-            SetActionTitle("Lister les sauvegardes");
-            ShowCreateEditFields(false);
-            ShowDeleteExecuteFields(false);
-        }
-        
-        private void OnActionCreateEditButtonClick(object sender, RoutedEventArgs e)
-        {
-            CreateEditConfirmationTextBlock.IsVisible = true;
-            DeleteExecuteConfirmationTextBlock.IsVisible = false;
-        }
-
-        private void OnActionDeleteExecuteButtonClick(object sender, RoutedEventArgs e)
-        {
-            DeleteExecuteConfirmationTextBlock.IsVisible = true;
-            CreateEditConfirmationTextBlock.IsVisible = false;
-        }
-        
-        private async void OnSelectSourceDirectoryClick(object sender, RoutedEventArgs e)
-        {
-            var dialog = new OpenFolderDialog();
-            var result = await dialog.ShowAsync(this);
-            if (!string.IsNullOrEmpty(result))
-            {
-                SourceDirectoryTextBox.Text = result;
-            }
-        }
-
-        private async void OnSelectTargetDirectoryClick(object sender, RoutedEventArgs e)
-        {
-            var dialog = new OpenFolderDialog();
-            var result = await dialog.ShowAsync(this);
-            if (!string.IsNullOrEmpty(result))
-            {
-                TargetDirectoryTextBox.Text = result;
-            }
-        }
-
-
     }
 }
