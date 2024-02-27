@@ -7,7 +7,7 @@
         Width="1280" Height="720"
         Background="#e3e0ff"
         CanResize="False"
-        Icon="/Assets/logo-easy-save.ico">
+        Icon="/Assets/pictures/logo-easy-save.ico">
         
     
     <Window.Styles>
@@ -40,7 +40,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Classes="MainButton" x:Name="BackupButton" Content="{x:Static assets:Resources.GreetingText}" Grid.Column="1" Width="600" Height="70" Margin="15, 20" Cursor="Hand" Click="BackupButton_Click"/>
+            <Button Classes="MainButton" x:Name="BackupButton" Content="{x:Static assets:Resources.Backup}" Grid.Column="1" Width="600" Height="70" Margin="15, 20" Cursor="Hand" Click="BackupButton_Click"/>
             <Button Classes="MainButton" x:Name="SettingsButton" Content="PARAMÈTRES" Grid.Column="2" Width="600" Height="70" Margin="15, 20" Cursor="Hand" Click="SettingsButton_Click"/>
         </Grid>
         <ContentControl Grid.Row="1" x:Name="MainContent" />

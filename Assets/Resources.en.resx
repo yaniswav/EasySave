@@ -14,4 +14,7 @@
     <data name="GreetingText" xml:space="preserve">
         <value>Hi</value>
     </data>
+    <data name="Backup" xml:space="preserve">
+        <value>BACKUP</value>
+    </data>
 </root>

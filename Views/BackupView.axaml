@@ -21,27 +21,27 @@
     <StackPanel Orientation="Vertical" Background="#dad7fc" Margin="25, 0, 25, 25" >
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="15, 10, 15, 0" Spacing="10">
             <Button x:Name="CreateButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Créer une sauvegarde" Click="OnCreateButtonClick">
-                <Image Source="/Assets/create.png" Width="20" Height="20"/>
+                <Image Source="/Assets/pictures/create.png" Width="20" Height="20"/>
             </Button>
             <Button x:Name="EditButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Modifier une sauvegarde" Click="OnEditButtonClick">
-                <Image Source="/Assets/edit.png" Width="20" Height="20"/>
+                <Image Source="/Assets/pictures/edit.png" Width="20" Height="20"/>
             </Button>
             <Button x:Name="DeleteButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Supprimer une sauveagrde" Click="OnDeleteButtonClick">
-                <Image Source="/Assets/trash.png" Width="20" Height="20"/>
+                <Image Source="/Assets/pictures/trash.png" Width="20" Height="20"/>
             </Button>
-            <Image Source="/Assets/separator3.png" Width="150" Height="100"/>
+            <Image Source="/Assets/pictures/separator3.png" Width="150" Height="100"/>
             <Button x:Name="ExecuteButton" Width="150" Height="40" Cursor="Hand" ToolTip.Tip="Lancer une sauvegarde" Click="OnExecuteButtonClick">
-                <Image Source="/Assets/play.png" Width="20" Height="20"/>
+                <Image Source="/Assets/pictures/play.png" Width="20" Height="20"/>
             </Button>
-            <Image Source="/Assets/separator3.png" Width="150" Height="100"/>
+            <Image Source="/Assets/pictures/separator3.png" Width="150" Height="100"/>
             <Button x:Name="PlayButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Reprendre la sauveagrde" Click="OnPlayButtonClick">
-                <Image Source="/Assets/redo.png" Width="20" Height="20"/>
+                <Image Source="/Assets/pictures/redo.png" Width="20" Height="20"/>
             </Button>
             <Button x:Name="PauseButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Mettre en pause la sauvegarde" Click="OnPauseButtonClick">
-                <Image Source="/Assets/pause.png" Width="20" Height="20"/>
+                <Image Source="/Assets/pictures/pause.png" Width="20" Height="20"/>
             </Button>
             <Button x:Name="StopButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Arrêter la sauvegarde" Click="OnStopButtonClick">
-                <Image Source="/Assets/stop.png" Width="20" Height="20"/>
+                <Image Source="/Assets/pictures/stop.png" Width="20" Height="20"/>
             </Button>
         </StackPanel>
         
@@ -61,13 +61,13 @@
             <!-- Répertoire source -->
             <TextBox Grid.Column="1" x:Name="SourceDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="Répertoire source"/>
             <Button Grid.Column="2" Margin="0,5,5,5" Width="30" Height="30" Cursor="Hand" ToolTip.Tip="Parcourir vos dossiers" Click="OnSelectSourceDirectoryClick">
-                <Image Source="/Assets/folder.png" Width="20" Height="20"/>
+                <Image Source="/Assets/pictures/folder.png" Width="20" Height="20"/>
             </Button>
 
             <!-- Répertoire de destination -->
             <TextBox Grid.Column="3" x:Name="TargetDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="Répertoire de destination"/>
             <Button Grid.Column="4" Margin="0,5,5,5" Width="30" Height="30" Cursor="Hand" ToolTip.Tip="Parcourir vos dossiers" Click="OnSelectTargetDirectoryClick">
-                <Image Source="/Assets/folder.png" Width="20" Height="20"/>
+                <Image Source="/Assets/pictures/folder.png" Width="20" Height="20"/>
             </Button>
 
             <!-- Type -->

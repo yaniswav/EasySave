@@ -50,5 +50,10 @@ namespace EasySave.Assets {
                 return ResourceManager.GetString("GreetingText", resourceCulture); 
             }
         }
+        public static string Backup {
+            get {
+                return ResourceManager.GetString("Backup", resourceCulture); 
+            }
+        }
     }
 }

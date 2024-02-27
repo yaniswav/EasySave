@@ -34,13 +34,13 @@
                 <ComboBox SelectedIndex="1">
                     <ComboBoxItem>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Assets/french_flag.png" Width="20" Height="20"/>
+                            <Image Source="/Assets/pictures/french_flag.png" Width="20" Height="20"/>
                             <TextBlock Text="Français" Margin="5,0,0,0" Foreground="Black" FontSize="16"/>
                         </StackPanel>
                     </ComboBoxItem>
                     <ComboBoxItem>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Assets/uk_flag.png" Width="20" Height="20"/>
+                            <Image Source="/Assets/pictures/uk_flag.png" Width="20" Height="20"/>
                             <TextBlock Text="English" Margin="5,0,0,0" Foreground="Black" FontSize="16"/>
                         </StackPanel>
                     </ComboBoxItem>
