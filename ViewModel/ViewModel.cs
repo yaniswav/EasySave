@@ -145,6 +145,7 @@ namespace EasySave
                 }
 
                 // Execute specified backup jobs
+                Console.WriteLine($"Executing backup jobs... {jobNames}");
                 BackupManager.ExecuteJobs(jobNames);
                 break;
             }
