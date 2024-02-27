@@ -1,47 +1,91 @@
+using System;
 using System.ComponentModel;
 using System.Windows.Input;
+using EasySave; // Ensure this namespace is correct for access to Models
 
 namespace EasySave.ViewModels
 {
     public class SettingsVM : INotifyPropertyChanged
     {
-        private string? _backupLocation;
-        private bool _enableNotifications;
+        private ConfigModel _configModel = new ConfigModel();
+        private string _selectedLocale;
+        private string _logOutputFormat;
+        private ICommand _saveSettingsCommand;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public string? BackupLocation
+        public SettingsVM()
         {
-            get => _backupLocation;
+            // Initialize settings with current values
+            _selectedLocale = _configModel.Locale;
+            _logOutputFormat = ConfigurationHelper.GetOutputFormat();
+        }
+
+        public string SelectedLocale
+        {
+            get => _selectedLocale;
             set
             {
-                _backupLocation = value;
-                OnPropertyChanged(nameof(BackupLocation));
+                if (_selectedLocale != value)
+                {
+                    _selectedLocale = value;
+                    OnPropertyChanged(nameof(SelectedLocale));
+                }
             }
         }
 
-        public bool EnableNotifications
+        public string LogOutputFormat
         {
-            get => _enableNotifications;
+            get => _logOutputFormat;
             set
             {
-                _enableNotifications = value;
-                OnPropertyChanged(nameof(EnableNotifications));
+                if (_logOutputFormat != value)
+                {
+                    _logOutputFormat = value;
+                    OnPropertyChanged(nameof(LogOutputFormat));
+                }
             }
         }
 
-        private ICommand? _saveSettingsCommand;
-        public ICommand SaveSettingsCommand => _saveSettingsCommand ??= new RelayCommand(SaveSettings);
+        public ICommand SaveSettingsCommand
+        {
+            get
+            {
+                return _saveSettingsCommand ?? (_saveSettingsCommand = new RelayCommand(param => SaveSettings(), param => CanSaveSettings()));
+            }
+        }
+
+        private bool CanSaveSettings()
+        {
+            // Add logic here if there are conditions that must be met before saving
+            return true;
+        }
 
         private void SaveSettings()
         {
-            // Logique pour sauvegarder les paramètres.
-            // Exemple : SettingsManager.Save(BackupLocation, EnableNotifications);
+            try
+            {
+                // Save locale setting
+                _configModel.SetLocale(SelectedLocale);
+
+                // Save log output format
+                ConfigurationHelper.SetOutputFormat(LogOutputFormat);
+
+                // Potential additional settings save operations can be performed here
+
+                Console.WriteLine("Settings have been successfully saved.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving settings: {ex.Message}");
+            }
         }
 
-        protected void OnPropertyChanged(string? propertyName)
+        protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+
+    // Assuming RelayCommand is implemented elsewhere in the project
 }

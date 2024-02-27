@@ -1,25 +1,27 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using EasySave; // Assuming the namespace for BackupJob and related classes
 
 namespace EasySave.ViewModels
 {
-    public class CommunicationVm : INotifyPropertyChanged, IDataErrorInfo
+    public class CommunicationVm : INotifyPropertyChanged
     {
-        private List<string> _extensionsToEncrypt;
+        private BackupJob _currentBackupJob; // A reference to the current backup job
         private string _extensionToAdd = "";
 
-        public CommunicationVm()
+        public CommunicationVm(BackupJob currentBackupJob)
         {
-            _extensionsToEncrypt = new List<string>();
+            _currentBackupJob = currentBackupJob; // Initialize with an existing backup job
+            ExtensionsToEncrypt = _currentBackupJob.ExtensionsToEncrypt ?? new List<string>();
         }
 
         public List<string> ExtensionsToEncrypt
         {
-            get => _extensionsToEncrypt;
+            get => _currentBackupJob.ExtensionsToEncrypt;
             set
             {
-                _extensionsToEncrypt = value;
+                _currentBackupJob.ExtensionsToEncrypt = value;
                 OnPropertyChanged();
             }
         }
@@ -36,9 +38,9 @@ namespace EasySave.ViewModels
 
         public void AddExtension()
         {
-            if (!string.IsNullOrWhiteSpace(_extensionToAdd) && !_extensionsToEncrypt.Contains(_extensionToAdd))
+            if (!string.IsNullOrWhiteSpace(_extensionToAdd) && !_currentBackupJob.ExtensionsToEncrypt.Contains(_extensionToAdd.ToLower()))
             {
-                _extensionsToEncrypt.Add(_extensionToAdd);
+                _currentBackupJob.ExtensionsToEncrypt.Add(_extensionToAdd.ToLower());
                 ExtensionToAdd = ""; // Reset after adding
                 OnPropertyChanged(nameof(ExtensionsToEncrypt));
             }
@@ -46,40 +48,18 @@ namespace EasySave.ViewModels
 
         public void RemoveExtension(string extension)
         {
-            if (_extensionsToEncrypt.Contains(extension))
+            if (_currentBackupJob.ExtensionsToEncrypt.Contains(extension.ToLower()))
             {
-                _extensionsToEncrypt.Remove(extension);
+                _currentBackupJob.ExtensionsToEncrypt.Remove(extension.ToLower());
                 OnPropertyChanged(nameof(ExtensionsToEncrypt));
             }
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public string Error => string.Empty;
-
-        public string this[string columnName]
-        {
-            get
-            {
-                if (columnName == nameof(ExtensionToAdd))
-                {
-                    if (string.IsNullOrWhiteSpace(ExtensionToAdd))
-                    {
-                        return "Extension cannot be empty.";
-                    }
-
-                    if (ExtensionsToEncrypt.Contains(ExtensionToAdd))
-                    {
-                        return "Extension already added.";
-                    }
-                }
-                return string.Empty;
-            }
         }
     }
 }

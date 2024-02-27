@@ -2,20 +2,22 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using EasySave; // Assurez-vous que le chemin d'accès est correct
 using System;
+using System.Linq;
+using System.Threading;
 
 namespace EasySave.ViewModels
 {
     public class BackupVM : INotifyPropertyChanged
     {
-        private ConfigModel _configModel;
         private ObservableCollection<BackupJobConfig> _backupJobs;
+        private ConfigModel _configModel;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public BackupVM()
         {
             _configModel = new ConfigModel();
-            BackupJobs = new ObservableCollection<BackupJobConfig>(_configModel.LoadBackupJobs());
+            LoadBackupJobs(); // Chargement des jobs de sauvegarde à partir des configurations
         }
 
         public ObservableCollection<BackupJobConfig> BackupJobs
@@ -28,33 +30,39 @@ namespace EasySave.ViewModels
             }
         }
 
-        // Command pour rafraîchir la liste des travaux de sauvegarde
-        public void RefreshBackupJobs()
+        // Charge les jobs de sauvegarde depuis la configuration
+        private void LoadBackupJobs()
         {
-            BackupJobs.Clear();
-            var jobs = _configModel.LoadBackupJobs();
-            foreach (var job in jobs)
-            {
-                BackupJobs.Add(job);
-            }
+            var jobs = new ObservableCollection<BackupJobConfig>(_configModel.LoadBackupJobs());
+            BackupJobs = jobs;
         }
 
-        // Affiche une liste des travaux de sauvegarde configurés
-        public void ListBackups()
+        // Actualise la liste des jobs de sauvegarde
+        public void RefreshBackupJobs()
         {
-            Console.WriteLine();
-            var backupJobs = _configModel.LoadBackupJobs();
-            if (backupJobs.Count == 0)
+            LoadBackupJobs(); // Rechargement des configurations
+        }
+
+        // Ajoute un nouveau job de sauvegarde
+        public void AddBackupJob(string name, string sourceDir, string destinationDir, string type)
+        {
+            var jobConfig = new BackupJobConfig
             {
-                Console.WriteLine("No backup jobs configured.");
-            }
-            else
-            {
-                foreach (var job in backupJobs)
-                {
-                    Console.WriteLine($"Name: {job.Name}, Source: {job.SourceDir}, Destination: {job.DestinationDir}, Type: {job.Type}");
-                }
-            }
+                Name = name,
+                SourceDir = sourceDir,
+                DestinationDir = destinationDir,
+                Type = type
+            };
+
+            _configModel.AddBackupJob(jobConfig); // Persiste la configuration
+            RefreshBackupJobs(); // Actualise la liste des jobs
+        }
+
+        // Supprime un job de sauvegarde
+        public void DeleteBackupJob(string jobName)
+        {
+            _configModel.DeleteBackupJob(jobName); // Supprime la configuration
+            RefreshBackupJobs(); // Actualise la liste des jobs
         }
 
         protected void OnPropertyChanged(string propertyName)

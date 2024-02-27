@@ -1,10 +1,11 @@
-// Supposition : Le fichier est placé dans un dossier correspondant à cet espace de noms.
+using System;
+using ReactiveUI;
+using System.Reactive;
+using EasySave;
+using System.Threading;
+
 namespace EasySave.ViewModels
 {
-    using ReactiveUI;
-    using System;
-    using System.Reactive;
-
     public class CreateBackupVM : ReactiveObject
     {
         private string _backupName = string.Empty;
@@ -12,6 +13,8 @@ namespace EasySave.ViewModels
         private string _targetDirectory = string.Empty;
         private string _backupType = string.Empty;
         private readonly ReactiveCommand<Unit, Unit> _createBackupCommand;
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private ManualResetEvent _pauseEvent = new ManualResetEvent(true);
 
         public string BackupName
         {
@@ -46,19 +49,62 @@ namespace EasySave.ViewModels
                 x => x.SourceDirectory,
                 x => x.TargetDirectory,
                 x => x.BackupType,
-                (name, source, target, type) => 
-                    !string.IsNullOrWhiteSpace(name) && 
-                    !string.IsNullOrWhiteSpace(source) && 
+                (name, source, target, type) =>
+                    !string.IsNullOrWhiteSpace(name) &&
+                    !string.IsNullOrWhiteSpace(source) &&
                     !string.IsNullOrWhiteSpace(target) &&
                     !string.IsNullOrWhiteSpace(type));
 
-            _createBackupCommand = ReactiveCommand.Create(CreateBackup, canExecute);
+            _createBackupCommand = ReactiveCommand.Create(ExecuteBackup, canExecute);
         }
 
-        private void CreateBackup()
+        private void ExecuteBackup()
         {
-            // Implémentez ici la logique pour créer la sauvegarde.
-            Console.WriteLine($"Création d'une sauvegarde: {BackupName}");
+            BackupJob backupJob;
+            switch (BackupType)
+            {
+                case "Complete":
+                    backupJob = new CompleteBackup(BackupName, SourceDirectory, TargetDirectory);
+                    break;
+                case "Differential":
+                    backupJob = new DifferentialBackup(BackupName, SourceDirectory, TargetDirectory);
+                    break;
+                default:
+                    throw new InvalidOperationException("Unsupported backup type.");
+            }
+
+            try
+            {
+                // Execute the backup job with proper threading and error handling
+                Thread backupThread = new Thread(() =>
+                {
+                    backupJob.Start(_cancellationTokenSource.Token, _pauseEvent);
+                });
+                backupThread.Start();
+                Console.WriteLine($"Backup {BackupName} started.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error starting backup {BackupName}: {ex.Message}");
+            }
+        }
+
+        public void PauseBackup()
+        {
+            _pauseEvent.Reset();
+            Console.WriteLine("Backup paused.");
+        }
+
+        public void ResumeBackup()
+        {
+            _pauseEvent.Set();
+            Console.WriteLine("Backup resumed.");
+        }
+
+        public void CancelBackup()
+        {
+            _cancellationTokenSource.Cancel();
+            Console.WriteLine("Backup cancelled.");
         }
     }
 }
