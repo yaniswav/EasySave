@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:assets="clr-namespace:EasySave.Assets"
              x:Class="EasySave.Views.SettingsView">
     
     <UserControl.Styles>
@@ -29,7 +30,7 @@
             <!-- Langue -->
             <StackPanel Orientation="Vertical" Width="250"> 
                 <StackPanel Background="#857DFF" Margin="0,0,0,10">
-                    <TextBlock Text="Langue" FontWeight="Bold" Foreground="White" FontSize="20" TextAlignment="Center" />
+                    <TextBlock Text="{x:Static assets:Resources.Language}" FontWeight="Bold" Foreground="White" FontSize="20" TextAlignment="Center" />
                 </StackPanel>
                 <ComboBox SelectedIndex="1">
                     <ComboBoxItem>
@@ -50,7 +51,7 @@
             <!-- Format du fichier log -->
             <StackPanel Orientation="Vertical" Width="250">
                 <StackPanel Background="#857DFF" Margin="0,0,0,10">
-                    <TextBlock Text="Format du fichier log" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
+                    <TextBlock Text="{x:Static assets:Resources.LogFileFormat}" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
                 </StackPanel>
                 <ComboBox Height="20" SelectedIndex="0">
                     <StackPanel Orientation="Horizontal">
@@ -65,7 +66,7 @@
             <!-- Taille max du fichier -->
             <StackPanel Orientation="Vertical" Width="250">
                 <StackPanel Background="#857DFF" Margin="0,0,0,10">
-                    <TextBlock Text="Taille max du fichier" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
+                    <TextBlock Text="{x:Static assets:Resources.FileMaxSize}" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
                 </StackPanel>
                 <TextBox Text="10000" />
             </StackPanel>
@@ -78,7 +79,7 @@
             <!-- Logiciel métier -->
             <StackPanel Orientation="Vertical" Width="250">
                 <StackPanel Background="#857DFF" Margin="0,0,0,10">
-                    <TextBlock Text="Logiciel métier" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
+                    <TextBlock Text="{x:Static assets:Resources.BuisnessSoftware}" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
                 </StackPanel>
                 <TextBox Text="notepad" />
             </StackPanel>
@@ -86,7 +87,7 @@
             <!-- Répertoire du fichier log -->
             <StackPanel Orientation="Vertical" Width="250">
                 <StackPanel Background="#857DFF" Margin="0,0,0,10">
-                    <TextBlock Text="Répertoire du fichier log" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
+                    <TextBlock Text="{x:Static assets:Resources.LogFileDirectory}" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
                 </StackPanel>
                 <TextBox Text="Chemin/Par/Défaut" />
             </StackPanel>
@@ -94,7 +95,7 @@
             <!-- Répertoire du fichier état -->
             <StackPanel Orientation="Vertical" Width="250">
                 <StackPanel Background="#857DFF" Margin="0,0,0,10">
-                    <TextBlock Text="Répertoire du fichier état" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
+                    <TextBlock Text="{x:Static assets:Resources.StateFileDirectory}" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
                 </StackPanel>
                 <TextBox Text="Chemin/Par/Défaut" />
             </StackPanel>
@@ -107,7 +108,7 @@
         
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="25" Spacing="75">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                <TextBlock Text="Extension à prioriser" FontWeight="Bold" Foreground="White" FontSize="20" Background="#857DFF" TextAlignment="Center"/>
+                <TextBlock Text="{x:Static assets:Resources.PrioritizedExtensions}" FontWeight="Bold" Foreground="White" FontSize="20" Background="#857DFF" TextAlignment="Center"/>
                 <StackPanel Orientation="Horizontal" Margin="10">
                     <CheckBox Content=".exe" Cursor="Hand" Margin="5"/>
                     <CheckBox Content=".docx" Cursor="Hand" Margin="5"/>
@@ -117,7 +118,7 @@
             </StackPanel>
 
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                <TextBlock Text="Extension à chiffrer" FontWeight="Bold" Foreground="White" FontSize="20" Background="#857DFF" TextAlignment="Center"/>
+                <TextBlock Text="{x:Static assets:Resources.EncryptedExtensions}" FontWeight="Bold" Foreground="White" FontSize="20" Background="#857DFF" TextAlignment="Center"/>
                 <StackPanel Orientation="Horizontal" Margin="10">
                     <CheckBox Content=".exe" Cursor="Hand" Margin="5"/>
                     <CheckBox Content=".docx" Cursor="Hand" Margin="5"/>
@@ -129,8 +130,8 @@
 
         <!-- Boutons -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Spacing="20">
-            <Button x:Name="ResetButton" Content="Réinitialiser" Cursor="Hand" FontSize="20" Margin="10" Click="OnResetButtonClick"/>
-            <Button x:Name="ApplyButton" Content="Appliquer les changements" Cursor="Hand" FontSize="20" Margin="10" Click="OnApplyButtonClick" />
+            <Button x:Name="ResetButton" Content="{x:Static assets:Resources.Reset}" Cursor="Hand" FontSize="20" Margin="10" Click="OnResetButtonClick"/>
+            <Button x:Name="ApplyButton" Content="{x:Static assets:Resources.ApplyChanges}" Cursor="Hand" FontSize="20" Margin="10" Click="OnApplyButtonClick" />
         </StackPanel>
     </StackPanel>
 </UserControl>

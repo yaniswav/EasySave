@@ -131,5 +131,57 @@ namespace EasySave.Assets {
                 return ResourceManager.GetString("BrowseFolders", resourceCulture); 
             }
         }
+        
+        // --- SettingsView ---
+        public static string ApplyChanges {
+            get {
+                return ResourceManager.GetString("ApplyChanges", resourceCulture); 
+            }
+        }
+        public static string BuisnessSoftware {
+            get {
+                return ResourceManager.GetString("BuisnessSoftware", resourceCulture); 
+            }
+        }
+        public static string EncryptedExtensions {
+            get {
+                return ResourceManager.GetString("EncryptedExtensions", resourceCulture); 
+            }
+        }
+        public static string FileMaxSize {
+            get {
+                return ResourceManager.GetString("FileMaxSize", resourceCulture); 
+            }
+        }
+        public static string Language {
+            get {
+                return ResourceManager.GetString("Language", resourceCulture); 
+            }
+        }
+        public static string LogFileDirectory {
+            get {
+                return ResourceManager.GetString("LogFileDirectory", resourceCulture); 
+            }
+        }
+        public static string LogFileFormat {
+            get {
+                return ResourceManager.GetString("LogFileFormat", resourceCulture); 
+            }
+        }
+        public static string PrioritizedExtensions {
+            get {
+                return ResourceManager.GetString("PrioritizedExtensions", resourceCulture); 
+            }
+        }
+        public static string Reset {
+            get {
+                return ResourceManager.GetString("Reset", resourceCulture); 
+            }
+        }
+        public static string StateFileDirectory {
+            get {
+                return ResourceManager.GetString("StateFileDirectory", resourceCulture); 
+            }
+        }
     }
 }

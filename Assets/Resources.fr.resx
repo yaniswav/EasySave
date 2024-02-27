@@ -59,4 +59,34 @@
     <data name="BrowseFolders" xml:space="preserve">
         <value>Parcourir vos dossiers</value>
     </data>
+    <data name="Language" xml:space="preserve">
+        <value>Langue</value>
+    </data>
+    <data name="LogFileFormat" xml:space="preserve">
+        <value>Format du fichier log</value>
+    </data>
+    <data name="FileMaxSize" xml:space="preserve">
+        <value>Taille max du fichier</value>
+    </data>
+    <data name="BuisnessSoftware" xml:space="preserve">
+        <value>Logiciel métier </value>
+    </data>
+    <data name="LogFileDirectory" xml:space="preserve">
+        <value>Répertoire du fichier log</value>
+    </data>
+    <data name="StateFileDirectory" xml:space="preserve">
+        <value>Répertoire du fichier état</value>
+    </data>
+    <data name="PrioritizedExtensions" xml:space="preserve">
+        <value>Extensions à prioriser</value>
+    </data>
+    <data name="EncryptedExtensions" xml:space="preserve">
+        <value>Extensions à chiffrer</value>
+    </data>
+    <data name="ApplyChanges" xml:space="preserve">
+        <value>Appliquer les changements</value>
+    </data>
+    <data name="Reset" xml:space="preserve">
+        <value>Réinitialiser</value>
+    </data>
 </root>
