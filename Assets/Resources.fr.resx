@@ -11,10 +11,52 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="GreetingText" xml:space="preserve">
-        <value>Bonjour</value>
-    </data>
     <data name="Backup" xml:space="preserve">
         <value>SAUVEGARDE</value>
+    </data>
+    <data name="Settings" xml:space="preserve">
+        <value>PARAMÈTRES</value>
+    </data>
+    <data name="CreateBackup" xml:space="preserve">
+        <value>Créer une sauvegarde</value>
+    </data>
+    <data name="EditBackup" xml:space="preserve">
+        <value>Modifier une sauvegarde</value>
+    </data>
+    <data name="DeleteBackup" xml:space="preserve">
+        <value>Supprimer une sauvegarde</value>
+    </data>
+    <data name="ExecuteBackup" xml:space="preserve">
+        <value>Lancer une sauvegarde</value>
+    </data>
+    <data name="ResumeBackup" xml:space="preserve">
+        <value>Reprendre la sauveagrde</value>
+    </data>
+    <data name="PauseBackup" xml:space="preserve">
+        <value>Mettre la sauvegarde en pause</value>
+    </data>
+    <data name="StopBackup" xml:space="preserve">
+        <value>Arrêter la sauvegarde</value>
+    </data>
+    <data name="BackupName" xml:space="preserve">
+        <value>Nom de la sauvegarde</value>
+    </data>
+    <data name="SourceDirectory" xml:space="preserve">
+        <value>Répertoire source</value>
+    </data>
+    <data name="TargetDirectory" xml:space="preserve">
+        <value>Répertoire cible</value>
+    </data>
+    <data name="CompleteType" xml:space="preserve">
+        <value>Complète</value>
+    </data>
+    <data name="DifferentialType" xml:space="preserve">
+        <value>Différentielle</value>
+    </data>
+    <data name="BackupType" xml:space="preserve">
+        <value>Type de sauvegarde</value>
+    </data>
+    <data name="BrowseFolders" xml:space="preserve">
+        <value>Parcourir vos dossiers</value>
     </data>
 </root>

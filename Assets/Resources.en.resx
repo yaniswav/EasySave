@@ -11,10 +11,52 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="GreetingText" xml:space="preserve">
-        <value>Hi</value>
-    </data>
     <data name="Backup" xml:space="preserve">
         <value>BACKUP</value>
+    </data>
+    <data name="Settings" xml:space="preserve">
+        <value>SETTINGS</value>
+    </data>
+    <data name="CreateBackup" xml:space="preserve">
+        <value>Create a backup</value>
+    </data>
+    <data name="EditBackup" xml:space="preserve">
+        <value>Edit a backup</value>
+    </data>
+    <data name="DeleteBackup" xml:space="preserve">
+        <value>Delete a backup</value>
+    </data>
+    <data name="ExecuteBackup" xml:space="preserve">
+        <value>Execute a backup</value>
+    </data>
+    <data name="ResumeBackup" xml:space="preserve">
+        <value>Resume backup</value>
+    </data>
+    <data name="PauseBackup" xml:space="preserve">
+        <value>Pause backup</value>
+    </data>
+    <data name="StopBackup" xml:space="preserve">
+        <value>Stop Backup</value>
+    </data>
+    <data name="BackupName" xml:space="preserve">
+        <value>Backup name</value>
+    </data>
+    <data name="SourceDirectory" xml:space="preserve">
+        <value>Source directory</value>
+    </data>
+    <data name="TargetDirectory" xml:space="preserve">
+        <value>Target Directory</value>
+    </data>
+    <data name="CompleteType" xml:space="preserve">
+        <value>Complete</value>
+    </data>
+    <data name="DifferentialType" xml:space="preserve">
+        <value>Differential</value>
+    </data>
+    <data name="BackupType" xml:space="preserve">
+        <value>Backup type</value>
+    </data>
+    <data name="BrowseFolders" xml:space="preserve">
+        <value>Browse folders</value>
     </data>
 </root>

@@ -45,14 +45,90 @@ namespace EasySave.Assets {
             }
         }
         
-        public static string GreetingText {
-            get {
-                return ResourceManager.GetString("GreetingText", resourceCulture); 
-            }
-        }
+        //RESX
+        
+        //--- MainWindow ---
         public static string Backup {
             get {
                 return ResourceManager.GetString("Backup", resourceCulture); 
+            }
+        }
+        public static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture); 
+            }
+        }
+        
+        // --- BackupView ---
+        public static string CreateBackup {
+            get {
+                return ResourceManager.GetString("CreateBackup", resourceCulture); 
+            }
+        }
+        public static string DeleteBackup {
+            get {
+                return ResourceManager.GetString("DeleteBackup", resourceCulture); 
+            }
+        }
+        public static string EditBackup {
+            get {
+                return ResourceManager.GetString("EditBackup", resourceCulture); 
+            }
+        }
+        public static string ExecuteBackup {
+            get {
+                return ResourceManager.GetString("ExecuteBackup", resourceCulture); 
+            }
+        }
+        public static string PauseBackup {
+            get {
+                return ResourceManager.GetString("PauseBackup", resourceCulture); 
+            }
+        }
+        public static string ResumeBackup {
+            get {
+                return ResourceManager.GetString("ResumeBackup", resourceCulture); 
+            }
+        }
+        public static string StopBackup {
+            get {
+                return ResourceManager.GetString("StopBackup", resourceCulture); 
+            }
+        }
+        public static string BackupName {
+            get {
+                return ResourceManager.GetString("BackupName", resourceCulture); 
+            }
+        }
+        public static string SourceDirectory {
+            get {
+                return ResourceManager.GetString("SourceDirectory", resourceCulture); 
+            }
+        }
+        public static string TargetDirectory {
+            get {
+                return ResourceManager.GetString("TargetDirectory", resourceCulture); 
+            }
+        }
+        public static string CompleteType {
+            get {
+                return ResourceManager.GetString("CompleteType", resourceCulture); 
+            }
+        }
+        public static string DifferentialType {
+            get {
+                return ResourceManager.GetString("DifferentialType", resourceCulture); 
+            }
+        }
+
+        public static string BackupType {
+            get {
+                return ResourceManager.GetString("BackupType", resourceCulture); 
+            }
+        }
+        public static string BrowseFolders {
+            get {
+                return ResourceManager.GetString("BrowseFolders", resourceCulture); 
             }
         }
     }

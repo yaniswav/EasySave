@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:assets="clr-namespace:EasySave.Assets"
              x:Class="EasySave.Views.BackupView">
     <UserControl.Styles>
         <Style Selector="Button">
@@ -20,27 +21,27 @@
     
     <StackPanel Orientation="Vertical" Background="#dad7fc" Margin="25, 0, 25, 25" >
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="15, 10, 15, 0" Spacing="10">
-            <Button x:Name="CreateButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Créer une sauvegarde" Click="OnCreateButtonClick">
+            <Button x:Name="CreateButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.CreateBackup}" Click="OnCreateButtonClick">
                 <Image Source="/Assets/pictures/create.png" Width="20" Height="20"/>
             </Button>
-            <Button x:Name="EditButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Modifier une sauvegarde" Click="OnEditButtonClick">
+            <Button x:Name="EditButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.EditBackup}" Click="OnEditButtonClick">
                 <Image Source="/Assets/pictures/edit.png" Width="20" Height="20"/>
             </Button>
-            <Button x:Name="DeleteButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Supprimer une sauveagrde" Click="OnDeleteButtonClick">
+            <Button x:Name="DeleteButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.DeleteBackup}" Click="OnDeleteButtonClick">
                 <Image Source="/Assets/pictures/trash.png" Width="20" Height="20"/>
             </Button>
             <Image Source="/Assets/pictures/separator3.png" Width="150" Height="100"/>
-            <Button x:Name="ExecuteButton" Width="150" Height="40" Cursor="Hand" ToolTip.Tip="Lancer une sauvegarde" Click="OnExecuteButtonClick">
+            <Button x:Name="ExecuteButton" Width="150" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.ExecuteBackup}" Click="OnExecuteButtonClick">
                 <Image Source="/Assets/pictures/play.png" Width="20" Height="20"/>
             </Button>
             <Image Source="/Assets/pictures/separator3.png" Width="150" Height="100"/>
-            <Button x:Name="PlayButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Reprendre la sauveagrde" Click="OnPlayButtonClick">
+            <Button x:Name="PlayButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.ResumeBackup}" Click="OnPlayButtonClick">
                 <Image Source="/Assets/pictures/redo.png" Width="20" Height="20"/>
             </Button>
-            <Button x:Name="PauseButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Mettre en pause la sauvegarde" Click="OnPauseButtonClick">
+            <Button x:Name="PauseButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.PauseBackup}" Click="OnPauseButtonClick">
                 <Image Source="/Assets/pictures/pause.png" Width="20" Height="20"/>
             </Button>
-            <Button x:Name="StopButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="Arrêter la sauvegarde" Click="OnStopButtonClick">
+            <Button x:Name="StopButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.StopBackup}" Click="OnStopButtonClick">
                 <Image Source="/Assets/pictures/stop.png" Width="20" Height="20"/>
             </Button>
         </StackPanel>
@@ -56,24 +57,24 @@
             </Grid.ColumnDefinitions>
 
             <!-- Nom de la sauvegarde -->
-            <TextBox Grid.Column="0" x:Name="NameTextBox" Width="200" Margin="5" Watermark="Nom de la sauvegarde"/>
+            <TextBox Grid.Column="0" x:Name="NameTextBox" Width="200" Margin="5" Watermark="{x:Static assets:Resources.BackupName}"/>
 
             <!-- Répertoire source -->
-            <TextBox Grid.Column="1" x:Name="SourceDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="Répertoire source"/>
-            <Button Grid.Column="2" Margin="0,5,5,5" Width="30" Height="30" Cursor="Hand" ToolTip.Tip="Parcourir vos dossiers" Click="OnSelectSourceDirectoryClick">
+            <TextBox Grid.Column="1" x:Name="SourceDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="{x:Static assets:Resources.SourceDirectory}"/>
+            <Button Grid.Column="2" Margin="0,5,5,5" Width="30" Height="30" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.BrowseFolders}" Click="OnSelectSourceDirectoryClick">
                 <Image Source="/Assets/pictures/folder.png" Width="20" Height="20"/>
             </Button>
 
             <!-- Répertoire de destination -->
-            <TextBox Grid.Column="3" x:Name="TargetDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="Répertoire de destination"/>
-            <Button Grid.Column="4" Margin="0,5,5,5" Width="30" Height="30" Cursor="Hand" ToolTip.Tip="Parcourir vos dossiers" Click="OnSelectTargetDirectoryClick">
+            <TextBox Grid.Column="3" x:Name="TargetDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="{x:Static assets:Resources.TargetDirectory}"/>
+            <Button Grid.Column="4" Margin="0,5,5,5" Width="30" Height="30" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.BrowseFolders}" Click="OnSelectTargetDirectoryClick">
                 <Image Source="/Assets/pictures/folder.png" Width="20" Height="20"/>
             </Button>
 
             <!-- Type -->
-            <ComboBox Grid.Column="5" Width="200" Margin="5" PlaceholderText="Type de sauvegarde">
-                <ComboBoxItem Content="Complète"/>
-                <ComboBoxItem Content="Différentielle"/>
+            <ComboBox Grid.Column="5" Width="200" Margin="5" PlaceholderText="{x:Static assets:Resources.BackupType}">
+                <ComboBoxItem Content="{x:Static assets:Resources.CompleteType}"/>
+                <ComboBoxItem Content="{x:Static assets:Resources.DifferentialType}"/>
             </ComboBox>
         </Grid>
         
