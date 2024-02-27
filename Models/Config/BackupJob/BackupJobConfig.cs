@@ -57,7 +57,6 @@ public partial class ConfigModel
 
         var backupJobs = GetBackupJobs();
 
-
         backupJobs.Add(jobConfig);
         SaveBackupJobs(backupJobs);
         Console.WriteLine($"Backup job {jobConfig.Name} added.");

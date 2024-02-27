@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using System.Collections.Concurrent;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EasySave
 {
     [XmlInclude(typeof(XmlLogger))]
-    public class LoggingModel
+    public abstract class LoggingModel
     {
-        // Propriétés communes
+        private static readonly ConcurrentQueue<LoggingModel> LogQueue = new ConcurrentQueue<LoggingModel>();
+        private static readonly AutoResetEvent LogSignal = new AutoResetEvent(false);
+        private static readonly Thread LogThread;
+        protected static readonly object FileLock = new object();
+
         public string Name { get; set; }
         public string FileSource { get; set; }
         public string FileTarget { get; set; }
@@ -24,17 +31,39 @@ namespace EasySave
             Xml
         }
 
-        // Méthodes abstraites pour l'écriture et le chargement des logs
-        public virtual void WriteLog(LoggingModel log)
+        static LoggingModel()
         {
+            LogThread = new Thread(ProcessLogQueue)
+            {
+                IsBackground = true
+            };
+            LogThread.Start();
         }
 
+        private static void ProcessLogQueue()
+        {
+            while (true)
+            {
+                LogSignal.WaitOne();
+                while (LogQueue.TryDequeue(out var logEntry))
+                {
+                    logEntry.WriteLogToFile();
+                }
+            }
+        }
+
+        public static void EnqueueLog(LoggingModel logEntry)
+        {
+            LogQueue.Enqueue(logEntry);
+            LogSignal.Set();
+        }
+
+        protected abstract void WriteLogToFile();
 
         public static List<T> LoadLogs<T>(string filePath, LogFormat format)
         {
             if (!File.Exists(filePath) || new FileInfo(filePath).Length == 0)
             {
-                Console.WriteLine("Log file is empty or not found. Creating a new list.");
                 return new List<T>();
             }
 
@@ -43,7 +72,6 @@ namespace EasySave
                 string content = File.ReadAllText(filePath);
                 if (string.IsNullOrWhiteSpace(content))
                 {
-                    Console.WriteLine("Log file is empty. Creating a new list.");
                     return new List<T>();
                 }
 
@@ -58,13 +86,10 @@ namespace EasySave
             }
         }
 
-
-        // Méthode helper pour obtenir le chemin du fichier de log
         protected static string GetLogFilePath(string extension)
         {
             string logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
-            Directory.CreateDirectory(logDirectory); // Crée le répertoire s'il n'existe pas
-
+            Directory.CreateDirectory(logDirectory);
             string logFileName = DateTime.Now.ToString("yyyy-MM-dd") + extension;
             return Path.Combine(logDirectory, logFileName);
         }

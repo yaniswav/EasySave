@@ -14,7 +14,7 @@ namespace EasySave.ViewModels
 
         public BackupVM()
         {
-            _configModel = new ConfigModel();
+            _configModel = ConfigModel.Instance;
             BackupJobs = new ObservableCollection<BackupJobConfig>(_configModel.LoadBackupJobs());
         }
 
@@ -52,7 +52,8 @@ namespace EasySave.ViewModels
             {
                 foreach (var job in backupJobs)
                 {
-                    Console.WriteLine($"Name: {job.Name}, Source: {job.SourceDir}, Destination: {job.DestinationDir}, Type: {job.Type}");
+                    Console.WriteLine(
+                        $"Name: {job.Name}, Source: {job.SourceDir}, Destination: {job.DestinationDir}, Type: {job.Type}");
                 }
             }
         }
