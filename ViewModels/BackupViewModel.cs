@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using ReactiveUI;
-using EasySave.Models;
+using EasySave;
 
 namespace EasySave.ViewModels
 {
