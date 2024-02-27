@@ -32,7 +32,7 @@
                 <StackPanel Background="#857DFF" Margin="0,0,0,10">
                     <TextBlock Text="{x:Static assets:Resources.Language}" FontWeight="Bold" Foreground="White" FontSize="20" TextAlignment="Center" />
                 </StackPanel>
-                <ComboBox SelectedIndex="1">
+                <ComboBox x:Name="Language">
                     <ComboBoxItem>
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/Assets/pictures/french_flag.png" Width="20" Height="20"/>
@@ -53,7 +53,7 @@
                 <StackPanel Background="#857DFF" Margin="0,0,0,10">
                     <TextBlock Text="{x:Static assets:Resources.LogFileFormat}" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
                 </StackPanel>
-                <ComboBox Height="20" SelectedIndex="0">
+                <ComboBox x:Name="Format" Height="20">
                     <StackPanel Orientation="Horizontal">
                     <ComboBoxItem Content="JSON" />
                     </StackPanel>
@@ -68,7 +68,7 @@
                 <StackPanel Background="#857DFF" Margin="0,0,0,10">
                     <TextBlock Text="{x:Static assets:Resources.FileMaxSize}" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
                 </StackPanel>
-                <TextBox Text="10000" />
+                <TextBox x:Name="FileSize"/>
             </StackPanel>
         </StackPanel>
         
@@ -81,7 +81,7 @@
                 <StackPanel Background="#857DFF" Margin="0,0,0,10">
                     <TextBlock Text="{x:Static assets:Resources.BuisnessSoftware}" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
                 </StackPanel>
-                <TextBox Text="notepad" />
+                <TextBox x:Name="BusinessSoftware" />
             </StackPanel>
 
             <!-- Répertoire du fichier log -->
@@ -89,7 +89,7 @@
                 <StackPanel Background="#857DFF" Margin="0,0,0,10">
                     <TextBlock Text="{x:Static assets:Resources.LogFileDirectory}" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
                 </StackPanel>
-                <TextBox Text="Chemin/Par/Défaut" />
+                <TextBox x:Name="LogDirectory" />
             </StackPanel>
     
             <!-- Répertoire du fichier état -->
@@ -97,7 +97,7 @@
                 <StackPanel Background="#857DFF" Margin="0,0,0,10">
                     <TextBlock Text="{x:Static assets:Resources.StateFileDirectory}" FontWeight="Bold" Foreground="White" FontSize="20"  TextAlignment="Center" />
                 </StackPanel>
-                <TextBox Text="Chemin/Par/Défaut" />
+                <TextBox x:Name="StateDirectory"/>
             </StackPanel>
         </StackPanel>
 
@@ -110,20 +110,20 @@
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                 <TextBlock Text="{x:Static assets:Resources.PrioritizedExtensions}" FontWeight="Bold" Foreground="White" FontSize="20" Background="#857DFF" TextAlignment="Center"/>
                 <StackPanel Orientation="Horizontal" Margin="10">
-                    <CheckBox Content=".exe" Cursor="Hand" Margin="5"/>
-                    <CheckBox Content=".docx" Cursor="Hand" Margin="5"/>
-                    <CheckBox Content=".pdf" Cursor="Hand" Margin="5"/>
-                    <CheckBox Content=".txt" Cursor="Hand" Margin="5"/>
+                    <CheckBox x:Name="PrioritizedCheckExe" Content=".exe" Cursor="Hand" Margin="5"/>
+                    <CheckBox x:Name="PrioritizedCheckDocx" Content=".docx" Cursor="Hand" Margin="5"/>
+                    <CheckBox x:Name="PrioritizedCheckPdf" Content=".pdf" Cursor="Hand" Margin="5"/>
+                    <CheckBox x:Name="PrioritizedCheckTxt" Content=".txt" Cursor="Hand" Margin="5"/>
                 </StackPanel>
             </StackPanel>
 
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                 <TextBlock Text="{x:Static assets:Resources.EncryptedExtensions}" FontWeight="Bold" Foreground="White" FontSize="20" Background="#857DFF" TextAlignment="Center"/>
                 <StackPanel Orientation="Horizontal" Margin="10">
-                    <CheckBox Content=".exe" Cursor="Hand" Margin="5"/>
-                    <CheckBox Content=".docx" Cursor="Hand" Margin="5"/>
-                    <CheckBox Content=".pdf" Cursor="Hand" Margin="5"/>
-                    <CheckBox Content=".txt" Cursor="Hand" Margin="5"/>
+                    <CheckBox x:Name="EncryptedCheckExe" Content=".exe" Cursor="Hand" Margin="5"/>
+                    <CheckBox x:Name="EncryptedCheckDocx" Content=".docx" Cursor="Hand" Margin="5"/>
+                    <CheckBox x:Name="EncryptedCheckPdf" Content=".pdf" Cursor="Hand" Margin="5"/>
+                    <CheckBox x:Name="EncryptedCheckTxt" Content=".txt" Cursor="Hand" Margin="5"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

@@ -1,54 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data;
 using System.Xml;
 using System.Xml.Serialization;
-using System.IO;
 
 namespace EasySave
 {
     public class XmlLogger : LoggingModel
     {
-        // Méthode pour écrire le log au format XML
-        public override void WriteLog(LoggingModel log)
+        protected override void WriteLogToFile()
         {
-            try
+            string logFilePath = GetLogFilePath(".xml");
+
+            lock (FileLock)
             {
-                Console.WriteLine("Début de l'écriture du log en XML.");
-                string filePath = GetLogFilePath(".xml");
-                Console.WriteLine($"Chemin du fichier de log XML : {filePath}");
-
-                var logs = LoadLogs<LoggingModel>(filePath, LogFormat.Xml);
-                Console.WriteLine($"Logs XML chargés. Nombre de logs existants : {logs.Count}");
-
-                logs.Add(log);
-                XmlSerializer serializer = new XmlSerializer(typeof(List<LoggingModel>));
-                Console.WriteLine($"XML Serializer : {serializer}");
-                using (StreamWriter writer = new StreamWriter(filePath, false)) // false to overwrite the file
-
+                if (!File.Exists(logFilePath))
                 {
-                    serializer.Serialize(writer, logs);
-                    Console.WriteLine(
-                        $"Sérialisation des logs XML terminée. Nombre de logs : {logs.Count}, chemin : {filePath}, writer : {writer}, serializer : {serializer}");
+                    // Create a new file with a root element
+                    CreateNewLogFile(logFilePath);
                 }
 
-                Console.WriteLine("Log XML écrit dans le fichier.");
+                // Append the log entry to the existing file
+                AppendLogEntryToFile(logFilePath, this);
             }
-            catch (Exception e)
+        }
+
+        private void CreateNewLogFile(string filePath)
+        {
+            using (var writer = XmlWriter.Create(filePath, new XmlWriterSettings { Indent = true }))
             {
-                Console.WriteLine("Error during the log writing: " + e.Message);
-                if (e.InnerException != null)
+                writer.WriteStartDocument();
+                writer.WriteStartElement("Logs");
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+        }
+
+        private void AppendLogEntryToFile(string filePath, LoggingModel logEntry)
+        {
+            var doc = new XmlDocument();
+            doc.Load(filePath);
+
+            var root = doc.DocumentElement;
+
+            var serializer = new XmlSerializer(typeof(LoggingModel));
+            using (var stream = new MemoryStream())
+            {
+                serializer.Serialize(stream, logEntry);
+                stream.Position = 0;
+                var logEntryDoc = new XmlDocument();
+                logEntryDoc.Load(stream);
+                var importedNode = doc.ImportNode(logEntryDoc.DocumentElement, true);
+                
+                root.AppendChild(importedNode);
+
+                using (var writer = XmlWriter.Create(filePath, new XmlWriterSettings { Indent = true }))
                 {
-                    Console.WriteLine("Inner exception: " + e.InnerException.Message);
+                    doc.Save(writer);
                 }
             }
-
         }
     }
 }

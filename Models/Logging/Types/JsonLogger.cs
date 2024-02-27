@@ -2,24 +2,28 @@
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace EasySave
 {
     public class JsonLogger : LoggingModel
     {
-        public override void WriteLog(LoggingModel log)
+        protected override async void WriteLogToFile()
         {
-            Console.WriteLine("Début de l'écriture du log en JSON.");
-            string filePath = GetLogFilePath(".json");
-            Console.WriteLine($"Chemin du fichier de log JSON : {filePath}");
+            string logFilePath = GetLogFilePath(".json");
 
-            var logs = LoadLogs<LoggingModel>(filePath, LogFormat.Json);
-            Console.WriteLine($"Logs JSON chargés. Nombre de logs existants : {logs.Count}");
+            // Serialize the log entry outside of the lock to improve performance
+            string jsonString = JsonConvert.SerializeObject(this, Formatting.Indented);
 
-            logs.Add(log);
-            string jsonString = JsonConvert.SerializeObject(logs, Formatting.Indented);
-            File.WriteAllText(filePath, jsonString);
-            Console.WriteLine("Log JSON écrit dans le fichier.");
+            // Use asynchronous file access for improved performance
+            await Task.Run(() =>
+            {
+                lock (FileLock)
+                {
+                    // Append the serialized log entry to the file
+                    File.AppendAllText(logFilePath, jsonString + Environment.NewLine);
+                }
+            });
         }
     }
 }
