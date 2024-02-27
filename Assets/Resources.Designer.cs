@@ -183,5 +183,23 @@ namespace EasySave.Assets {
                 return ResourceManager.GetString("StateFileDirectory", resourceCulture); 
             }
         }
+        
+        // --- SettingsView ---
+        
+        public static string SelectFileOrFolder {
+            get {
+                return ResourceManager.GetString("SelectFileOrFolder", resourceCulture); 
+            }
+        }
+        public static string SelectFolder {
+            get {
+                return ResourceManager.GetString("SelectFolder", resourceCulture); 
+            }
+        }
+        public static string SelectFile {
+            get {
+                return ResourceManager.GetString("SelectFile", resourceCulture); 
+            }
+        }
     }
 }

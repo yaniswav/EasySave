@@ -1,9 +1,10 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:assets="clr-namespace:EasySave.Assets"
         x:Class="EasySave.FileTypeView"
-        Width="300" Height="200"
+        Width="500" Height="200"
         CanResize="False"
-        Title="Selectionner Fichier ou Dossier">
+        Title="{x:Static assets:Resources.SelectFileOrFolder}">
     <Window.Styles>
         <Style Selector="Button">
             <Setter Property="Background" Value="#857DFF" />
@@ -21,8 +22,8 @@
         </Style>
         
     </Window.Styles>
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="SelectFolderButton" Content="Select Folder" Cursor="Hand" Click="SelectFolderButton_Click" Margin="10"/>
-        <Button x:Name="SelectFileButton" Content="Select File" Cursor="Hand" Click="SelectFileButton_Click" Margin="10"/>
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Button x:Name="SelectFolderButton" Content="{x:Static assets:Resources.SelectFolder}" Cursor="Hand" Click="SelectFolderButton_Click" Width="200" Margin="10"/>
+        <Button x:Name="SelectFileButton" Content="{x:Static assets:Resources.SelectFile}" Cursor="Hand" Click="SelectFileButton_Click" Width="200" Margin="10"/>
     </StackPanel>
 </Window>

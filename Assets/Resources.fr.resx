@@ -89,4 +89,13 @@
     <data name="Reset" xml:space="preserve">
         <value>Réinitialiser</value>
     </data>
+    <data name="SelectFileOrFolder" xml:space="preserve">
+        <value>Dossier ou Fichier</value>
+    </data>
+    <data name="SelectFolder" xml:space="preserve">
+        <value>Sélectionner un dossier</value>
+    </data>
+    <data name="SelectFile" xml:space="preserve">
+        <value>Sélectinner un fichier</value>
+    </data>
 </root>

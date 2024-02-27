@@ -93,4 +93,13 @@
     <data name="Reset" xml:space="preserve">
         <value />
     </data>
+    <data name="SelectFileOrFolder" xml:space="preserve">
+        <value />
+    </data>
+    <data name="SelectFolder" xml:space="preserve">
+        <value />
+    </data>
+    <data name="SelectFile" xml:space="preserve">
+        <value />
+    </data>
 </root>
