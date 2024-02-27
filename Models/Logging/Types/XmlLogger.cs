@@ -1,23 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace EasySave
 {
     public class XmlLogger : LoggingModel
     {
-        // Cette méthode est appelée par le thread de journalisation dans la classe de base pour écrire les données dans le fichier XML.
         protected override void WriteLogToFile()
         {
-            lock (FileLock) // Assurez-vous qu'un seul thread écrit dans le fichier à la fois
+            string logFilePath = GetLogFilePath(".xml");
+
+            lock (FileLock)
             {
-                List<LoggingModel> logs = LoadLogs<LoggingModel>(GetLogFilePath(".xml"), LogFormat.Xml) ?? new List<LoggingModel>();
-                logs.Add(this); // Ajoute l'entrée actuelle au journal
-                using (StreamWriter writer = new StreamWriter(GetLogFilePath(".xml"), false))
+                if (!File.Exists(logFilePath))
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(List<LoggingModel>));
-                    serializer.Serialize(writer, logs);
+                    // Create a new file with a root element
+                    CreateNewLogFile(logFilePath);
+                }
+
+                // Append the log entry to the existing file
+                AppendLogEntryToFile(logFilePath, this);
+            }
+        }
+
+        private void CreateNewLogFile(string filePath)
+        {
+            using (var writer = XmlWriter.Create(filePath, new XmlWriterSettings { Indent = true }))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("Logs");
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+        }
+
+        private void AppendLogEntryToFile(string filePath, LoggingModel logEntry)
+        {
+            var doc = new XmlDocument();
+            doc.Load(filePath);
+
+            var root = doc.DocumentElement;
+
+            var serializer = new XmlSerializer(typeof(LoggingModel));
+            using (var stream = new MemoryStream())
+            {
+                serializer.Serialize(stream, logEntry);
+                stream.Position = 0;
+                var logEntryDoc = new XmlDocument();
+                logEntryDoc.Load(stream);
+                var importedNode = doc.ImportNode(logEntryDoc.DocumentElement, true);
+                
+                root.AppendChild(importedNode);
+
+                using (var writer = XmlWriter.Create(filePath, new XmlWriterSettings { Indent = true }))
+                {
+                    doc.Save(writer);
                 }
             }
         }
