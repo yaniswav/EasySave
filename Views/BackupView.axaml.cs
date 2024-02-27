@@ -16,6 +16,7 @@ public partial class BackupView : UserControl
     {
         InitializeComponent();
 
+        DataContext = new BackupViewModel();
         //Ne fonctionne pas 
         var sampleData = new List<BackupJob>
         {
@@ -31,6 +32,8 @@ public partial class BackupView : UserControl
             }
             // Add more sample data as needed
         };
+        
+        
         SampleDataGrid.ItemsSource = sampleData;
     }
 

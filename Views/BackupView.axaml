@@ -1,23 +1,38 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:assets="clr-namespace:EasySave.Assets"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:EasySave.ViewModels"
+             mc:Ignorable="d"
+             d:DesignInstance="{d:DesignInstance Type=vm:BackupViewModel, IsDesignTimeCreatable=True}"
              x:Class="EasySave.Views.BackupView">
-    <UserControl.Styles>
-        <Style Selector="Button">
-            <Setter Property="Background" Value="#857DFF" />
-            <Setter Property="Margin" Value="10" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Width" Value="120" />
-            <Setter Property="Height" Value="40" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-        </Style>
-        <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="#6552d1"/>
-        </Style>
-        
-    </UserControl.Styles>
+    <UserControl.DataContext>
+        <vm:BackupViewModel/>
+    </UserControl.DataContext>
+    <StackPanel Orientation="Vertical" Background="#dad7fc" Margin="25">
+        <!-- Commandes et contrôles simplifiés pour interaction avec le ViewModel -->
+        <Button Command="{Binding CreateBackupCommand}" Content="Créer" Margin="10"/>
+        <Button Command="{Binding EditBackupCommand}" Content="Modifier" Margin="10"/>
+        <Button Command="{Binding DeleteBackupCommand}" Content="Supprimer" Margin="10"/>
+        <Button Command="{Binding ExecuteBackupCommand}" Content="Exécuter" Margin="10"/>
+        <Button Command="{Binding PauseBackupCommand}" Content="Pause" Margin="10"/>
+        <Button Command="{Binding ResumeBackupCommand}" Content="Reprendre" Margin="10"/>
+        <Button Command="{Binding StopBackupCommand}" Content="Arrêter" Margin="10"/>
+
+        <!-- Affichage des travaux de sauvegarde -->
+        <DataGrid ItemsSource="{Binding Jobs}" AutoGenerateColumns="False" Margin="10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Nom" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Répertoire source" Binding="{Binding SourceDirectory}"/>
+                <DataGridTextColumn Header="Répertoire cible" Binding="{Binding DestinationDirectory}"/>
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
+                <DataGridTextColumn Header="État" Binding="{Binding State}"/>
+                <DataGridTextColumn Header="Progression" Binding="{Binding Progress}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
+</UserControl>
+
     
     <StackPanel Orientation="Vertical" Background="#dad7fc" Margin="25, 0, 25, 25" >
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="15, 10, 15, 0" Spacing="10">

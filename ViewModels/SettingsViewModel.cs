@@ -1,33 +1,21 @@
-using System.Collections.ObjectModel;
-using ReactiveUI;
-using EasySave; // Make sure this is the correct namespace
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
-public class SettingsViewModel : ReactiveObject
+namespace EasySave.ViewModels;
+
+public partial class SettingsViewModel : ViewModelBase
 {
+    [ObservableProperty]
     private string _selectedLanguage;
-    private ConfigModel _localeConfig = new ConfigModel(); // Assuming ConfigModel is correct
 
-    public SettingsViewModel()
+    [ObservableProperty]
+    private bool _isDarkThemeEnabled;
+
+    // La commande est générée automatiquement à partir de la méthode marquée par l'attribut [RelayCommand]
+    [RelayCommand]
+    private void ApplySettings()
     {
-        Languages = new ObservableCollection<string> { "English", "Français" };
-        SelectedLanguage = "English"; // Default language
-    }
-
-    public ObservableCollection<string> Languages { get; }
-
-    public string SelectedLanguage
-    {
-        get => _selectedLanguage;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _selectedLanguage, value);
-            ChangeLanguage(value);
-        }
-    }
-
-    private void ChangeLanguage(string language)
-    {
-        var locale = language == "Français" ? "fr-FR" : "en-US";
-        _localeConfig.SetLocale(locale); // Use ConfigModel's method
+        // Logique pour appliquer les paramètres ici
+        // Par exemple, mettre à jour la configuration de l'application avec les nouvelles valeurs
     }
 }
