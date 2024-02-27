@@ -10,13 +10,13 @@ using System.Collections.Specialized;
 public class View
 {
     // Dependencies for managing configurations, displaying messages, and accessing resource files
-    private ConfigModel _configModel;
     private ViewModel _viewModel;
     private Utilities _messageDisplay;
     private ResourceManager _resourceManager;
+    protected ConfigModel config = ConfigModel.Instance;
 
     // Constructor initializes the view with necessary models and utilities
-    public View(ConfigModel configModel, ViewModel viewModel, Utilities messageDisplay)
+    public View(ViewModel viewModel, Utilities messageDisplay)
     {
         _viewModel = viewModel;
         // Initialize ResourceManager for accessing localized strings
@@ -91,7 +91,7 @@ public class View
         CultureInfo newCulture = newLocale == "fr" ? new CultureInfo("fr-FR") : new CultureInfo("en-US");
 
         // Mise à jour de la locale via la propriété CurrentLocale
-        ConfigModel.CurrentLocale = newCulture.Name;
+        config.CurrentLocale = newCulture.Name;
 
         // Inutile de mettre à jour CultureInfo.CurrentUICulture ici car SetCulture est appelé dans CurrentLocale
 
@@ -105,7 +105,7 @@ public class View
     private void ListBackups()
     {
         Console.WriteLine();
-        var backupJobs = _configModel.LoadBackupJobs();
+        var backupJobs = config.LoadBackupJobs();
         if (backupJobs.Count == 0)
         {
             _messageDisplay.DisplayMessage("NoBackup");
@@ -199,6 +199,7 @@ public class View
             var progress = backupManager.GetBackupProgress();
             foreach (var kvp in progress)
             {
+                Console.WriteLine("Progression qui progresse");
                 Console.WriteLine($"Progression de {kvp.Key}: {kvp.Value}%");
                 Thread.Sleep(1000);
             }

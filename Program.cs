@@ -15,9 +15,10 @@ namespace EasySave
         {
             // Initialize the configuration model to manage application settings
             var configModel = ConfigModel.Instance;
-            
+
             // Create ResourceManager for message
-            var resourceManager = new ResourceManager("EasySave.Resources.Languages.Messages", typeof(Program).Assembly);
+            var resourceManager =
+                new ResourceManager("EasySave.Resources.Languages.Messages", typeof(Program).Assembly);
 
             //Initialize Utilities with ResourceManager to display message to the user
             Utilities messageDisplay = new Utilities(resourceManager);
@@ -26,7 +27,7 @@ namespace EasySave
             ViewModel viewModel = new ViewModel(configModel, messageDisplay);
 
             // Create View instance, responsible for user interface logic and user interactions
-            View view = new View(configModel, viewModel, messageDisplay);
+            View view = new View(viewModel, messageDisplay);
 
             // Menu display
             view.DisplayMenu();
