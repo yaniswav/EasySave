@@ -1,8 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using System.Resources;
-using System.Reflection;
-using EasySave.ViewModels;
+using Avalonia.Markup.Xaml;
+
 
 namespace EasySave.Views
 {
@@ -11,8 +10,9 @@ namespace EasySave.Views
         public MainWindow()
         {
             InitializeComponent();
+            MainContent.Content = new BackupView();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            UpdateButtonColor();
+            UpdateButtonColor(activeButton: "Backup");
         }
 
         private void BackupButton_Click(object sender, RoutedEventArgs e)
@@ -29,7 +29,7 @@ namespace EasySave.Views
             UpdateButtonColor(activeButton: "Settings");
         }
 
-        private void UpdateButtonColor(string activeButton = "")
+        public void UpdateButtonColor(string activeButton = "")
         {
             var activeColor = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#857DFF"));
             var inactiveColor = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#B4BAFF"));
@@ -37,6 +37,13 @@ namespace EasySave.Views
             BackupButton.Background = activeButton == "Backup" ? activeColor : inactiveColor;
             SettingsButton.Background = activeButton == "Settings" ? activeColor : inactiveColor;
         }
+        
+        public void RefreshButtonContent()
+        {
+            BackupButton.Content = Assets.Resources.Backup;
+            SettingsButton.Content = Assets.Resources.Settings;
+        }
+
         
     }
 }
