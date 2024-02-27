@@ -2,103 +2,44 @@ using EasySave;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading;
 
 namespace EasySave.ViewModels
 {
     public class ModifyBackupVm : INotifyPropertyChanged
     {
-        private ObservableCollection<BackupJob> _backupJobs;
-        private BackupJob _selectedBackupJob;
-        private ObservableCollection<string> _extensionsToEncrypt;
-        private string _newExtension;
+        private ObservableCollection<BackupJobConfig> _backupJobConfigs;
+        private BackupJobConfig _selectedBackupJobConfig;
+        private ConfigModel _configModel = new ConfigModel();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ModifyBackupVm()
         {
-            _backupJobs = new ObservableCollection<BackupJob>();
-            _extensionsToEncrypt = new ObservableCollection<string>();
-            LoadBackupJobs();
+            _backupJobConfigs = new ObservableCollection<BackupJobConfig>(_configModel.LoadBackupJobs());
         }
 
-        public ObservableCollection<BackupJob> BackupJobs
+        public ObservableCollection<BackupJobConfig> BackupJobConfigs
         {
-            get => _backupJobs;
+            get => _backupJobConfigs;
             set
             {
-                _backupJobs = value;
+                _backupJobConfigs = value;
                 OnPropertyChanged();
             }
         }
 
-        public BackupJob SelectedBackupJob
+        public BackupJobConfig SelectedBackupJobConfig
         {
-            get => _selectedBackupJob;
+            get => _selectedBackupJobConfig;
             set
             {
-                _selectedBackupJob = value;
+                _selectedBackupJobConfig = value;
                 OnPropertyChanged();
-                LoadExtensionsToEncrypt();
+                // LoadExtensionsToEncrypt(); // This method will be adjusted or removed based on new logic.
             }
         }
 
-        public ObservableCollection<string> ExtensionsToEncrypt
-        {
-            get => _extensionsToEncrypt;
-            set
-            {
-                _extensionsToEncrypt = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string NewExtension
-        {
-            get => _newExtension;
-            set
-            {
-                _newExtension = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public void AddExtension()
-        {
-            if (!string.IsNullOrWhiteSpace(NewExtension) && !ExtensionsToEncrypt.Contains(NewExtension))
-            {
-                ExtensionsToEncrypt.Add(NewExtension);
-                SelectedBackupJob.ExtensionsToEncrypt.Add(NewExtension);
-                NewExtension = string.Empty;
-            }
-        }
-
-        public void RemoveExtension(string extension)
-        {
-            if (ExtensionsToEncrypt.Contains(extension))
-            {
-                ExtensionsToEncrypt.Remove(extension);
-                SelectedBackupJob.ExtensionsToEncrypt.Remove(extension);
-            }
-        }
-
-        private void LoadBackupJobs()
-        {
-            // Simuler le chargement des BackupJobs
-            // Dans une application réelle, cette méthode récupérerait les jobs de sauvegarde depuis un gestionnaire de configuration ou une base de données
-        }
-
-        private void LoadExtensionsToEncrypt()
-        {
-            ExtensionsToEncrypt.Clear();
-            if (SelectedBackupJob != null)
-            {
-                foreach (var extension in SelectedBackupJob.ExtensionsToEncrypt)
-                {
-                    ExtensionsToEncrypt.Add(extension);
-                }
-            }
-        }
+        // Add or modify methods to interact with backup jobs through configurations rather than direct manipulation.
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

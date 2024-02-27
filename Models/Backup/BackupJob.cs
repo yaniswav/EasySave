@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -19,6 +20,8 @@ namespace EasySave
         public int TotalFilesToCopy;
         public int NbFilesLeftToDo;
         public double Progression { get; protected set; }
+        public List<string> ExtensionsToEncrypt { get; set; }
+
         private static LoggingModel logger;
 
         protected ConfigModel config = ConfigModel.Instance;
@@ -162,5 +165,11 @@ namespace EasySave
             State = state;
             StateModel.UpdateBackupState(this);
         }
+
+        public void Start()
+        {
+            throw new NotImplementedException();
+        }
     }
+
 }

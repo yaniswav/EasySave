@@ -18,9 +18,16 @@ public partial class ConfigModel
         }
     }
 
+    public string? Locale { get; set; }
+
     private static void SetCulture(string locale)
     {
         CultureInfo.CurrentCulture = new CultureInfo(locale);
         CultureInfo.CurrentUICulture = new CultureInfo(locale);
+    }
+
+    public void SetLocale(string selectedLocale)
+    {
+        throw new NotImplementedException();
     }
 }

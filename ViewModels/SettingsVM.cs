@@ -87,5 +87,18 @@ namespace EasySave.ViewModels
         }
     }
 
+    public class ConfigurationHelper
+    {
+        public static void SetOutputFormat(string logOutputFormat)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static string? GetOutputFormat()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     // Assuming RelayCommand is implemented elsewhere in the project
 }

@@ -13,7 +13,10 @@ namespace EasySave.ViewModels
         public CommunicationVm(BackupJob currentBackupJob)
         {
             _currentBackupJob = currentBackupJob; // Initialize with an existing backup job
-            ExtensionsToEncrypt = _currentBackupJob.ExtensionsToEncrypt ?? new List<string>();
+            if (_currentBackupJob.ExtensionsToEncrypt == null)
+            {
+                _currentBackupJob.ExtensionsToEncrypt = new List<string>(); // Ensure the list is initialized
+            }
         }
 
         public List<string> ExtensionsToEncrypt

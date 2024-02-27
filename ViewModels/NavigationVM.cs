@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
-using EasySave; 
+using EasySave; // Assuming EasySave is the namespace containing the Models
 using System.Threading;
 
 namespace EasySave.ViewModels
@@ -8,85 +8,72 @@ namespace EasySave.ViewModels
     public class RelayCommand : ICommand
     {
         private readonly Action<object> _execute;
-        private readonly Func<object, bool>? _canExecute;
-        private event EventHandler? _canExecuteChanged;
+        private readonly Func<object, bool> _canExecute;
 
-        public RelayCommand(Action<object> execute, Func<object, bool>? canExecute = null)
+        public RelayCommand(Action<object> execute, Func<object, bool> canExecute)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            _canExecute = canExecute;
+            _canExecute = canExecute ?? throw new ArgumentNullException(nameof(canExecute));
         }
 
-        public event EventHandler? CanExecuteChanged
+        public event EventHandler CanExecuteChanged
         {
-            add => _canExecuteChanged += value;
-            remove => _canExecuteChanged -= value;
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public bool CanExecute(object? parameter) => _canExecute == null || _canExecute(parameter);
+        public bool CanExecute(object parameter)
+        {
+            return _canExecute(parameter);
+        }
 
-        public void Execute(object? parameter) => _execute(parameter);
+        public void Execute(object parameter)
+        {
+            _execute(parameter);
+        }
+    }
+
+    public class CommandManager
+    {
+        public static EventHandler RequerySuggested { get; set; }
     }
 
     public class BackupCommandViewModel
     {
         private readonly BackupManager _backupManager;
-        public ICommand StartBackupCommand { get; }
-        public ICommand PauseBackupCommand { get; }
-        public ICommand ResumeBackupCommand { get; }
-        public ICommand StopBackupCommand { get; }
+
+        public ICommand StartBackupCommand { get; private set; }
+        public ICommand StopBackupCommand { get; private set; }
 
         public BackupCommandViewModel()
         {
             _backupManager = new BackupManager();
-            _backupManager.LoadBackupJobs(); // Load jobs at initialization
+            _backupManager.LoadBackupJobs(); // Initialize backup jobs from configurations
 
-            StartBackupCommand = new RelayCommand(param => StartBackup(param), param => CanExecuteBackupCommand(param));
-            PauseBackupCommand = new RelayCommand(param => PauseBackup(param), param => CanExecuteBackupCommand(param));
-            ResumeBackupCommand = new RelayCommand(param => ResumeBackup(param), param => CanExecuteBackupCommand(param));
-            StopBackupCommand = new RelayCommand(param => StopBackup(param), param => CanExecuteBackupCommand(param));
-        }
+            StartBackupCommand = new RelayCommand(
+                execute: param => StartBackup(param),
+                canExecute: _ => true); // Simplified for demonstration
 
-        private bool CanExecuteBackupCommand(object param)
-        {
-            // Example validation to enable/disable the command
-            return true; // Or implement actual validation logic
+            StopBackupCommand = new RelayCommand(
+                execute: param => StopBackup(param),
+                canExecute: _ => true); // Simplified for demonstration
         }
 
         private void StartBackup(object param)
         {
-            string jobName = param as string;
-            if (!string.IsNullOrEmpty(jobName))
+            if (param is string jobName && !string.IsNullOrWhiteSpace(jobName))
             {
-                // Execute the backup job
                 _backupManager.ExecuteJobs(new[] { jobName });
-            }
-        }
-
-        private void PauseBackup(object param)
-        {
-            string jobName = param as string;
-            if (!string.IsNullOrEmpty(jobName))
-            {
-                _backupManager.PauseJob(jobName);
-            }
-        }
-
-        private void ResumeBackup(object param)
-        {
-            string jobName = param as string;
-            if (!string.IsNullOrEmpty(jobName))
-            {
-                _backupManager.ResumeJob(jobName);
+                Console.WriteLine($"Backup job '{jobName}' started.");
             }
         }
 
         private void StopBackup(object param)
         {
-            string jobName = param as string;
-            if (!string.IsNullOrEmpty(jobName))
+            if (param is string jobName && !string.IsNullOrWhiteSpace(jobName))
             {
                 _backupManager.StopJob(jobName);
+                Console.WriteLine($"Backup job '{jobName}' stopped.");
             }
         }
     }

@@ -8,7 +8,7 @@ public partial class ConfigModel
 {
     private static ConfigModel _instance;
 
-    private ConfigModel()
+    public ConfigModel()
     {
         // Constructor is private to prevent instantiation
     }

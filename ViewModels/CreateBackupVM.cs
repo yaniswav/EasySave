@@ -1,8 +1,8 @@
 using System;
 using ReactiveUI;
 using System.Reactive;
-using EasySave;
-using System.Threading;
+using EasySave; // Ensure this namespace matches where your Models are located
+using System.Threading.Tasks;
 
 namespace EasySave.ViewModels
 {
@@ -13,8 +13,6 @@ namespace EasySave.ViewModels
         private string _targetDirectory = string.Empty;
         private string _backupType = string.Empty;
         private readonly ReactiveCommand<Unit, Unit> _createBackupCommand;
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        private ManualResetEvent _pauseEvent = new ManualResetEvent(true);
 
         public string BackupName
         {
@@ -55,56 +53,28 @@ namespace EasySave.ViewModels
                     !string.IsNullOrWhiteSpace(target) &&
                     !string.IsNullOrWhiteSpace(type));
 
-            _createBackupCommand = ReactiveCommand.Create(ExecuteBackup, canExecute);
+            _createBackupCommand = ReactiveCommand.CreateFromTask(ExecuteBackupAsync, canExecute);
         }
 
-        private void ExecuteBackup()
+        private async Task ExecuteBackupAsync()
         {
-            BackupJob backupJob;
-            switch (BackupType)
+            BackupJob backupJob = BackupType switch
             {
-                case "Complete":
-                    backupJob = new CompleteBackup(BackupName, SourceDirectory, TargetDirectory);
-                    break;
-                case "Differential":
-                    backupJob = new DifferentialBackup(BackupName, SourceDirectory, TargetDirectory);
-                    break;
-                default:
-                    throw new InvalidOperationException("Unsupported backup type.");
-            }
+                "Complete" => new CompleteBackup(BackupName, SourceDirectory, TargetDirectory),
+                "Differential" => new DifferentialBackup(BackupName, SourceDirectory, TargetDirectory),
+                _ => throw new InvalidOperationException("Unsupported backup type.")
+            };
 
             try
             {
-                // Execute the backup job with proper threading and error handling
-                Thread backupThread = new Thread(() =>
-                {
-                    backupJob.Start(_cancellationTokenSource.Token, _pauseEvent);
-                });
-                backupThread.Start();
-                Console.WriteLine($"Backup {BackupName} started.");
+                // No need for explicit threading, Task.Run can be used if necessary
+                await Task.Run(() => backupJob.Start());
+                Console.WriteLine($"Backup {BackupName} started successfully.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error starting backup {BackupName}: {ex.Message}");
             }
-        }
-
-        public void PauseBackup()
-        {
-            _pauseEvent.Reset();
-            Console.WriteLine("Backup paused.");
-        }
-
-        public void ResumeBackup()
-        {
-            _pauseEvent.Set();
-            Console.WriteLine("Backup resumed.");
-        }
-
-        public void CancelBackup()
-        {
-            _cancellationTokenSource.Cancel();
-            Console.WriteLine("Backup cancelled.");
         }
     }
 }

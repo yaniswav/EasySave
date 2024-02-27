@@ -1,26 +1,25 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using EasySave; // Assurez-vous que le chemin d'accès est correct
+using EasySave; // Make sure this namespace is correct
 using System;
 using System.Linq;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace EasySave.ViewModels
 {
     public class BackupVM : INotifyPropertyChanged
     {
-        private ObservableCollection<BackupJobConfig> _backupJobs;
-        private ConfigModel _configModel;
+        private ObservableCollection<BackupJob> _backupJobs;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public BackupVM()
         {
-            _configModel = new ConfigModel();
-            LoadBackupJobs(); // Chargement des jobs de sauvegarde à partir des configurations
+            _backupJobs = new ObservableCollection<BackupJob>();
+            // Initialize with existing backup jobs if necessary
         }
 
-        public ObservableCollection<BackupJobConfig> BackupJobs
+        public ObservableCollection<BackupJob> BackupJobs
         {
             get => _backupJobs;
             set
@@ -30,40 +29,37 @@ namespace EasySave.ViewModels
             }
         }
 
-        // Charge les jobs de sauvegarde depuis la configuration
-        private void LoadBackupJobs()
-        {
-            var jobs = new ObservableCollection<BackupJobConfig>(_configModel.LoadBackupJobs());
-            BackupJobs = jobs;
-        }
-
-        // Actualise la liste des jobs de sauvegarde
-        public void RefreshBackupJobs()
-        {
-            LoadBackupJobs(); // Rechargement des configurations
-        }
-
-        // Ajoute un nouveau job de sauvegarde
         public void AddBackupJob(string name, string sourceDir, string destinationDir, string type)
         {
-            var jobConfig = new BackupJobConfig
+            BackupJob backupJob;
+            if (type == "Complete")
             {
-                Name = name,
-                SourceDir = sourceDir,
-                DestinationDir = destinationDir,
-                Type = type
-            };
+                backupJob = new CompleteBackup(name, sourceDir, destinationDir);
+            }
+            else if (type == "Differential")
+            {
+                backupJob = new DifferentialBackup(name, sourceDir, destinationDir);
+            }
+            else
+            {
+                throw new ArgumentException("Unsupported backup job type.");
+            }
 
-            _configModel.AddBackupJob(jobConfig); // Persiste la configuration
-            RefreshBackupJobs(); // Actualise la liste des jobs
+            _backupJobs.Add(backupJob);
+            OnPropertyChanged(nameof(BackupJobs));
         }
 
-        // Supprime un job de sauvegarde
-        public void DeleteBackupJob(string jobName)
+        public void DeleteBackupJob(string name)
         {
-            _configModel.DeleteBackupJob(jobName); // Supprime la configuration
-            RefreshBackupJobs(); // Actualise la liste des jobs
+            var jobToDelete = _backupJobs.FirstOrDefault(job => job.Name == name);
+            if (jobToDelete != null)
+            {
+                _backupJobs.Remove(jobToDelete);
+                OnPropertyChanged(nameof(BackupJobs));
+            }
         }
+
+        // Additional methods to manage backup jobs (e.g., start, stop) could be added here
 
         protected void OnPropertyChanged(string propertyName)
         {
