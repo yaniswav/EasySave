@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using EasySave; // Assuming EasySave is the namespace containing the Models
 using System.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace EasySave.ViewModels
 {

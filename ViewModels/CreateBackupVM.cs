@@ -3,6 +3,7 @@ using ReactiveUI;
 using System.Reactive;
 using EasySave; // Ensure this namespace matches where your Models are located
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace EasySave.ViewModels
 {

@@ -4,14 +4,14 @@ using EasySave; // Make sure this namespace is correct
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace EasySave.ViewModels
 {
-    public class BackupVM : INotifyPropertyChanged
+    public class BackupVM 
     {
         private ObservableCollection<BackupJob> _backupJobs;
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        
 
         public BackupVM()
         {
@@ -25,7 +25,7 @@ namespace EasySave.ViewModels
             set
             {
                 _backupJobs = value;
-                OnPropertyChanged(nameof(BackupJobs));
+                
             }
         }
 
@@ -46,7 +46,7 @@ namespace EasySave.ViewModels
             }
 
             _backupJobs.Add(backupJob);
-            OnPropertyChanged(nameof(BackupJobs));
+           
         }
 
         public void DeleteBackupJob(string name)
@@ -55,15 +55,12 @@ namespace EasySave.ViewModels
             if (jobToDelete != null)
             {
                 _backupJobs.Remove(jobToDelete);
-                OnPropertyChanged(nameof(BackupJobs));
+                
             }
         }
 
         // Additional methods to manage backup jobs (e.g., start, stop) could be added here
 
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+
     }
 }

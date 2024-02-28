@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using EasySave; // Assuming the namespace for BackupJob and related classes
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace EasySave.ViewModels
 {
-    public class CommunicationVm : INotifyPropertyChanged
+    public class CommunicationVm 
     {
         private BackupJob _currentBackupJob; // A reference to the current backup job
         private string _extensionToAdd = "";
@@ -58,11 +59,11 @@ namespace EasySave.ViewModels
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+      
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+           
         }
     }
 }

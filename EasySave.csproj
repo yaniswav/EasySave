@@ -13,6 +13,7 @@
 
     <ItemGroup>
         <!-- Common package references -->
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="System.Collections" Version="4.3.0"/>
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0"/>

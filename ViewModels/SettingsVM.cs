@@ -2,17 +2,17 @@ using System;
 using System.ComponentModel;
 using System.Windows.Input;
 using EasySave; // Ensure this namespace is correct for access to Models
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace EasySave.ViewModels
 {
-    public class SettingsVM : INotifyPropertyChanged
+    public class SettingsVM 
     {
         private ConfigModel _configModel = new ConfigModel();
         private string _selectedLocale;
         private string _logOutputFormat;
         private ICommand _saveSettingsCommand;
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        
 
         public SettingsVM()
         {
@@ -29,7 +29,6 @@ namespace EasySave.ViewModels
                 if (_selectedLocale != value)
                 {
                     _selectedLocale = value;
-                    OnPropertyChanged(nameof(SelectedLocale));
                 }
             }
         }
@@ -42,7 +41,6 @@ namespace EasySave.ViewModels
                 if (_logOutputFormat != value)
                 {
                     _logOutputFormat = value;
-                    OnPropertyChanged(nameof(LogOutputFormat));
                 }
             }
         }
@@ -81,10 +79,7 @@ namespace EasySave.ViewModels
             }
         }
 
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+
     }
 
     public class ConfigurationHelper

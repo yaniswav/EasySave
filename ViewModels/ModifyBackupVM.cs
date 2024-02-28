@@ -2,16 +2,16 @@ using EasySave;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace EasySave.ViewModels
 {
-    public class ModifyBackupVm : INotifyPropertyChanged
+    public class ModifyBackupVm 
     {
         private ObservableCollection<BackupJobConfig> _backupJobConfigs;
         private BackupJobConfig _selectedBackupJobConfig;
         private ConfigModel _configModel = new ConfigModel();
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        
 
         public ModifyBackupVm()
         {
@@ -24,7 +24,7 @@ namespace EasySave.ViewModels
             set
             {
                 _backupJobConfigs = value;
-                OnPropertyChanged();
+   
             }
         }
 
@@ -34,16 +34,13 @@ namespace EasySave.ViewModels
             set
             {
                 _selectedBackupJobConfig = value;
-                OnPropertyChanged();
+     
                 // LoadExtensionsToEncrypt(); // This method will be adjusted or removed based on new logic.
             }
         }
 
         // Add or modify methods to interact with backup jobs through configurations rather than direct manipulation.
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+ 
     }
 }
