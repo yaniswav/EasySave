@@ -4,14 +4,14 @@ using System.Resources;
 using System.Configuration;
 using System.Collections;
 using System.Collections.Specialized;
-
+using System.Net;
 
 namespace EasySave
 {
     // Class for entry point of the EasySaveConsole application
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             // Initialize the configuration model to manage application settings
             var configModel = ConfigModel.Instance;
@@ -29,7 +29,10 @@ namespace EasySave
             // Create View instance, responsible for user interface logic and user interactions
             View view = new View(viewModel, messageDisplay);
 
-            // Menu display
+            BackupServer server = new BackupServer(8080);
+            await server.Start();
+            
+            // Menu display    
             view.DisplayMenu();
         }
     }

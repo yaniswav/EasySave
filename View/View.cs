@@ -99,7 +99,7 @@ public class View
         _messageDisplay.DisplayMessage("ChangedLanguage");
         Console.WriteLine($"{newCulture.DisplayName}");
     }
-    
+
 
     // Displays a list of configured backup jobs
     private void ListBackups()
