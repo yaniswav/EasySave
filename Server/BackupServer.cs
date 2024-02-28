@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using EasySave;  // Use your actual namespace where BackupManager is defined.
 
-public class BackupServer
+public class Server
 {
     private TcpListener listener;
     private readonly int port;
     private BackupManager backupManager;
 
-    public BackupServer(int port)
+    public Server(int port)
     {
         this.port = port;
         backupManager = new BackupManager();  

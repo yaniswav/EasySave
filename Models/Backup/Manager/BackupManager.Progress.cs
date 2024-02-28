@@ -17,7 +17,6 @@ namespace EasySave
             Console.WriteLine("Listing Active Threads:");
             foreach (var entry in _backupThreads)
             {
-                Console.WriteLine($"entry key: {entry.Key} entry value: {entry.Value}");
                 string threadStatus = entry.Value.IsAlive ? "Active" : "Not Active";
                 Console.WriteLine($"Job: {entry.Key}, Thread Status: {threadStatus}");
             }

@@ -28,12 +28,15 @@ namespace EasySave
 
             // Create View instance, responsible for user interface logic and user interactions
             View view = new View(viewModel, messageDisplay);
-
-            BackupServer server = new BackupServer(8080);
-            await server.Start();
+            
+            Server server = new Server(8080);
+            Task serverTask = Task.Run(() => server.Start());
+            
             
             // Menu display    
             view.DisplayMenu();
+            
+            await serverTask;
         }
     }
 }

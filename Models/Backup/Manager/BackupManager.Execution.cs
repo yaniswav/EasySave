@@ -29,13 +29,10 @@ namespace EasySave
                 }
             }
 
-            LogCurrentBackupThreads("Après l'ajout du thread");
         }
 
         private void StartNewBackupJob(string jobName)
         {
-            LogCurrentBackupThreads("Avant la création du thread");
-            Console.WriteLine($"Starting execution of backup job '{jobName}'...");
 
             var jobToExecute = _backupJobs.First(job => job.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
             var cancellationTokenSource = new CancellationTokenSource();
@@ -43,16 +40,12 @@ namespace EasySave
 
             var thread = InitializeJobThread(jobName, jobToExecute, cancellationTokenSource, pauseEvent);
 
-            Console.WriteLine(
-                $"Adding backup job '{jobName}' to the list of running jobs... with thread {thread.ManagedThreadId}.");
 
             _backupThreads.Add(jobName, thread);
             _cancellationTokens.Add(jobName, cancellationTokenSource);
             _pauseEvents.Add(jobName, pauseEvent);
 
             thread.Start();
-            ListActiveThreads();
-            Console.WriteLine($"[{DateTime.Now}] Starting execution of backup job '{jobName}'...");
         }
 
         private Thread InitializeJobThread(string jobName, BackupJob jobToExecute,
@@ -62,11 +55,7 @@ namespace EasySave
             {
                 try
                 {
-                    Console.WriteLine(
-                        $"[{DateTime.Now}] Backup job '{jobName}' starting on thread {Thread.CurrentThread.ManagedThreadId}.");
                     jobToExecute.Start(cancellationTokenSource.Token, pauseEvent);
-                    Console.WriteLine(
-                        $"[{DateTime.Now}] Backup job '{jobName}' completed on thread {Thread.CurrentThread.ManagedThreadId}.");
                 }
                 catch (Exception ex)
                 {
@@ -75,7 +64,6 @@ namespace EasySave
                 finally
                 {
                     ThreadCleanup(jobName);
-                    ListActiveThreads();
                 }
             });
         }

@@ -13,7 +13,6 @@ namespace EasySave
                 _backupThreads.Remove(jobName);
                 _cancellationTokens.Remove(jobName);
                 _pauseEvents.Remove(jobName);
-                LogCurrentBackupThreads("Après nettoyage");
             }
         }
 

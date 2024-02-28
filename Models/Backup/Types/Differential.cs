@@ -7,7 +7,6 @@
         {
         }
 
-
         protected override void PerformBackup(string sourceDir, string destinationDir,
             CancellationToken cancellationToken,
             ManualResetEvent pauseEvent)
@@ -23,35 +22,17 @@
                 Directory.CreateDirectory(destinationDir);
             }
 
-            // Filtre les fichiers en fonction de leur priorité et de la taille
-            var sourceFiles = Directory.GetFiles(sourceDir);
-            var priorityFiles = sourceFiles.Where(file => config.ExtPrio.Contains(Path.GetExtension(file).ToLower()))
-                .ToList();
-            var nonPriorityFiles = sourceFiles
-                .Where(file => !config.ExtPrio.Contains(Path.GetExtension(file).ToLower())).ToList();
+            var allFiles = Directory.GetFiles(sourceDir, "*", SearchOption.AllDirectories);
+            var priorityFiles = allFiles.Where(file => HasPriorityFile(file)).ToArray();
+            var nonPriorityFiles = allFiles.Except(priorityFiles).ToArray();
 
-            // Copie d'abord les fichiers prioritaires
             foreach (var sourceFile in priorityFiles)
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 pauseEvent.WaitOne();
 
-                var destFile = Path.Combine(destinationDir, Path.GetFileName(sourceFile));
-                if (ShouldCopyFile(sourceFile, destFile))
-                {
-                    CopyFileWithBuffer(sourceFile, destFile);
-                    UpdateProgress(sourceFile);
-                }
-            }
-
-            // Copie ensuite les fichiers non prioritaires, en respectant la restriction de taille
-            foreach (var sourceFile in nonPriorityFiles)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                pauseEvent.WaitOne();
-
-                long fileSize = new FileInfo(sourceFile).Length;
-                if (fileSize <= config.MaxBackupFileSize * 1024)
+                long fileSize = 10;
+                if (fileSize <= config.MaxBackupFileSize)
                 {
                     var destFile = Path.Combine(destinationDir, Path.GetFileName(sourceFile));
                     if (ShouldCopyFile(sourceFile, destFile))
@@ -62,7 +43,25 @@
                 }
             }
 
-            // Récursion pour les sous-dossiers
+            foreach (var sourceFile in nonPriorityFiles)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                pauseEvent.WaitOne();
+
+                // long fileSize = new FileInfo(sourceFile).Length;
+                long fileSize = 10;
+
+                if (fileSize <= config.MaxBackupFileSize)
+                {
+                    var destFile = Path.Combine(destinationDir, Path.GetFileName(sourceFile));
+                    if (ShouldCopyFile(sourceFile, destFile))
+                    {
+                        CopyFileWithBuffer(sourceFile, destFile);
+                        UpdateProgress(sourceFile);
+                    }
+                }
+            }
+
             foreach (var dir in Directory.GetDirectories(sourceDir))
             {
                 cancellationToken.ThrowIfCancellationRequested();

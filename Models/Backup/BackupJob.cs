@@ -47,7 +47,6 @@ namespace EasySave
             NbFilesLeftToDo = TotalFilesToCopy;
         }
 
-
         public virtual void Start(CancellationToken cancellationToken, ManualResetEvent pauseEvent)
         {
             InitializeTrackingProperties();
@@ -55,9 +54,7 @@ namespace EasySave
             try
             {
                 UpdateState("ACTIVE");
-                Console.WriteLine($"Starting {Name} backup: from {SourceDir} to {DestinationDir}");
                 PerformBackup(SourceDir, DestinationDir, cancellationToken, pauseEvent);
-                Console.WriteLine($"{Name} backup completed.");
                 UpdateState("END");
             }
             catch (OperationCanceledException)
@@ -137,15 +134,14 @@ namespace EasySave
             Progression = TotalFilesToCopy > 0 ? 100.0 * (TotalFilesToCopy - NbFilesLeftToDo) / TotalFilesToCopy : 100;
         }
 
-        // Méthode pour vérifier si des fichiers prioritaires sont en attente
-        private bool HasPriorityFilesWaiting(string[] files)
+        public bool HasPriorityFile(string file)
         {
-            return files.Any(file => config.ExtPrio.Contains(Path.GetExtension(file).ToLower()));
+            return config.ExtPrio.Contains(Path.GetExtension(file).ToLower().TrimStart('.'));
         }
+
 
         private void EncryptFile(string filePath)
         {
-
         }
 
         protected bool ShouldCopyFile(string sourceFile, string destinationFile)

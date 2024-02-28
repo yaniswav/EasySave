@@ -66,7 +66,7 @@ public class View
                     break;
                 case "5":
                     _viewModel.ExecuteBackups();
-                    DisplayBackupProgress(_viewModel.BackupManager);
+                    // DisplayBackupProgress(_viewModel.BackupManager);
                     break;
                 case "6":
                     ChangeLocale();

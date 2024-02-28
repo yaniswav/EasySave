@@ -9,7 +9,8 @@ namespace EasySave
     {
         private Utilities _messageDisplay;
         private ResourceManager _resourceManager;
-        private ConfigModel _configModel;
+        private ConfigModel _configModel = ConfigModel.Instance;
+
         public BackupManager BackupManager { get; private set; }
 
         public ViewModel(ConfigModel configModel, Utilities messageDisplay)
@@ -18,7 +19,7 @@ namespace EasySave
             var resourceManager =
                 new ResourceManager("EasySave.Resources.Languages.Messages", typeof(Program).Assembly);
             _messageDisplay = new Utilities(resourceManager);
-            _configModel = configModel;
+
             BackupManager = new BackupManager();
         }
 
