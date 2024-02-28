@@ -1,66 +1,95 @@
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using EasySave; // Make sure this namespace is correct
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 
 namespace EasySave.ViewModels
 {
-    public class BackupVM 
+    public class BackupVM : ViewModelBase
     {
-        private ObservableCollection<BackupJob> _backupJobs;
-        
+        private BackupManager _backupManager;
+        public ObservableCollection<BackupJobViewModel> BackupJobs { get; set; }
 
         public BackupVM()
         {
-            _backupJobs = new ObservableCollection<BackupJob>();
-            // Initialize with existing backup jobs if necessary
+            _backupManager = new BackupManager();
+            BackupJobs = new ObservableCollection<BackupJobViewModel>();
+            LoadBackupJobs();
+
+            ExecuteBackupCommand = new RelayCommand(ExecuteBackup, CanExecuteBackupCommand);
+            PauseBackupCommand = new RelayCommand(PauseBackup, CanExecuteBackupCommand);
+            ResumeBackupCommand = new RelayCommand(ResumeBackup, CanExecuteBackupCommand);
+            StopBackupCommand = new RelayCommand(StopBackup, CanExecuteBackupCommand);
         }
 
-        public ObservableCollection<BackupJob> BackupJobs
+        public ICommand ExecuteBackupCommand { get; }
+        public ICommand PauseBackupCommand { get; }
+        public ICommand ResumeBackupCommand { get; }
+        public ICommand StopBackupCommand { get; }
+
+        private void LoadBackupJobs()
         {
-            get => _backupJobs;
-            set
+            // Assuming LoadBackupJobs fetches jobs from the BackupManager and populates BackupJobs
+            // This is just a placeholder. Implement according to your application's logic.
+            BackupJobs.Clear();
+            foreach (var job in _backupManager.GetBackupJobs())
             {
-                _backupJobs = value;
-                
+                BackupJobs.Add(new BackupJobViewModel(job));
             }
         }
 
-        public void AddBackupJob(string name, string sourceDir, string destinationDir, string type)
+        private void ExecuteBackup(object parameter)
         {
-            BackupJob backupJob;
-            if (type == "Complete")
-            {
-                backupJob = new CompleteBackup(name, sourceDir, destinationDir);
-            }
-            else if (type == "Differential")
-            {
-                backupJob = new DifferentialBackup(name, sourceDir, destinationDir);
-            }
-            else
-            {
-                throw new ArgumentException("Unsupported backup job type.");
-            }
-
-            _backupJobs.Add(backupJob);
-           
+            var selectedBackups = BackupJobs.Where(bj => bj.IsSelected).Select(bj => bj.Job).ToList();
+            _backupManager.ExecuteBackup(selectedBackups);
+            OnPropertyChanged(nameof(BackupJobs)); // Notify UI to update
         }
 
-        public void DeleteBackupJob(string name)
+        private void PauseBackup(object parameter)
         {
-            var jobToDelete = _backupJobs.FirstOrDefault(job => job.Name == name);
-            if (jobToDelete != null)
-            {
-                _backupJobs.Remove(jobToDelete);
-                
-            }
+            var selectedBackups = BackupJobs.Where(bj => bj.IsSelected).Select(bj => bj.Job).ToList();
+            _backupManager.PauseBackups(selectedBackups);
+            OnPropertyChanged(nameof(BackupJobs)); // Notify UI to update
         }
 
-        // Additional methods to manage backup jobs (e.g., start, stop) could be added here
+        private void ResumeBackup(object parameter)
+        {
+            var selectedBackups = BackupJobs.Where(bj => bj.IsSelected).Select(bj => bj.Job).ToList();
+            _backupManager.ResumeBackups(selectedBackups);
+            OnPropertyChanged(nameof(BackupJobs)); // Notify UI to update
+        }
 
+        private void StopBackup(object parameter)
+        {
+            var selectedBackups = BackupJobs.Where(bj => bj.IsSelected).Select(bj => bj.Job).ToList();
+            _backupManager.StopBackups(selectedBackups);
+            OnPropertyChanged(nameof(BackupJobs)); // Notify UI to update
+        }
 
+        private bool CanExecuteBackupCommand(object parameter)
+        {
+            // Adjust logic here if necessary, for instance:
+            // Check if any job is selected before allowing commands to execute.
+            return BackupJobs.Any(bj => bj.IsSelected);
+        }
+    }
+
+    // Assuming BackupJobViewModel represents a BackupJob in the UI, including selection state.
+    public class BackupJobViewModel : ViewModelBase
+    {
+        public BackupJob Job { get; }
+        private bool _isSelected;
+
+        public BackupJobViewModel(BackupJob job)
+        {
+            Job = job;
+        }
+
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => SetProperty(ref _isSelected, value);
+        }
     }
 }

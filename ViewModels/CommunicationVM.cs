@@ -1,69 +1,46 @@
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
+using System.Net;
+using System.Text;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.IO;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using EasySave; // Assuming the namespace for BackupJob and related classes
-using CommunityToolkit.Mvvm.ComponentModel;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
+
 
 namespace EasySave.ViewModels
 {
-    public class CommunicationVm 
+    public class CommunicationVM : ViewModelBase
     {
-        private BackupJob _currentBackupJob; // A reference to the current backup job
-        private string _extensionToAdd = "";
+        private string _notificationMessage;
 
-        public CommunicationVm(BackupJob currentBackupJob)
+        public CommunicationVM()
         {
-            _currentBackupJob = currentBackupJob; // Initialize with an existing backup job
-            if (_currentBackupJob.ExtensionsToEncrypt == null)
-            {
-                _currentBackupJob.ExtensionsToEncrypt = new List<string>(); // Ensure the list is initialized
-            }
+            // Initialize commands
+            ShowNotificationCommand = new RelayCommand(ShowNotification);
         }
 
-        public List<string> ExtensionsToEncrypt
+        // Property to bind with the UI for displaying messages
+        public string NotificationMessage
         {
-            get => _currentBackupJob.ExtensionsToEncrypt;
-            set
-            {
-                _currentBackupJob.ExtensionsToEncrypt = value;
-                OnPropertyChanged();
-            }
+            get => _notificationMessage;
+            set => SetProperty(ref _notificationMessage, value);
         }
 
-        public string ExtensionToAdd
+        // Command for showing notifications
+        public ICommand ShowNotificationCommand { get; }
+
+        // Method to invoke displaying a notification
+        private void ShowNotification(object message)
         {
-            get => _extensionToAdd;
-            set
+            if (message is string msg)
             {
-                _extensionToAdd = value;
-                OnPropertyChanged();
+                NotificationMessage = msg;
             }
-        }
-
-        public void AddExtension()
-        {
-            if (!string.IsNullOrWhiteSpace(_extensionToAdd) && !_currentBackupJob.ExtensionsToEncrypt.Contains(_extensionToAdd.ToLower()))
-            {
-                _currentBackupJob.ExtensionsToEncrypt.Add(_extensionToAdd.ToLower());
-                ExtensionToAdd = ""; // Reset after adding
-                OnPropertyChanged(nameof(ExtensionsToEncrypt));
-            }
-        }
-
-        public void RemoveExtension(string extension)
-        {
-            if (_currentBackupJob.ExtensionsToEncrypt.Contains(extension.ToLower()))
-            {
-                _currentBackupJob.ExtensionsToEncrypt.Remove(extension.ToLower());
-                OnPropertyChanged(nameof(ExtensionsToEncrypt));
-            }
-        }
-
-      
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-           
         }
     }
 }

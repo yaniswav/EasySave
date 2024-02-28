@@ -1,81 +1,35 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
-using EasySave; // Assuming EasySave is the namespace containing the Models
-using System.Threading;
-using CommunityToolkit.Mvvm.ComponentModel;
+using System.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+
 
 namespace EasySave.ViewModels
 {
-    public class RelayCommand : ICommand
+    public class NavigationVM : ViewModelBase
     {
-        private readonly Action<object> _execute;
-        private readonly Func<object, bool> _canExecute;
+        private ViewModelBase _currentViewModel;
 
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute)
+        public NavigationVM()
         {
-            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            _canExecute = canExecute ?? throw new ArgumentNullException(nameof(canExecute));
+            // Commands to switch views
+            ShowCreateBackupViewCommand = new RelayCommand(o => CurrentViewModel = new CreateBackupVM());
+            ShowModifyBackupViewCommand = new RelayCommand(o => CurrentViewModel = new ModifyBackupVM());
+            // Additional commands for other views as needed
         }
 
-        public event EventHandler CanExecuteChanged
+        public ViewModelBase CurrentViewModel
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            get => _currentViewModel;
+            set => SetProperty(ref _currentViewModel, value);
         }
 
-        public bool CanExecute(object parameter)
-        {
-            return _canExecute(parameter);
-        }
-
-        public void Execute(object parameter)
-        {
-            _execute(parameter);
-        }
-    }
-
-    public class CommandManager
-    {
-        public static EventHandler RequerySuggested { get; set; }
-    }
-
-    public class BackupCommandViewModel
-    {
-        private readonly BackupManager _backupManager;
-
-        public ICommand StartBackupCommand { get; private set; }
-        public ICommand StopBackupCommand { get; private set; }
-
-        public BackupCommandViewModel()
-        {
-            _backupManager = new BackupManager();
-            _backupManager.LoadBackupJobs(); // Initialize backup jobs from configurations
-
-            StartBackupCommand = new RelayCommand(
-                execute: param => StartBackup(param),
-                canExecute: _ => true); // Simplified for demonstration
-
-            StopBackupCommand = new RelayCommand(
-                execute: param => StopBackup(param),
-                canExecute: _ => true); // Simplified for demonstration
-        }
-
-        private void StartBackup(object param)
-        {
-            if (param is string jobName && !string.IsNullOrWhiteSpace(jobName))
-            {
-                _backupManager.ExecuteJobs(new[] { jobName });
-                Console.WriteLine($"Backup job '{jobName}' started.");
-            }
-        }
-
-        private void StopBackup(object param)
-        {
-            if (param is string jobName && !string.IsNullOrWhiteSpace(jobName))
-            {
-                _backupManager.StopJob(jobName);
-                Console.WriteLine($"Backup job '{jobName}' stopped.");
-            }
-        }
+        public ICommand ShowCreateBackupViewCommand { get; private set; }
+        public ICommand ShowModifyBackupViewCommand { get; private set; }
+        // Additional ICommand properties for other views as needed
     }
 }

@@ -1,81 +1,70 @@
+using EasySave.Utilities;
 using System;
-using ReactiveUI;
-using System.Reactive;
-using EasySave; // Ensure this namespace matches where your Models are located
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
+using System.Windows;
+using System.Windows.Input;
+using Avalonia.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+
+
 
 namespace EasySave.ViewModels
 {
-    public class CreateBackupVM : ReactiveObject
+    public class CreateBackupVM : ViewModelBase
     {
-        private string _backupName = string.Empty;
-        private string _sourceDirectory = string.Empty;
-        private string _targetDirectory = string.Empty;
-        private string _backupType = string.Empty;
-        private readonly ReactiveCommand<Unit, Unit> _createBackupCommand;
+        private string _jobName;
+        private string _sourceDirectory;
+        private string _destinationDirectory;
+        private string _backupType;
 
-        public string BackupName
+        public CreateBackupVM()
         {
-            get => _backupName;
-            set => this.RaiseAndSetIfChanged(ref _backupName, value);
+            CreateBackupCommand = new RelayCommand(CreateBackup, CanCreateBackup);
+        }
+
+        public string JobName
+        {
+            get => _jobName;
+            set => SetProperty(ref _jobName, value);
         }
 
         public string SourceDirectory
         {
             get => _sourceDirectory;
-            set => this.RaiseAndSetIfChanged(ref _sourceDirectory, value);
+            set => SetProperty(ref _sourceDirectory, value);
         }
 
-        public string TargetDirectory
+        public string DestinationDirectory
         {
-            get => _targetDirectory;
-            set => this.RaiseAndSetIfChanged(ref _targetDirectory, value);
+            get => _destinationDirectory;
+            set => SetProperty(ref _destinationDirectory, value);
         }
 
         public string BackupType
         {
             get => _backupType;
-            set => this.RaiseAndSetIfChanged(ref _backupType, value);
+            set => SetProperty(ref _backupType, value);
         }
 
-        public ReactiveCommand<Unit, Unit> CreateBackupCommand => _createBackupCommand;
+        public ICommand CreateBackupCommand { get; private set; }
 
-        public CreateBackupVM()
+        private void CreateBackup(object parameter)
         {
-            var canExecute = this.WhenAnyValue(
-                x => x.BackupName,
-                x => x.SourceDirectory,
-                x => x.TargetDirectory,
-                x => x.BackupType,
-                (name, source, target, type) =>
-                    !string.IsNullOrWhiteSpace(name) &&
-                    !string.IsNullOrWhiteSpace(source) &&
-                    !string.IsNullOrWhiteSpace(target) &&
-                    !string.IsNullOrWhiteSpace(type));
-
-            _createBackupCommand = ReactiveCommand.CreateFromTask(ExecuteBackupAsync, canExecute);
+            // Your logic to create backup job
+            // This could involve creating a BackupJobConfig and passing it to ConfigModel or directly to BackupManager
         }
 
-        private async Task ExecuteBackupAsync()
+        private bool CanCreateBackup(object parameter)
         {
-            BackupJob backupJob = BackupType switch
-            {
-                "Complete" => new CompleteBackup(BackupName, SourceDirectory, TargetDirectory),
-                "Differential" => new DifferentialBackup(BackupName, SourceDirectory, TargetDirectory),
-                _ => throw new InvalidOperationException("Unsupported backup type.")
-            };
-
-            try
-            {
-                // No need for explicit threading, Task.Run can be used if necessary
-                await Task.Run(() => backupJob.Start());
-                Console.WriteLine($"Backup {BackupName} started successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error starting backup {BackupName}: {ex.Message}");
-            }
+            // Logic to determine if the backup can be created
+            // For example, ensure all fields are filled out and valid
+            return !string.IsNullOrEmpty(JobName) && !string.IsNullOrEmpty(SourceDirectory) &&
+                   !string.IsNullOrEmpty(DestinationDirectory) && !string.IsNullOrEmpty(BackupType);
         }
     }
 }
