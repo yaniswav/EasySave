@@ -107,7 +107,7 @@ public partial class ConfigModel
         }
     }
 
-    private List<BackupJobConfig> GetBackupJobs()
+    public List<BackupJobConfig> GetBackupJobs()
     {
         try
         {
