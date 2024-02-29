@@ -88,26 +88,18 @@ namespace EasySave
 
             try
             {
-                if (!config.ExtToEncrypt.Contains(Path.GetExtension(sourceFile).ToLower()))
+                using (FileStream sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read))
                 {
-                    using (FileStream sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read))
+                    using (FileStream destStream =
+                           new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
                     {
-                        using (FileStream destStream =
-                               new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
+                        byte[] buffer = new byte[bufferSize];
+                        int bytesRead;
+                        while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
                         {
-                            byte[] buffer = new byte[bufferSize];
-                            int bytesRead;
-                            while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
-                            {
-                                destStream.Write(buffer, 0, bytesRead);
-                            }
+                            destStream.Write(buffer, 0, bytesRead);
                         }
                     }
-                }
-
-                else
-                {
-                    EncryptFile(sourceFile); // Cryptez le fichier source sans le copier
                 }
 
                 stopwatch.Stop();
@@ -141,51 +133,38 @@ namespace EasySave
         }
 
 
-        private void EncryptFile(string filesToEncrypt)
-        {
-            // Chemin vers l'exécutable du programme externe
-            string externalProgramPath =
-                "C:\\Users\\yanis\\Desktop\\CryptoSoft-1.1\\bin\\Release\\net8.0\\CryptoSoft.exe";
-            string encryptionKey = "VotreCleDeChiffrement";
+        public void EncryptFiles(Dictionary<string, string> fileMappings, string encryptionKey) {
+            foreach (var filePair in fileMappings) {
+                var sourceFile = filePair.Key;
+                var destinationFile = filePair.Value;
 
-            try
-            {
-                // Création d'un processus pour exécuter le programme externe
-                using (Process process = new Process())
-                {
-                    // Configuration du processus
-                    process.StartInfo.FileName = externalProgramPath;
+                if (!File.Exists(sourceFile)) {
+                    Console.WriteLine($"Source file does not exist: {sourceFile}");
+                    continue;
+                }
 
-                    // Construire la liste d'arguments
-                    string arguments = "";
-                    foreach (string filesToEncrypt in filesToEncrypt)
-                    {
-                        arguments += $"\"{file}\" ";
-                    }
+                var startInfo = new ProcessStartInfo {
+                    FileName = config.CryptoSoftPath,
+                    Arguments = $"\"{sourceFile}\" \"{destinationFile}\" {encryptionKey}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                };
 
-                    arguments += $"\"{destinationDirectoryPath}\" \"{encryptionKey}\"";
+                using (var process = Process.Start(startInfo)) {
+                    Console.WriteLine($"Encrypting {sourceFile}...");
+                    process.WaitForExit();
 
-                    process.StartInfo.Arguments = arguments;
+                    string output = process.StandardOutput.ReadToEnd();
+                    string errors = process.StandardError.ReadToEnd();
 
-                    // Démarrage du processus
-                    process.Start();
-                    process.WaitForExit(); // Attendre que le processus externe se termine
-
-                    // Vérifier le code de sortie du processus
-                    if (process.ExitCode == 0)
-                    {
-                        Console.WriteLine("Programme externe exécuté avec succès.");
-                    }
-                    else
-                    {
-                        Console.WriteLine(
-                            $"Erreur lors de l'exécution du programme externe. Code de sortie : {process.ExitCode}");
+                    if (process.ExitCode == 0) {
+                        Console.WriteLine($"File {sourceFile} encrypted to {destinationFile} successfully.");
+                    } else {
+                        Console.WriteLine($"Error encrypting {sourceFile}: {errors}");
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erreur : {ex.Message}");
             }
         }
 

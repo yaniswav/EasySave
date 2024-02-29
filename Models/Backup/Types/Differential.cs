@@ -31,15 +31,11 @@
                 cancellationToken.ThrowIfCancellationRequested();
                 pauseEvent.WaitOne();
 
-                long fileSize = 10;
-                if (fileSize <= config.MaxBackupFileSize)
+                var destFile = Path.Combine(destinationDir, Path.GetFileName(sourceFile));
+                if (ShouldCopyFile(sourceFile, destFile))
                 {
-                    var destFile = Path.Combine(destinationDir, Path.GetFileName(sourceFile));
-                    if (ShouldCopyFile(sourceFile, destFile))
-                    {
-                        CopyFileWithBuffer(sourceFile, destFile);
-                        UpdateProgress(sourceFile);
-                    }
+                    CopyFileWithBuffer(sourceFile, destFile);
+                    UpdateProgress(sourceFile);
                 }
             }
 
@@ -48,17 +44,11 @@
                 cancellationToken.ThrowIfCancellationRequested();
                 pauseEvent.WaitOne();
 
-                // long fileSize = new FileInfo(sourceFile).Length;
-                long fileSize = 10;
-
-                if (fileSize <= config.MaxBackupFileSize)
+                var destFile = Path.Combine(destinationDir, Path.GetFileName(sourceFile));
+                if (ShouldCopyFile(sourceFile, destFile))
                 {
-                    var destFile = Path.Combine(destinationDir, Path.GetFileName(sourceFile));
-                    if (ShouldCopyFile(sourceFile, destFile))
-                    {
-                        CopyFileWithBuffer(sourceFile, destFile);
-                        UpdateProgress(sourceFile);
-                    }
+                    CopyFileWithBuffer(sourceFile, destFile);
+                    UpdateProgress(sourceFile);
                 }
             }
 
