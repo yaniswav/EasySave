@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EasySave
+namespace EasySave.ViewModels
 {
     public class BackupJobControlVM
     {

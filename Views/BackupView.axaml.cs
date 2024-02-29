@@ -149,10 +149,46 @@ public partial class BackupView : UserControl
     }
 
     
+    // Dans BackupView.axaml.cs
+
     private void OnExecuteButtonClick(object sender, RoutedEventArgs e)
     {
-        // TODO: Add logic for deleting a backup
+        Console.WriteLine("OnExecuteButtonClick started"); // Pour vérifier que la méthode est appelée
+
+        var selectedBackupJobs = SampleDataGrid.SelectedItems
+            .Cast<BackupJobConfig>() // Assurez-vous que c'est le type correct pour vos éléments dans le DataGrid
+            .Select(jobConfig => jobConfig.Name) // Extraction des noms des tâches de sauvegarde
+            .ToList();
+
+        Console.WriteLine($"Selected jobs count: {selectedBackupJobs.Count}"); // Pour afficher le nombre de tâches sélectionnées
+
+        if (selectedBackupJobs.Any())
+        {
+            Console.WriteLine("There are selected jobs"); // Confirmer que des tâches sont sélectionnées
+            var viewModel = this.DataContext as BackupVM; // Utilisation de BackupVM ici
+            if (viewModel != null)
+            {
+                Console.WriteLine("ViewModel is not null, attempting to start jobs"); // Confirmer que le ViewModel est récupéré
+                viewModel.StartJobs(selectedBackupJobs); // Appeler StartJobs sur BackupVM
+                Console.WriteLine("StartJobs called on ViewModel"); // Confirmer l'appel à StartJobs
+            }
+            else
+            {
+                Console.WriteLine("ViewModel is null"); // Si le ViewModel n'est pas récupéré
+            }
+        }
+        else
+        {
+            // Gérer le cas où aucune tâche n'est sélectionnée
+            Console.WriteLine("Please select at least one backup job to execute."); // Si aucune tâche n'est sélectionnée
+        }
     }
+
+
+
+
+
+
     
     private void OnPauseButtonClick(object sender, RoutedEventArgs e)
     {
@@ -224,7 +260,6 @@ public partial class BackupView : UserControl
             NameTextBox.Text = selectedBackup.Name;
             SourceDirectoryTextBox.Text = selectedBackup.SourceDir;
             TargetDirectoryTextBox.Text = selectedBackup.DestinationDir;
-            // Assurez-vous que le ComboBox pour le type de sauvegarde est également mis à jour
             TypeChoice.SelectedItem = TypeChoice.Items.Cast<ComboBoxItem>().FirstOrDefault(item => item.Content.ToString() == selectedBackup.Type);
         }
         
