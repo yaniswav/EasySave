@@ -241,5 +241,25 @@ namespace EasySave.Assets {
                 return ResourceManager.GetString("BackupDeleted", resourceCulture); 
             }
         }
+        public static string Select {
+            get {
+                return ResourceManager.GetString("Select", resourceCulture); 
+            }
+        }
+        public static string Name {
+            get {
+                return ResourceManager.GetString("Name", resourceCulture); 
+            }
+        }
+        public static string State {
+            get {
+                return ResourceManager.GetString("State", resourceCulture); 
+            }
+        }
+        public static string Progress {
+            get {
+                return ResourceManager.GetString("Progress", resourceCulture); 
+            }
+        }
     }
 }

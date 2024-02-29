@@ -122,4 +122,16 @@
     <data name="BackupDeleted" xml:space="preserve">
         <value>Sauvegarde supprimée</value>
     </data>
+    <data name="Select" xml:space="preserve">
+        <value>Sélectionner</value>
+    </data>
+    <data name="Name" xml:space="preserve">
+        <value>Nom</value>
+    </data>
+    <data name="State" xml:space="preserve">
+        <value>État</value>
+    </data>
+    <data name="Progress" xml:space="preserve">
+        <value>Progression</value>
+    </data>
 </root>

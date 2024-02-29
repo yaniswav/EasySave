@@ -108,13 +108,13 @@
         <StackPanel Orientation="Vertical" Background="White" Margin="30, 10, 30, 30">
             <DataGrid x:Name="SampleDataGrid" Margin="15, 10, 15, 0" VerticalAlignment="Top">
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn Header="Sélectionner"/>
-                    <DataGridTextColumn Header="Nom"/>
-                    <DataGridTextColumn Header="Répertoire source"/>
-                    <DataGridTextColumn Header="Répertoire de destination"/>
+                    <DataGridCheckBoxColumn Header="{x:Static assets:Resources.Select}"/>
+                    <DataGridTextColumn Header="{x:Static assets:Resources.Name}"/>
+                    <DataGridTextColumn Header="{x:Static assets:Resources.SourceDirectory}"/>
+                    <DataGridTextColumn Header="{x:Static assets:Resources.TargetDirectory}"/>
                     <DataGridTextColumn Header="Type"/>
-                    <DataGridTextColumn Header="État"/>
-                    <DataGridTextColumn Header="Progression"/>
+                    <DataGridTextColumn Header="{x:Static assets:Resources.State}"/>
+                    <DataGridTextColumn Header="{x:Static assets:Resources.Progress}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
