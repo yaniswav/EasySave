@@ -1,7 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:assets="clr-namespace:EasySave.Assets"
-             x:Class="EasySave.Views.BackupView">
+             x:Class="EasySave.Views.BackupView"
+             x:DataType="vm:BackupVM">
     <UserControl.Styles>
         <Style Selector="Button">
             <Setter Property="Background" Value="#857DFF" />
@@ -103,19 +104,18 @@
 
         
         <StackPanel Orientation="Vertical" Background="White" Margin="30, 10, 30, 30">
-            <DataGrid x:Name="SampleDataGrid" Margin="15, 10, 15, 0" VerticalAlignment="Top">
+            <DataGrid x:Name="SampleDataGrid" ItemsSource="{Binding BackupJobs}" Margin="15, 10, 15, 0" VerticalAlignment="Top">
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn Header="Sélectionner"/>
-                    <DataGridTextColumn Header="Nom"/>
-                    <DataGridTextColumn Header="Répertoire source"/>
-                    <DataGridTextColumn Header="Répertoire de destination"/>
-                    <DataGridTextColumn Header="Type"/>
+                    <DataGridTextColumn Header="Nom" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Répertoire source" Binding="{Binding SourceDir}"/>
+                    <DataGridTextColumn Header="Répertoire de destination" Binding="{Binding DestinationDir}"/>
+                    <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
                     <DataGridTextColumn Header="État"/>
                     <DataGridTextColumn Header="Progression"/>
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
-
     </StackPanel>
 </UserControl>
             
