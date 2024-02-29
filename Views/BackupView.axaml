@@ -90,6 +90,17 @@
                     <DataGridTextColumn Header="Progression"/>
                 </DataGrid.Columns>
             </DataGrid>
+            
+            
+           <!-- <DataGrid ItemsSource="{Binding BackupJobs}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Source Directory" Binding="{Binding SourceDir}"/>
+                    <DataGridTextColumn Header="Destination Directory" Binding="{Binding DestinationDir}"/>
+                    <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
+                </DataGrid.Columns>
+            </DataGrid> -->
+            
         </StackPanel>
 
     </StackPanel>
