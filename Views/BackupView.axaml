@@ -2,6 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:EasySave.ViewModels"
+             x:DataType="vm:BackupVM"
              mc:Ignorable="d"
              xmlns:assets="clr-namespace:EasySave.Assets"
              x:Class="EasySave.Views.BackupView">
@@ -42,6 +44,10 @@
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
     </UserControl.Styles>
+    
+    <Design.DataContext>
+        <vm:BackupVM />
+    </Design.DataContext>
     
     <StackPanel Orientation="Vertical" Background="#dad7fc" Margin="25, 0, 25, 25" >
         <Grid Margin="15, 10, 15, 0" HorizontalAlignment="Center">
