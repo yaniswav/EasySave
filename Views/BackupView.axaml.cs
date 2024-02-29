@@ -1,8 +1,10 @@
+using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using EasySave.ViewModels;
 using System.Threading.Tasks;
 using Avalonia.VisualTree;
+using System.Linq;
 
 namespace EasySave.Views;
 
@@ -213,5 +215,20 @@ public partial class BackupView : UserControl
         TargetDirectoryTextBox.Text = string.Empty;
         TypeChoice.SelectedIndex = -1;
     }
+    
+    private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var grid = sender as DataGrid;
+        if (grid.SelectedItem is BackupJobConfig selectedBackup)
+        {
+            NameTextBox.Text = selectedBackup.Name;
+            SourceDirectoryTextBox.Text = selectedBackup.SourceDir;
+            TargetDirectoryTextBox.Text = selectedBackup.DestinationDir;
+            // Assurez-vous que le ComboBox pour le type de sauvegarde est également mis à jour
+            TypeChoice.SelectedItem = TypeChoice.Items.Cast<ComboBoxItem>().FirstOrDefault(item => item.Content.ToString() == selectedBackup.Type);
+        }
+        
+    }
+
 }
 

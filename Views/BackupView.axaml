@@ -135,9 +135,8 @@
 </Grid>
         
         <StackPanel Orientation="Vertical" Margin="30, 10, 30, 30">
-            <DataGrid x:Name="SampleDataGrid" ItemsSource="{Binding BackupJobs}" Margin="15, 10, 15, 0" VerticalAlignment="Top" AutoGenerateColumns="False">
+            <DataGrid x:Name="SampleDataGrid" ItemsSource="{Binding BackupJobs}" Margin="15, 10, 15, 0" VerticalAlignment="Top" AutoGenerateColumns="False" SelectionMode="Extended" SelectionChanged="OnSelectionChanged">
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn Header="{x:Static assets:Resources.Select}" Width="*"/>
                     <DataGridTextColumn Header="{x:Static assets:Resources.Name}" Binding="{Binding Name}" Width="*"/>
                     <DataGridTextColumn Header="{x:Static assets:Resources.SourceDirectory}" Binding="{Binding SourceDir}" Width="*"/>
                     <DataGridTextColumn Header="{x:Static assets:Resources.TargetDirectory}" Binding="{Binding DestinationDir}" Width="*"/>
