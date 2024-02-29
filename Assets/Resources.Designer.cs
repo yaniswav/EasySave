@@ -201,5 +201,45 @@ namespace EasySave.Assets {
                 return ResourceManager.GetString("SelectFile", resourceCulture); 
             }
         }
+        public static string InvalidPath {
+            get {
+                return ResourceManager.GetString("InvalidPath", resourceCulture); 
+            }
+        }
+        public static string ErrorType {
+            get {
+                return ResourceManager.GetString("ErrorType", resourceCulture); 
+            }
+        }
+        public static string BackupNamed {
+            get {
+                return ResourceManager.GetString("BackupNamed", resourceCulture); 
+            }
+        }
+        public static string AlreadyExists {
+            get {
+                return ResourceManager.GetString("AlreadyExists", resourceCulture); 
+            }
+        }
+        public static string NoBackupNamed {
+            get {
+                return ResourceManager.GetString("NoBackupNamed", resourceCulture); 
+            }
+        }
+        public static string BackupCreated {
+            get {
+                return ResourceManager.GetString("BackupCreated", resourceCulture); 
+            }
+        }
+        public static string BackupEdited {
+            get {
+                return ResourceManager.GetString("BackupEdited", resourceCulture); 
+            }
+        }
+        public static string BackupDeleted {
+            get {
+                return ResourceManager.GetString("BackupDeleted", resourceCulture); 
+            }
+        }
     }
 }

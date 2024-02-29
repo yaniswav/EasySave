@@ -98,4 +98,28 @@
     <data name="SelectFile" xml:space="preserve">
         <value>Select a file</value>
     </data>
+    <data name="InvalidPath" xml:space="preserve">
+        <value>Invalid Path</value>
+    </data>
+    <data name="ErrorType" xml:space="preserve">
+        <value>Error, choose a backup type</value>
+    </data>
+    <data name="BackupNamed" xml:space="preserve">
+        <value>A backup named</value>
+    </data>
+    <data name="AlreadyExists" xml:space="preserve">
+        <value>already exists</value>
+    </data>
+    <data name="NoBackupNamed" xml:space="preserve">
+        <value>No backup named </value>
+    </data>
+    <data name="BackupCreated" xml:space="preserve">
+        <value>Backup created</value>
+    </data>
+    <data name="BackupEdited" xml:space="preserve">
+        <value>Backup edited</value>
+    </data>
+    <data name="BackupDeleted" xml:space="preserve">
+        <value>Backup deleted</value>
+    </data>
 </root>
