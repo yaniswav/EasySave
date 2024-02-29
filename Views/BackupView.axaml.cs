@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using EasySave.ViewModels;
 using System.Threading.Tasks;
+using Avalonia.VisualTree;
 
 namespace EasySave.Views;
 
@@ -66,6 +67,13 @@ public partial class BackupView : UserControl
         {
             ShowCreateSuccessMessage(SuccessMessageCreate.Text);
             ResetFields();
+            var mainWindow = (MainWindow)this.GetVisualRoot();
+            if (mainWindow != null)
+            {
+                mainWindow.RefreshButtonContent();
+                mainWindow.MainContent.Content = new BackupView(); 
+                mainWindow.UpdateButtonColor(activeButton: "Backup");
+            }
         }
     }
     
@@ -100,6 +108,13 @@ public partial class BackupView : UserControl
         {
             ShowEditSuccessMessage(SuccessMessageEdit.Text);
             ResetFields();
+            var mainWindow = (MainWindow)this.GetVisualRoot();
+            if (mainWindow != null)
+            {
+                mainWindow.RefreshButtonContent();
+                mainWindow.MainContent.Content = new BackupView(); 
+                mainWindow.UpdateButtonColor(activeButton: "Backup");
+            }
         }
     }
     
@@ -121,6 +136,13 @@ public partial class BackupView : UserControl
         {
             ShowDeleteSuccessMessage(SuccessMessageDelete.Text);
             ResetFields();
+            var mainWindow = (MainWindow)this.GetVisualRoot();
+            if (mainWindow != null)
+            {
+                mainWindow.RefreshButtonContent();
+                mainWindow.MainContent.Content = new BackupView(); 
+                mainWindow.UpdateButtonColor(activeButton: "Backup");
+            }
         }
     }
 
