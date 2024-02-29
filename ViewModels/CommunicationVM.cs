@@ -41,7 +41,8 @@ namespace EasySave.ViewModels
 
         public void AddExtension()
         {
-            if (!string.IsNullOrWhiteSpace(_extensionToAdd) && !_currentBackupJob.ExtensionsToEncrypt.Contains(_extensionToAdd.ToLower()))
+            if (!string.IsNullOrWhiteSpace(_extensionToAdd) &&
+                !_currentBackupJob.ExtensionsToEncrypt.Contains(_extensionToAdd.ToLower()))
             {
                 _currentBackupJob.ExtensionsToEncrypt.Add(_extensionToAdd.ToLower());
                 ExtensionToAdd = ""; // Reset after adding
