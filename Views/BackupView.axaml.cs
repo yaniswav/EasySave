@@ -1,12 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using System.Resources;
-using System.Reflection;
 using EasySave.ViewModels;
-using System.Collections.Generic;
-using Avalonia.VisualTree;
-
-
+using System.Threading.Tasks;
 
 namespace EasySave.Views;
 
@@ -15,35 +10,7 @@ public partial class BackupView : UserControl
     public BackupView()
     {
         InitializeComponent();
-
-        //Ne fonctionne pas 
-        var sampleData = new List<BackupJob>
-        {
-            new BackupJob
-            {
-                Name = "Job 1", SourceDirectory = "C:\\Source1", DestinationDirectory = "D:\\Destination1",
-                Type = "Complète", State = "Ready", Progress = "0%"
-            },
-            new BackupJob
-            {
-                Name = "Job 2", SourceDirectory = "C:\\Source2", DestinationDirectory = "D:\\Destination2",
-                Type = "Différentielle", State = "In Progress", Progress = "50%"
-            }
-            // Add more sample data as needed
-        };
-        SampleDataGrid.ItemsSource = sampleData;
-    }
-
-    //Ne fonctionne pas 
-    public class BackupJob
-    {
-        public bool Selected { get; set; }
-        public string Name { get; set; }
-        public string SourceDirectory { get; set; }
-        public string DestinationDirectory { get; set; }
-        public string Type { get; set; }
-        public string State { get; set; }
-        public string Progress { get; set; }
+        this.DataContext = new BackupVM();
     }
 
     private async void OnSelectSourceDirectoryClick(object sender, RoutedEventArgs e)
@@ -67,23 +34,96 @@ public partial class BackupView : UserControl
             TargetDirectoryTextBox.Text = selectionWindow.SelectedPath;
         }
     }
-
-
     
     private void OnCreateButtonClick(object sender, RoutedEventArgs e)
     {
-        // TODO: Add logic for creating a backup
-    }
+        var viewModel = this.DataContext as BackupVM;
+        if (viewModel == null) return;
 
+        var name = NameTextBox.Text;
+        var sourceDir = SourceDirectoryTextBox.Text;
+        var destinationDir = TargetDirectoryTextBox.Text;
+        var typeItem = TypeChoice.SelectedItem as ComboBoxItem;
+        var typeContent = typeItem?.Content.ToString();
+    
+        if (!viewModel.TryCreateBackup(name, sourceDir, destinationDir, typeContent)) {
+            if (viewModel._configModel.BackupJobExists(name))
+            {
+                ShowErrorMessage(NameError, $"Une sauvegarde nommée '{name}' existe déjà.");
+            }
+            if (!viewModel.IsValidPath(sourceDir))
+            {
+                ShowErrorMessage(SourceError, "Chemin incrorrect.");
+            }
+            if (!viewModel.IsValidPath(destinationDir)) {
+                ShowErrorMessage(DestinationError, "Chemin incrorrect.");
+            }
+            if (!viewModel.IsValidBackupType(typeContent)) {
+                ShowErrorMessage(TypeError, "Erreur, choisir un type de sauvegarde");
+            }
+        }
+        else
+        {
+            ShowSuccessMessage("Sauvegarde créée");
+            ResetFields();
+        }
+    }
+    
     private void OnEditButtonClick(object sender, RoutedEventArgs e)
     {
-        // TODO: Add logic for editing a backup
+        var viewModel = this.DataContext as BackupVM; 
+        if (viewModel == null) return; 
+        
+        var jobName = NameTextBox.Text; 
+        var newSourceDir = SourceDirectoryTextBox.Text; 
+        var newDestinationDir = TargetDirectoryTextBox.Text; 
+        var typeItem = TypeChoice.SelectedItem as ComboBoxItem;
+        var newType = typeItem?.Content.ToString();
+        
+        if (!viewModel.TryEditBackup(jobName, newSourceDir, newDestinationDir, newType)) {
+            if (!viewModel._configModel.BackupJobExists(jobName))
+            {
+                ShowErrorMessage(NameError, $"Aucune sauvegarde nommée '{jobName}'.");
+            }
+            if (!viewModel.IsValidPath(newSourceDir))
+            {
+                ShowErrorMessage(SourceError, "Chemin incrorrect.");
+            }
+            if (!viewModel.IsValidPath(newDestinationDir)) {
+                ShowErrorMessage(DestinationError, "Chemin incrorrect.");
+            }
+            if (!viewModel.IsValidBackupType(newType)) {
+                ShowErrorMessage(TypeError, "Erreur, choisir un type de sauvegarde");
+            }
+        }
+        else
+        {
+            ShowSuccessMessage("Sauvegarde modifiée");
+            ResetFields();
+        }
     }
-
+    
     private void OnDeleteButtonClick(object sender, RoutedEventArgs e)
     {
-        // TODO: Add logic for deleting a backup
+        var viewModel = this.DataContext as BackupVM; 
+        if (viewModel == null) return; 
+
+        var jobName = NameTextBox.Text; 
+        
+        if (!viewModel.TryDeleteBackup(jobName))
+        {
+            if (!viewModel._configModel.BackupJobExists(jobName))
+            {
+                ShowErrorMessage(NameError, $"Aucune sauvegarde nommée '{jobName}'.");
+            }
+        }
+        else
+        {
+            ShowSuccessMessage("Sauvegarde supprimée");
+            ResetFields();
+        }
     }
+
     
     private void OnExecuteButtonClick(object sender, RoutedEventArgs e)
     {
@@ -104,6 +144,32 @@ public partial class BackupView : UserControl
     {
         // TODO: Add logic for deleting a backup
     }
+    
+    private async void ShowErrorMessage(TextBlock errorTextBlock, string message)
+    {
+        errorTextBlock.Text = message;
+        errorTextBlock.IsVisible = true;
 
+        // Attendez 3 secondes
+        await Task.Delay(3000);
+        errorTextBlock.IsVisible = false;
+    }
+    private async void ShowSuccessMessage(string message)
+    {
+        SuccessMessage.Text = message;
+        SuccessMessage.IsVisible = true;
+
+        // Attendez 3 secondes
+        await Task.Delay(3000);
+        SuccessMessage.IsVisible = false;
+    }
+
+    private void ResetFields()
+    {
+        NameTextBox.Text = string.Empty;
+        SourceDirectoryTextBox.Text = string.Empty;
+        TargetDirectoryTextBox.Text = string.Empty;
+        TypeChoice.SelectedIndex = -1;
+    }
 }
 

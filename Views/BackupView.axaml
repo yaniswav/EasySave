@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:assets="clr-namespace:EasySave.Assets"
              x:Class="EasySave.Views.BackupView">
-    
     <UserControl.Styles>
         <Style Selector="Button">
             <Setter Property="Background" Value="#857DFF" />
@@ -21,63 +20,87 @@
     </UserControl.Styles>
     
     <StackPanel Orientation="Vertical" Background="#dad7fc" Margin="25, 0, 25, 25" >
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="15, 10, 15, 0" Spacing="10">
-            <Button x:Name="CreateButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.CreateBackup}" Click="OnCreateButtonClick">
-                <Image Source="/Assets/pictures/create.png" Width="20" Height="20"/>
-            </Button>
-            <Button x:Name="EditButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.EditBackup}" Click="OnEditButtonClick">
-                <Image Source="/Assets/pictures/edit.png" Width="20" Height="20"/>
-            </Button>
-            <Button x:Name="DeleteButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.DeleteBackup}" Click="OnDeleteButtonClick">
-                <Image Source="/Assets/pictures/trash.png" Width="20" Height="20"/>
-            </Button>
-            <Image Source="/Assets/pictures/separator3.png" Width="150" Height="100"/>
-            <Button x:Name="ExecuteButton" Width="150" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.ExecuteBackup}" Click="OnExecuteButtonClick">
-                <Image Source="/Assets/pictures/play.png" Width="20" Height="20"/>
-            </Button>
-            <Image Source="/Assets/pictures/separator3.png" Width="150" Height="100"/>
-            <Button x:Name="PlayButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.ResumeBackup}" Click="OnPlayButtonClick">
-                <Image Source="/Assets/pictures/redo.png" Width="20" Height="20"/>
-            </Button>
-            <Button x:Name="PauseButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.PauseBackup}" Click="OnPauseButtonClick">
-                <Image Source="/Assets/pictures/pause.png" Width="20" Height="20"/>
-            </Button>
-            <Button x:Name="StopButton" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.StopBackup}" Click="OnStopButtonClick">
-                <Image Source="/Assets/pictures/stop.png" Width="20" Height="20"/>
-            </Button>
-        </StackPanel>
-        
-        <Grid Margin="0, 0" HorizontalAlignment="Center">
+        <Grid Margin="15, 10, 15, 0" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/> <!-- Nom de la sauvegarde -->
-                <ColumnDefinition Width="Auto"/> <!-- Bouton source -->
-                <ColumnDefinition Width="Auto"/> <!-- Répertoire source -->
-                <ColumnDefinition Width="Auto"/> <!-- Bouton destination -->
-                <ColumnDefinition Width="Auto"/> <!-- Répertoire Destination -->
-                <ColumnDefinition Width="Auto"/> <!-- Type -->
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Nom de la sauvegarde -->
-            <TextBox Grid.Column="0" x:Name="NameTextBox" Width="200" Margin="5" Watermark="{x:Static assets:Resources.BackupName}"/>
-
-            <!-- Répertoire source -->
-            <TextBox Grid.Column="1" x:Name="SourceDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="{x:Static assets:Resources.SourceDirectory}"/>
-            <Button Grid.Column="2" Margin="0,5,5,5" Width="30" Height="30" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.BrowseFolders}" Click="OnSelectSourceDirectoryClick">
-                <Image Source="/Assets/pictures/folder.png" Width="20" Height="20"/>
+            <Button x:Name="CreateButton" Grid.Column="0" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.CreateBackup}" Click="OnCreateButtonClick">
+                <Image Source="/Assets/pictures/create.png" Width="20" Height="20"/>
             </Button>
-
-            <!-- Répertoire de destination -->
-            <TextBox Grid.Column="3" x:Name="TargetDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="{x:Static assets:Resources.TargetDirectory}"/>
-            <Button Grid.Column="4" Margin="0,5,5,5" Width="30" Height="30" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.BrowseFolders}" Click="OnSelectTargetDirectoryClick">
-                <Image Source="/Assets/pictures/folder.png" Width="20" Height="20"/>
+            <Button x:Name="EditButton" Grid.Column="1" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.EditBackup}" Click="OnEditButtonClick">
+                <Image Source="/Assets/pictures/edit.png" Width="20" Height="20"/>
             </Button>
-
-            <!-- Type -->
-            <ComboBox Grid.Column="5" Width="200" Margin="5" PlaceholderText="{x:Static assets:Resources.BackupType}">
-                <ComboBoxItem Content="{x:Static assets:Resources.CompleteType}"/>
-                <ComboBoxItem Content="{x:Static assets:Resources.DifferentialType}"/>
-            </ComboBox>
+            <Button x:Name="DeleteButton" Grid.Column="2" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.DeleteBackup}" Click="OnDeleteButtonClick">
+                <Image Source="/Assets/pictures/trash.png" Width="20" Height="20"/>
+            </Button>
+            <Image Source="/Assets/pictures/separator3.png" Grid.Column="3" Width="150" Height="100"/>
+            <TextBlock x:Name="SuccessMessage" Grid.Column="4" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" IsVisible="False"/>
+            <Button x:Name="ExecuteButton" Grid.Column="4" Width="150" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.ExecuteBackup}" Click="OnExecuteButtonClick">
+                <Image Source="/Assets/pictures/play.png" Width="20" Height="20"/>
+            </Button>
+            <Image Source="/Assets/pictures/separator3.png" Grid.Column="5" Width="150" Height="100"/>
+            <Button x:Name="PlayButton" Grid.Column="6" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.ResumeBackup}" Click="OnPlayButtonClick">
+                <Image Source="/Assets/pictures/redo.png" Width="20" Height="20"/>
+            </Button>
+            <Button x:Name="PauseButton" Grid.Column="7" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.PauseBackup}" Click="OnPauseButtonClick">
+                <Image Source="/Assets/pictures/pause.png" Width="20" Height="20"/>
+            </Button>
+            <Button x:Name="StopButton" Grid.Column="8" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.StopBackup}" Click="OnStopButtonClick">
+                <Image Source="/Assets/pictures/stop.png" Width="20" Height="20"/>
+            </Button>
         </Grid>
+        
+        <Grid Margin="0, 0" HorizontalAlignment="Center">
+            
+            <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/> <!-- Rangée pour les messages d'erreur -->
+        <RowDefinition Height="Auto"/> <!-- Rangée pour les champs de saisie -->
+    </Grid.RowDefinitions>
+            
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/> <!-- Nom de la sauvegarde -->
+        <ColumnDefinition Width="Auto"/> <!-- Bouton source -->
+        <ColumnDefinition Width="Auto"/> <!-- Répertoire source -->
+        <ColumnDefinition Width="Auto"/> <!-- Bouton destination -->
+        <ColumnDefinition Width="Auto"/> <!-- Répertoire Destination -->
+        <ColumnDefinition Width="Auto"/> <!-- Type -->
+    </Grid.ColumnDefinitions>
+
+    <!-- Nom de la sauvegarde -->
+    <TextBlock Grid.Row="0" Grid.Column="0" x:Name="NameError" Foreground="Red" IsVisible="False" TextAlignment="Center"/>
+    <TextBox Grid.Row="1" Grid.Column="0" x:Name="NameTextBox" Width="200" Margin="5" Watermark="{x:Static assets:Resources.BackupName}"/>
+        
+    <!-- Répertoire source -->
+    <TextBlock Grid.Row="0" Grid.Column="1" x:Name="SourceError" Foreground="Red" IsVisible="False" TextAlignment="Center"/>
+    <TextBox Grid.Row="1" Grid.Column="1" x:Name="SourceDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="{x:Static assets:Resources.SourceDirectory}"/>
+    <Button Grid.Row="1" Grid.Column="2" Margin="0,5,5,5" Width="30" Height="30" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.BrowseFolders}" Click="OnSelectSourceDirectoryClick">
+        <Image Source="/Assets/pictures/folder.png" Width="20" Height="20"/>
+    </Button>
+
+    <!-- Répertoire de destination -->
+    <TextBlock Grid.Row="0" Grid.Column="3" x:Name="DestinationError" Foreground="Red" IsVisible="False" TextAlignment="Center"/>
+    <TextBox Grid.Row="1" Grid.Column="3" x:Name="TargetDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="{x:Static assets:Resources.TargetDirectory}"/>
+    <Button Grid.Row="1" Grid.Column="4" Margin="0,5,5,5" Width="30" Height="30" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.BrowseFolders}" Click="OnSelectTargetDirectoryClick">
+        <Image Source="/Assets/pictures/folder.png" Width="20" Height="20"/>
+    </Button>
+
+    <!-- Type de sauvegarde -->
+    <TextBlock Grid.Row="0" Grid.Column="5" x:Name="TypeError" Foreground="Red" IsVisible="False" TextAlignment="Center"/>
+    <ComboBox Grid.Row="1" Grid.Column="5" x:Name="TypeChoice" Width="200" Margin="5" PlaceholderText="{x:Static assets:Resources.BackupType}">
+        <ComboBoxItem x:Name="CompleteType" Content="Complete"/>
+        <ComboBoxItem x:Name="DifferentialType" Content="Differential"/>
+    </ComboBox>
+</Grid>
+
         
         <StackPanel Orientation="Vertical" Background="White" Margin="30, 10, 30, 30">
             <DataGrid x:Name="SampleDataGrid" Margin="15, 10, 15, 0" VerticalAlignment="Top">
