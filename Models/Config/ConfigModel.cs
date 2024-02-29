@@ -39,7 +39,7 @@ public partial class ConfigModel
         // Chargement de la taille maximale de fichier de sauvegarde
         MaxBackupFileSize = int.TryParse(ConfigurationManager.AppSettings["MaxBackupFileSize"], out int maxFileSize)
             ? maxFileSize
-            : 0;
+            : 100000000;
 
         // Chargement et conversion de ExtToEncrypt en liste
         var extToEncryptValue = ConfigurationManager.AppSettings["ExtToEncrypt"] ?? string.Empty;
@@ -50,7 +50,7 @@ public partial class ConfigModel
         ExtPrio = extPrioValue.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
         CryptoSoftPath = ConfigurationManager.AppSettings["CryptoSoftPath"] ?? string.Empty;
-
+        EncryptionKey = ConfigurationManager.AppSettings["EncryptionKey"] ?? string.Empty;
         // Chargement des paramètres pour le logiciel d'entreprise
         BusinessSoftware = ConfigurationManager.AppSettings["BusinessSoftwareKey"] ?? string.Empty;
     }

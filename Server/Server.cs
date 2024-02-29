@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using EasySave;  // Use your actual namespace where BackupManager is defined.
+using EasySave; // Use your actual namespace where BackupManager is defined.
 
 public class Server
 {
@@ -14,7 +14,7 @@ public class Server
     public Server(int port)
     {
         this.port = port;
-        backupManager = new BackupManager();  
+        backupManager = new BackupManager();
         backupManager.LoadBackupJobs();
     }
 
@@ -22,10 +22,12 @@ public class Server
     {
         listener = new TcpListener(IPAddress.Any, port);
         listener.Start();
+        Console.WriteLine($"Server started on port {port}. Waiting for connections...");
 
         while (true)
         {
             TcpClient client = await listener.AcceptTcpClientAsync();
+            Console.WriteLine("Client connected.");
             HandleClient(client);
         }
     }
@@ -40,9 +42,10 @@ public class Server
             while (true)
             {
                 int byteCount = await stream.ReadAsync(buffer, 0, buffer.Length);
-                if (byteCount == 0)  // Client disconnected
+                if (byteCount == 0) // Client disconnected
                 {
-                    break;  // Exit the loop to handle client disconnection
+                    Console.WriteLine("Client disconnected.");
+                    break; // Exit the loop to handle client disconnection
                 }
 
                 string command = Encoding.UTF8.GetString(buffer, 0, byteCount);
@@ -51,7 +54,7 @@ public class Server
         }
         catch (Exception ex)
         {
-            
+            Console.WriteLine($"Error: {ex.Message}");
         }
         finally
         {
@@ -67,6 +70,7 @@ public class Server
         string[] commandParts = command.Split(':');
         if (commandParts.Length < 2)
         {
+            Console.WriteLine("Invalid command format.");
             return;
         }
 
@@ -83,20 +87,24 @@ public class Server
                 {
                     backupManager.PauseJob(jobName);
                 }
+
                 break;
             case "resume":
                 foreach (var jobName in jobNames)
                 {
                     backupManager.ResumeJob(jobName);
                 }
+
                 break;
             case "stop":
                 foreach (var jobName in jobNames)
                 {
                     backupManager.StopJob(jobName);
                 }
+
                 break;
             default:
+                Console.WriteLine("Unknown command received.");
                 break;
         }
     }

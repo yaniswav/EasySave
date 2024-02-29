@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace EasySave
 {
@@ -20,8 +21,6 @@ namespace EasySave
         public int TotalFilesToCopy;
         public int NbFilesLeftToDo;
         public double Progression { get; protected set; }
-        public List<string> ExtensionsToEncrypt { get; set; }
-
         private static LoggingModel logger;
 
         protected ConfigModel config = ConfigModel.Instance;
@@ -50,7 +49,6 @@ namespace EasySave
             NbFilesLeftToDo = TotalFilesToCopy;
         }
 
-
         public virtual void Start(CancellationToken cancellationToken, ManualResetEvent pauseEvent)
         {
             InitializeTrackingProperties();
@@ -58,9 +56,7 @@ namespace EasySave
             try
             {
                 UpdateState("ACTIVE");
-                Console.WriteLine($"Starting {Name} backup: from {SourceDir} to {DestinationDir}");
                 PerformBackup(SourceDir, DestinationDir, cancellationToken, pauseEvent);
-                Console.WriteLine($"{Name} backup completed.");
                 UpdateState("END");
             }
             catch (OperationCanceledException)
@@ -93,26 +89,18 @@ namespace EasySave
 
             try
             {
-                if (!config.ExtToEncrypt.Contains(Path.GetExtension(sourceFile).ToLower()))
+                using (FileStream sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read))
                 {
-                    using (FileStream sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read))
+                    using (FileStream destStream =
+                           new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
                     {
-                        using (FileStream destStream =
-                               new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
+                        byte[] buffer = new byte[bufferSize];
+                        int bytesRead;
+                        while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
                         {
-                            byte[] buffer = new byte[bufferSize];
-                            int bytesRead;
-                            while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
-                            {
-                                destStream.Write(buffer, 0, bytesRead);
-                            }
+                            destStream.Write(buffer, 0, bytesRead);
                         }
                     }
-                }
-
-                else
-                {
-                    EncryptFile(sourceFile); // Cryptez le fichier source sans le copier
                 }
 
                 stopwatch.Stop();
@@ -140,15 +128,53 @@ namespace EasySave
             Progression = TotalFilesToCopy > 0 ? 100.0 * (TotalFilesToCopy - NbFilesLeftToDo) / TotalFilesToCopy : 100;
         }
 
-        // Méthode pour vérifier si des fichiers prioritaires sont en attente
-        private bool HasPriorityFilesWaiting(string[] files)
+        public bool HasPriorityFile(string file)
         {
-            return files.Any(file => config.ExtPrio.Contains(Path.GetExtension(file).ToLower()));
+            return config.ExtPrio.Contains(Path.GetExtension(file).ToLower().TrimStart('.'));
         }
 
-        private void EncryptFile(string filePath)
-        {
 
+        public void EncryptFiles(Dictionary<string, string> fileMappings, string encryptionKey)
+        {
+            foreach (var filePair in fileMappings)
+            {
+                var sourceFile = filePair.Key;
+                var destinationFile = filePair.Value;
+
+                if (!File.Exists(sourceFile))
+                {
+                    Console.WriteLine($"Source file does not exist: {sourceFile}");
+                    continue;
+                }
+
+                var startInfo = new ProcessStartInfo
+                {
+                    FileName = config.CryptoSoftPath,
+                    Arguments = $"\"{sourceFile}\" \"{destinationFile}\" {encryptionKey}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                };
+
+                using (var process = Process.Start(startInfo))
+                {
+                    Console.WriteLine($"Encrypting {sourceFile}...");
+                    process.WaitForExit();
+
+                    string output = process.StandardOutput.ReadToEnd();
+                    string errors = process.StandardError.ReadToEnd();
+
+                    if (process.ExitCode == 0)
+                    {
+                        Console.WriteLine($"File {sourceFile} encrypted to {destinationFile} successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Error encrypting {sourceFile}: {errors}");
+                    }
+                }
+            }
         }
 
         protected bool ShouldCopyFile(string sourceFile, string destinationFile)
@@ -171,5 +197,4 @@ namespace EasySave
             throw new NotImplementedException();
         }
     }
-
 }
