@@ -109,6 +109,8 @@ namespace EasySave
                 stopwatch.Stop();
                 Console.WriteLine($"Error during the file copying : {ex.Message}");
             }
+
+            UpdateProgress(sourceFile);
         }
 
         // Determines the buffer size based on the file size
@@ -133,17 +135,21 @@ namespace EasySave
         }
 
 
-        public void EncryptFiles(Dictionary<string, string> fileMappings, string encryptionKey) {
-            foreach (var filePair in fileMappings) {
+        public void EncryptFiles(Dictionary<string, string> fileMappings, string encryptionKey)
+        {
+            foreach (var filePair in fileMappings)
+            {
                 var sourceFile = filePair.Key;
                 var destinationFile = filePair.Value;
 
-                if (!File.Exists(sourceFile)) {
+                if (!File.Exists(sourceFile))
+                {
                     Console.WriteLine($"Source file does not exist: {sourceFile}");
                     continue;
                 }
 
-                var startInfo = new ProcessStartInfo {
+                var startInfo = new ProcessStartInfo
+                {
                     FileName = config.CryptoSoftPath,
                     Arguments = $"\"{sourceFile}\" \"{destinationFile}\" {encryptionKey}",
                     UseShellExecute = false,
@@ -152,16 +158,20 @@ namespace EasySave
                     CreateNoWindow = true
                 };
 
-                using (var process = Process.Start(startInfo)) {
+                using (var process = Process.Start(startInfo))
+                {
                     Console.WriteLine($"Encrypting {sourceFile}...");
                     process.WaitForExit();
 
                     string output = process.StandardOutput.ReadToEnd();
                     string errors = process.StandardError.ReadToEnd();
 
-                    if (process.ExitCode == 0) {
+                    if (process.ExitCode == 0)
+                    {
                         Console.WriteLine($"File {sourceFile} encrypted to {destinationFile} successfully.");
-                    } else {
+                    }
+                    else
+                    {
                         Console.WriteLine($"Error encrypting {sourceFile}: {errors}");
                     }
                 }
