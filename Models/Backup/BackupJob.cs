@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace EasySave
 {
@@ -110,6 +110,8 @@ namespace EasySave
                 stopwatch.Stop();
                 Console.WriteLine($"Error during the file copying : {ex.Message}");
             }
+
+            UpdateProgress(sourceFile);
         }
 
         // Determines the buffer size based on the file size
@@ -190,11 +192,6 @@ namespace EasySave
         {
             State = state;
             StateModel.UpdateBackupState(this);
-        }
-
-        public void Start()
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -14,11 +14,15 @@ sealed class Program
     public static async Task Main(string[] args)
     {
         var configModel = ConfigModel.Instance;
+
+        Server server = new Server(8080);
+        Task serverTask = Task.Run(() => server.Start());
+
+
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
 
-        Server server = new Server(8080);
-        await server.Start();
+        await serverTask;
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
