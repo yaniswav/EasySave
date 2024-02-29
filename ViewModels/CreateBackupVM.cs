@@ -40,7 +40,7 @@ namespace EasySave.ViewModels
 
         public ReactiveCommand<Unit, Unit> CreateBackupCommand => _createBackupCommand;
 
-        public CreateBackupVM()
+        /*public CreateBackupVM()
         {
             var canExecute = this.WhenAnyValue(
                 x => x.BackupName,
@@ -56,7 +56,7 @@ namespace EasySave.ViewModels
             _createBackupCommand = ReactiveCommand.CreateFromTask(ExecuteBackupAsync, canExecute);
         }
 
-        private async Task ExecuteBackupAsync()
+        /*private async Task ExecuteBackupAsync()
         {
             BackupJob backupJob = BackupType switch
             {
@@ -75,6 +75,6 @@ namespace EasySave.ViewModels
             {
                 Console.WriteLine($"Error starting backup {BackupName}: {ex.Message}");
             }
-        }
+        }*/
     }
 }

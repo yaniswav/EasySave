@@ -73,6 +73,7 @@
                 <Image Source="/Assets/pictures/trash.png" Width="20" Height="20"/>
             </Button>
             <Image Source="/Assets/pictures/separator3.png" Grid.Column="3" Width="150" Height="100"/>
+            <TextBlock x:Name="ExecutionSuccessMessage" Grid.Column="4" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" Text="{x:Static assets:Resources.BackupCreated}" IsVisible="False"/>
             <TextBlock x:Name="SuccessMessageCreate" Grid.Column="4" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" Text="{x:Static assets:Resources.BackupCreated}" IsVisible="False"/>
             <TextBlock x:Name="SuccessMessageEdit" Grid.Column="4" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" Text="{x:Static assets:Resources.BackupEdited}" IsVisible="False"/>
             <TextBlock x:Name="SuccessMessageDelete" Grid.Column="4" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" Text="{x:Static assets:Resources.BackupDeleted}" IsVisible="False"/>
@@ -80,12 +81,15 @@
                 <Image Source="/Assets/pictures/play.png" Width="20" Height="20"/>
             </Button>
             <Image Source="/Assets/pictures/separator3.png" Grid.Column="5" Width="150" Height="100"/>
+            <TextBlock x:Name="ResumeSuccessMessage" Grid.Column="6" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" Text="" IsVisible="False"/>
             <Button x:Name="PlayButton" Grid.Column="6" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.ResumeBackup}" Click="OnPlayButtonClick">
                 <Image Source="/Assets/pictures/redo.png" Width="20" Height="20"/>
             </Button>
+            <TextBlock x:Name="PauseSuccessMessage" Grid.Column="7" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" Text="" IsVisible="False"/>
             <Button x:Name="PauseButton" Grid.Column="7" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.PauseBackup}" Click="OnPauseButtonClick">
                 <Image Source="/Assets/pictures/pause.png" Width="20" Height="20"/>
             </Button>
+            <TextBlock x:Name="StopSuccessMessage" Grid.Column="8" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" Text="" IsVisible="False"/>
             <Button x:Name="StopButton" Grid.Column="8" Width="80" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.StopBackup}" Click="OnStopButtonClick">
                 <Image Source="/Assets/pictures/stop.png" Width="20" Height="20"/>
             </Button>

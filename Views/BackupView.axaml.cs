@@ -151,59 +151,127 @@ public partial class BackupView : UserControl
     
     // Dans BackupView.axaml.cs
 
-    private void OnExecuteButtonClick(object sender, RoutedEventArgs e)
+    private async void OnExecuteButtonClick(object sender, RoutedEventArgs e)
     {
-        Console.WriteLine("OnExecuteButtonClick started"); // Pour vérifier que la méthode est appelée
-
         var selectedBackupJobs = SampleDataGrid.SelectedItems
-            .Cast<BackupJobConfig>() // Assurez-vous que c'est le type correct pour vos éléments dans le DataGrid
-            .Select(jobConfig => jobConfig.Name) // Extraction des noms des tâches de sauvegarde
+            .Cast<BackupJobConfig>()
+            .Select(jobConfig => jobConfig.Name)
             .ToList();
-
-        Console.WriteLine($"Selected jobs count: {selectedBackupJobs.Count}"); // Pour afficher le nombre de tâches sélectionnées
 
         if (selectedBackupJobs.Any())
         {
-            Console.WriteLine("There are selected jobs"); // Confirmer que des tâches sont sélectionnées
-            var viewModel = this.DataContext as BackupVM; // Utilisation de BackupVM ici
+            var viewModel = this.DataContext as BackupVM;
             if (viewModel != null)
             {
-                Console.WriteLine("ViewModel is not null, attempting to start jobs"); // Confirmer que le ViewModel est récupéré
-                viewModel.StartJobs(selectedBackupJobs); // Appeler StartJobs sur BackupVM
-                Console.WriteLine("StartJobs called on ViewModel"); // Confirmer l'appel à StartJobs
+                // Construction du message de succès avec les noms des tâches sélectionnées
+                string successMessage = $"{String.Join(", ", selectedBackupJobs)} en cours d'exécution...";
+                ExecutionSuccessMessage.Text = successMessage;
+                ExecutionSuccessMessage.IsVisible = true; // Afficher le message
+
+                viewModel.StartJobs(selectedBackupJobs);
+
+                // Attendre 3 secondes avant de masquer le message
+                await Task.Delay(3000);
+                ExecutionSuccessMessage.IsVisible = false; // Masquer le message après 3 secondes
             }
-            else
+        }
+    }
+    
+    private async void OnPauseButtonClick(object sender, RoutedEventArgs e)
+    {
+        var selectedBackupJobs = SampleDataGrid.SelectedItems
+            .Cast<BackupJobConfig>()
+            .Select(jobConfig => jobConfig.Name)
+            .ToList();
+
+        if (selectedBackupJobs.Any())
+        {
+            var viewModel = this.DataContext as BackupVM; // Assurez-vous d'utiliser le bon ViewModel
+            if (viewModel != null)
             {
-                Console.WriteLine("ViewModel is null"); // Si le ViewModel n'est pas récupéré
+                // Construction du message de pause
+                string pauseMessage = $"{String.Join(", ", selectedBackupJobs)} en pause...";
+                PauseSuccessMessage.Text = pauseMessage;
+                PauseSuccessMessage.IsVisible = true; // Afficher le message
+
+                viewModel.PauseJobs(selectedBackupJobs); // Appeler la méthode PauseJobs
+
+                // Attendre 3 secondes avant de masquer le message
+                await Task.Delay(3000);
+                PauseSuccessMessage.IsVisible = false; // Masquer le message après 3 secondes
             }
         }
         else
         {
-            // Gérer le cas où aucune tâche n'est sélectionnée
-            Console.WriteLine("Please select at least one backup job to execute."); // Si aucune tâche n'est sélectionnée
+            // Optionnel : Gérer le cas où aucune tâche n'est sélectionnée
+            Console.WriteLine("Please select at least one backup job to pause.");
         }
     }
 
+    
+    private async void OnPlayButtonClick(object sender, RoutedEventArgs e)
+    {
+        var selectedBackupJobs = SampleDataGrid.SelectedItems
+            .Cast<BackupJobConfig>()
+            .Select(jobConfig => jobConfig.Name)
+            .ToList();
 
+        if (selectedBackupJobs.Any())
+        {
+            var viewModel = this.DataContext as BackupVM; // Assurez-vous d'utiliser le bon ViewModel
+            if (viewModel != null)
+            {
+                // Construction du message de reprise
+                string resumeMessage = $"{String.Join(", ", selectedBackupJobs)} en reprise...";
+                ResumeSuccessMessage.Text = resumeMessage;
+                ResumeSuccessMessage.IsVisible = true; // Afficher le message
 
+                viewModel.ResumeJobs(selectedBackupJobs); // Appeler la méthode ResumeJobs
 
-
+                // Attendre 3 secondes avant de masquer le message
+                await Task.Delay(3000);
+                ResumeSuccessMessage.IsVisible = false; // Masquer le message après 3 secondes
+            }
+        }
+        else
+        {
+            // Optionnel : Gérer le cas où aucune tâche n'est sélectionnée
+            Console.WriteLine("Please select at least one backup job to resume.");
+        }
+    }
 
     
-    private void OnPauseButtonClick(object sender, RoutedEventArgs e)
+    private async void OnStopButtonClick(object sender, RoutedEventArgs e)
     {
-        // TODO: Add logic for deleting a backup
+        var selectedBackupJobs = SampleDataGrid.SelectedItems
+            .Cast<BackupJobConfig>()
+            .Select(jobConfig => jobConfig.Name)
+            .ToList();
+
+        if (selectedBackupJobs.Any())
+        {
+            var viewModel = this.DataContext as BackupVM; // Assurez-vous que c'est le bon ViewModel
+            if (viewModel != null)
+            {
+                // Construction du message d'arrêt
+                string stopMessage = $"{String.Join(", ", selectedBackupJobs)} arrêtée...";
+                StopSuccessMessage.Text = stopMessage;
+                StopSuccessMessage.IsVisible = true; // Afficher le message
+
+                viewModel.StopJobs(selectedBackupJobs); // Appeler la méthode StopJobs
+
+                // Attendre 3 secondes avant de masquer le message
+                await Task.Delay(3000);
+                StopSuccessMessage.IsVisible = false; // Masquer le message après 3 secondes
+            }
+        }
+        else
+        {
+            // Optionnel : Gérer le cas où aucune tâche n'est sélectionnée
+            Console.WriteLine("Please select at least one backup job to stop.");
+        }
     }
-    
-    private void OnPlayButtonClick(object sender, RoutedEventArgs e)
-    {
-        // TODO: Add logic for deleting a backup
-    }
-    
-    private void OnStopButtonClick(object sender, RoutedEventArgs e)
-    {
-        // TODO: Add logic for deleting a backup
-    }
+
     
     private async void ShowErrorMessage(TextBlock errorTextBlock, string message)
     {
