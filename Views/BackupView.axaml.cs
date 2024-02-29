@@ -149,25 +149,129 @@ public partial class BackupView : UserControl
     }
 
     
-    private void OnExecuteButtonClick(object sender, RoutedEventArgs e)
+    // Dans BackupView.axaml.cs
+
+    private async void OnExecuteButtonClick(object sender, RoutedEventArgs e)
     {
-        // TODO: Add logic for deleting a backup
+        var selectedBackupJobs = SampleDataGrid.SelectedItems
+            .Cast<BackupJobConfig>()
+            .Select(jobConfig => jobConfig.Name)
+            .ToList();
+
+        if (selectedBackupJobs.Any())
+        {
+            var viewModel = this.DataContext as BackupVM;
+            if (viewModel != null)
+            {
+                // Construction du message de succès avec les noms des tâches sélectionnées
+                string successMessage = $"{String.Join(", ", selectedBackupJobs)} en cours d'exécution...";
+                ExecutionSuccessMessage.Text = successMessage;
+                ExecutionSuccessMessage.IsVisible = true; // Afficher le message
+
+                viewModel.StartJobs(selectedBackupJobs);
+
+                // Attendre 3 secondes avant de masquer le message
+                await Task.Delay(3000);
+                ExecutionSuccessMessage.IsVisible = false; // Masquer le message après 3 secondes
+            }
+        }
     }
     
-    private void OnPauseButtonClick(object sender, RoutedEventArgs e)
+    private async void OnPauseButtonClick(object sender, RoutedEventArgs e)
     {
-        // TODO: Add logic for deleting a backup
+        var selectedBackupJobs = SampleDataGrid.SelectedItems
+            .Cast<BackupJobConfig>()
+            .Select(jobConfig => jobConfig.Name)
+            .ToList();
+
+        if (selectedBackupJobs.Any())
+        {
+            var viewModel = this.DataContext as BackupVM; // Assurez-vous d'utiliser le bon ViewModel
+            if (viewModel != null)
+            {
+                // Construction du message de pause
+                string pauseMessage = $"{String.Join(", ", selectedBackupJobs)} en pause...";
+                PauseSuccessMessage.Text = pauseMessage;
+                PauseSuccessMessage.IsVisible = true; // Afficher le message
+
+                viewModel.PauseJobs(selectedBackupJobs); // Appeler la méthode PauseJobs
+
+                // Attendre 3 secondes avant de masquer le message
+                await Task.Delay(3000);
+                PauseSuccessMessage.IsVisible = false; // Masquer le message après 3 secondes
+            }
+        }
+        else
+        {
+            // Optionnel : Gérer le cas où aucune tâche n'est sélectionnée
+            Console.WriteLine("Please select at least one backup job to pause.");
+        }
     }
+
     
-    private void OnPlayButtonClick(object sender, RoutedEventArgs e)
+    private async void OnPlayButtonClick(object sender, RoutedEventArgs e)
     {
-        // TODO: Add logic for deleting a backup
+        var selectedBackupJobs = SampleDataGrid.SelectedItems
+            .Cast<BackupJobConfig>()
+            .Select(jobConfig => jobConfig.Name)
+            .ToList();
+
+        if (selectedBackupJobs.Any())
+        {
+            var viewModel = this.DataContext as BackupVM; // Assurez-vous d'utiliser le bon ViewModel
+            if (viewModel != null)
+            {
+                // Construction du message de reprise
+                string resumeMessage = $"{String.Join(", ", selectedBackupJobs)} en reprise...";
+                ResumeSuccessMessage.Text = resumeMessage;
+                ResumeSuccessMessage.IsVisible = true; // Afficher le message
+
+                viewModel.ResumeJobs(selectedBackupJobs); // Appeler la méthode ResumeJobs
+
+                // Attendre 3 secondes avant de masquer le message
+                await Task.Delay(3000);
+                ResumeSuccessMessage.IsVisible = false; // Masquer le message après 3 secondes
+            }
+        }
+        else
+        {
+            // Optionnel : Gérer le cas où aucune tâche n'est sélectionnée
+            Console.WriteLine("Please select at least one backup job to resume.");
+        }
     }
+
     
-    private void OnStopButtonClick(object sender, RoutedEventArgs e)
+    private async void OnStopButtonClick(object sender, RoutedEventArgs e)
     {
-        // TODO: Add logic for deleting a backup
+        var selectedBackupJobs = SampleDataGrid.SelectedItems
+            .Cast<BackupJobConfig>()
+            .Select(jobConfig => jobConfig.Name)
+            .ToList();
+
+        if (selectedBackupJobs.Any())
+        {
+            var viewModel = this.DataContext as BackupVM; // Assurez-vous que c'est le bon ViewModel
+            if (viewModel != null)
+            {
+                // Construction du message d'arrêt
+                string stopMessage = $"{String.Join(", ", selectedBackupJobs)} arrêtée...";
+                StopSuccessMessage.Text = stopMessage;
+                StopSuccessMessage.IsVisible = true; // Afficher le message
+
+                viewModel.StopJobs(selectedBackupJobs); // Appeler la méthode StopJobs
+
+                // Attendre 3 secondes avant de masquer le message
+                await Task.Delay(3000);
+                StopSuccessMessage.IsVisible = false; // Masquer le message après 3 secondes
+            }
+        }
+        else
+        {
+            // Optionnel : Gérer le cas où aucune tâche n'est sélectionnée
+            Console.WriteLine("Please select at least one backup job to stop.");
+        }
     }
+
     
     private async void ShowErrorMessage(TextBlock errorTextBlock, string message)
     {
@@ -224,7 +328,6 @@ public partial class BackupView : UserControl
             NameTextBox.Text = selectedBackup.Name;
             SourceDirectoryTextBox.Text = selectedBackup.SourceDir;
             TargetDirectoryTextBox.Text = selectedBackup.DestinationDir;
-            // Assurez-vous que le ComboBox pour le type de sauvegarde est également mis à jour
             TypeChoice.SelectedItem = TypeChoice.Items.Cast<ComboBoxItem>().FirstOrDefault(item => item.Content.ToString() == selectedBackup.Type);
         }
         

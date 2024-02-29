@@ -10,6 +10,8 @@ namespace EasySave.ViewModels
     {
         public ConfigModel _configModel = ConfigModel.Instance;
         public ObservableCollection<BackupJobConfig> BackupJobs { get; set; }
+        
+        private BackupManager _backupManager;
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -17,6 +19,7 @@ namespace EasySave.ViewModels
         public BackupVM()
         {
             BackupJobs = new ObservableCollection<BackupJobConfig>(_configModel.GetBackupJobs());
+            _backupManager = new BackupManager();
         }
         
         
@@ -110,6 +113,39 @@ namespace EasySave.ViewModels
         public bool TryDeleteBackup(string jobName)
         {
             return _configModel.DeleteBackupJob(jobName);
+        }
+        
+        public void PauseJobs(List<string> jobNames)
+        {
+            _backupManager.LoadBackupJobs();
+            foreach (var jobName in jobNames)
+            {
+                _backupManager.PauseJob(jobName);
+            }
+        }
+
+        public void ResumeJobs(List<string> jobNames)
+        {
+            _backupManager.LoadBackupJobs();
+            foreach (var jobName in jobNames)
+            {
+                _backupManager.ResumeJob(jobName);
+            }
+        }
+
+        public void StopJobs(List<string> jobNames)
+        {
+            _backupManager.LoadBackupJobs();
+            foreach (var jobName in jobNames)
+            {
+                _backupManager.StopJob(jobName);
+            }
+        }
+
+        public void StartJobs(List<string> jobNames)
+        {
+            _backupManager.LoadBackupJobs();
+            _backupManager.ExecuteJobs(jobNames.ToArray());
         }
         
 
