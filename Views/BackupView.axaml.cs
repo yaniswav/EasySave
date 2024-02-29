@@ -50,22 +50,22 @@ public partial class BackupView : UserControl
         if (!viewModel.TryCreateBackup(name, sourceDir, destinationDir, typeContent)) {
             if (viewModel._configModel.BackupJobExists(name))
             {
-                ShowErrorMessage(NameError, $"Une sauvegarde nommée '{name}' existe déjà.");
+                ShowErrorMessage(NameErrorCreate, $"'{name}' '{NameErrorCreate.Text} ");
             }
             if (!viewModel.IsValidPath(sourceDir))
             {
-                ShowErrorMessage(SourceError, "Chemin incrorrect.");
+                ShowErrorMessage(SourceError, SourceError.Text);
             }
             if (!viewModel.IsValidPath(destinationDir)) {
-                ShowErrorMessage(DestinationError, "Chemin incrorrect.");
+                ShowErrorMessage(DestinationError, DestinationError.Text);
             }
             if (!viewModel.IsValidBackupType(typeContent)) {
-                ShowErrorMessage(TypeError, "Erreur, choisir un type de sauvegarde");
+                ShowErrorMessage(TypeError, TypeError.Text);
             }
         }
         else
         {
-            ShowSuccessMessage("Sauvegarde créée");
+            ShowCreateSuccessMessage(SuccessMessageCreate.Text);
             ResetFields();
         }
     }
@@ -84,22 +84,22 @@ public partial class BackupView : UserControl
         if (!viewModel.TryEditBackup(jobName, newSourceDir, newDestinationDir, newType)) {
             if (!viewModel._configModel.BackupJobExists(jobName))
             {
-                ShowErrorMessage(NameError, $"Aucune sauvegarde nommée '{jobName}'.");
+                ShowErrorMessage(NameError, $"{NameError.Text} {jobName}");
             }
             if (!viewModel.IsValidPath(newSourceDir))
             {
-                ShowErrorMessage(SourceError, "Chemin incrorrect.");
+                ShowErrorMessage(SourceError, SourceError.Text);
             }
             if (!viewModel.IsValidPath(newDestinationDir)) {
-                ShowErrorMessage(DestinationError, "Chemin incrorrect.");
+                ShowErrorMessage(DestinationError, DestinationError.Text);
             }
             if (!viewModel.IsValidBackupType(newType)) {
-                ShowErrorMessage(TypeError, "Erreur, choisir un type de sauvegarde");
+                ShowErrorMessage(TypeError, TypeError.Text);
             }
         }
         else
         {
-            ShowSuccessMessage("Sauvegarde modifiée");
+            ShowEditSuccessMessage(SuccessMessageEdit.Text);
             ResetFields();
         }
     }
@@ -115,12 +115,12 @@ public partial class BackupView : UserControl
         {
             if (!viewModel._configModel.BackupJobExists(jobName))
             {
-                ShowErrorMessage(NameError, $"Aucune sauvegarde nommée '{jobName}'.");
+                ShowErrorMessage(NameError, $"{NameError.Text} {jobName}");
             }
         }
         else
         {
-            ShowSuccessMessage("Sauvegarde supprimée");
+            ShowDeleteSuccessMessage(SuccessMessageDelete.Text);
             ResetFields();
         }
     }
@@ -155,14 +155,34 @@ public partial class BackupView : UserControl
         await Task.Delay(3000);
         errorTextBlock.IsVisible = false;
     }
-    private async void ShowSuccessMessage(string message)
+    private async void ShowCreateSuccessMessage(string message)
     {
-        SuccessMessage.Text = message;
-        SuccessMessage.IsVisible = true;
+        SuccessMessageCreate.Text = message;
+        SuccessMessageCreate.IsVisible = true;
 
         // Attendez 3 secondes
         await Task.Delay(3000);
-        SuccessMessage.IsVisible = false;
+        SuccessMessageCreate.IsVisible = false;
+    }
+    
+    private async void ShowEditSuccessMessage(string message)
+    {
+        SuccessMessageEdit.Text = message;
+        SuccessMessageEdit.IsVisible = true;
+
+        // Attendez 3 secondes
+        await Task.Delay(3000);
+        SuccessMessageEdit.IsVisible = false;
+    }
+    
+    private async void ShowDeleteSuccessMessage(string message)
+    {
+        SuccessMessageDelete.Text = message;
+        SuccessMessageDelete.IsVisible = true;
+
+        // Attendez 3 secondes
+        await Task.Delay(3000);
+        SuccessMessageDelete.IsVisible = false;
     }
 
     private void ResetFields()

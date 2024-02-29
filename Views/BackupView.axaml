@@ -43,7 +43,9 @@
                 <Image Source="/Assets/pictures/trash.png" Width="20" Height="20"/>
             </Button>
             <Image Source="/Assets/pictures/separator3.png" Grid.Column="3" Width="150" Height="100"/>
-            <TextBlock x:Name="SuccessMessage" Grid.Column="4" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" IsVisible="False"/>
+            <TextBlock x:Name="SuccessMessageCreate" Grid.Column="4" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" Text="{x:Static assets:Resources.BackupCreated}" IsVisible="False"/>
+            <TextBlock x:Name="SuccessMessageEdit" Grid.Column="4" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" Text="{x:Static assets:Resources.BackupEdited}" IsVisible="False"/>
+            <TextBlock x:Name="SuccessMessageDelete" Grid.Column="4" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" Text="{x:Static assets:Resources.BackupDeleted}" IsVisible="False"/>
             <Button x:Name="ExecuteButton" Grid.Column="4" Width="150" Height="40" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.ExecuteBackup}" Click="OnExecuteButtonClick">
                 <Image Source="/Assets/pictures/play.png" Width="20" Height="20"/>
             </Button>
@@ -76,25 +78,26 @@
     </Grid.ColumnDefinitions>
 
     <!-- Nom de la sauvegarde -->
-    <TextBlock Grid.Row="0" Grid.Column="0" x:Name="NameError" Foreground="Red" IsVisible="False" TextAlignment="Center"/>
+    <TextBlock Grid.Row="0" Grid.Column="0" x:Name="NameErrorCreate" Foreground="Red" Text="{x:Static assets:Resources.AlreadyExists}" IsVisible="False" TextAlignment="Center"/>
+    <TextBlock Grid.Row="0" Grid.Column="0" x:Name="NameError" Foreground="Red" Text="{x:Static assets:Resources.NoBackupNamed}" IsVisible="False" TextAlignment="Center"/>
     <TextBox Grid.Row="1" Grid.Column="0" x:Name="NameTextBox" Width="200" Margin="5" Watermark="{x:Static assets:Resources.BackupName}"/>
         
     <!-- Répertoire source -->
-    <TextBlock Grid.Row="0" Grid.Column="1" x:Name="SourceError" Foreground="Red" IsVisible="False" TextAlignment="Center"/>
+    <TextBlock Grid.Row="0" Grid.Column="1" x:Name="SourceError" Foreground="Red" Text="{x:Static assets:Resources.InvalidPath}" IsVisible="False" TextAlignment="Center"/>
     <TextBox Grid.Row="1" Grid.Column="1" x:Name="SourceDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="{x:Static assets:Resources.SourceDirectory}"/>
     <Button Grid.Row="1" Grid.Column="2" Margin="0,5,5,5" Width="30" Height="30" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.BrowseFolders}" Click="OnSelectSourceDirectoryClick">
         <Image Source="/Assets/pictures/folder.png" Width="20" Height="20"/>
     </Button>
 
     <!-- Répertoire de destination -->
-    <TextBlock Grid.Row="0" Grid.Column="3" x:Name="DestinationError" Foreground="Red" IsVisible="False" TextAlignment="Center"/>
+    <TextBlock Grid.Row="0" Grid.Column="3" x:Name="DestinationError" Foreground="Red" Text="{x:Static assets:Resources.InvalidPath}" IsVisible="False" TextAlignment="Center"/>
     <TextBox Grid.Row="1" Grid.Column="3" x:Name="TargetDirectoryTextBox" Width="200" Margin="5,5,5,5" Watermark="{x:Static assets:Resources.TargetDirectory}"/>
     <Button Grid.Row="1" Grid.Column="4" Margin="0,5,5,5" Width="30" Height="30" Cursor="Hand" ToolTip.Tip="{x:Static assets:Resources.BrowseFolders}" Click="OnSelectTargetDirectoryClick">
         <Image Source="/Assets/pictures/folder.png" Width="20" Height="20"/>
     </Button>
 
     <!-- Type de sauvegarde -->
-    <TextBlock Grid.Row="0" Grid.Column="5" x:Name="TypeError" Foreground="Red" IsVisible="False" TextAlignment="Center"/>
+    <TextBlock Grid.Row="0" Grid.Column="5" x:Name="TypeError" Foreground="Red" Text="{x:Static assets:Resources.ErrorType}" IsVisible="False" TextAlignment="Center"/>
     <ComboBox Grid.Row="1" Grid.Column="5" x:Name="TypeChoice" Width="200" Margin="5" PlaceholderText="{x:Static assets:Resources.BackupType}">
         <ComboBoxItem x:Name="CompleteType" Content="Complete"/>
         <ComboBoxItem x:Name="DifferentialType" Content="Differential"/>
@@ -105,13 +108,13 @@
         <StackPanel Orientation="Vertical" Background="White" Margin="30, 10, 30, 30">
             <DataGrid x:Name="SampleDataGrid" Margin="15, 10, 15, 0" VerticalAlignment="Top">
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn x:Name="DataGridSelect" Header="Sélectionner"/>
-                    <DataGridTextColumn x:Name="DataGridName" Header="Nom"/>
-                    <DataGridTextColumn x:Name="DataGridSource" Header="Répertoire source"/>
-                    <DataGridTextColumn x:Name="DataGridTarget" Header="Répertoire de destination"/>
-                    <DataGridTextColumn x:Name="DataGridType" Header="Type"/>
-                    <DataGridTextColumn x:Name="DataGridState" Header="État"/>
-                    <DataGridTextColumn x:Name="DataGridProgress" Header="Progression"/>
+                    <DataGridCheckBoxColumn Header="Sélectionner"/>
+                    <DataGridTextColumn Header="Nom"/>
+                    <DataGridTextColumn Header="Répertoire source"/>
+                    <DataGridTextColumn Header="Répertoire de destination"/>
+                    <DataGridTextColumn Header="Type"/>
+                    <DataGridTextColumn Header="État"/>
+                    <DataGridTextColumn Header="Progression"/>
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
