@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace EasySave
 {
@@ -140,8 +141,52 @@ namespace EasySave
         }
 
 
-        private void EncryptFile(string filePath)
+        private void EncryptFile(string filesToEncrypt)
         {
+            // Chemin vers l'exécutable du programme externe
+            string externalProgramPath =
+                "C:\\Users\\yanis\\Desktop\\CryptoSoft-1.1\\bin\\Release\\net8.0\\CryptoSoft.exe";
+            string encryptionKey = "VotreCleDeChiffrement";
+
+            try
+            {
+                // Création d'un processus pour exécuter le programme externe
+                using (Process process = new Process())
+                {
+                    // Configuration du processus
+                    process.StartInfo.FileName = externalProgramPath;
+
+                    // Construire la liste d'arguments
+                    string arguments = "";
+                    foreach (string filesToEncrypt in filesToEncrypt)
+                    {
+                        arguments += $"\"{file}\" ";
+                    }
+
+                    arguments += $"\"{destinationDirectoryPath}\" \"{encryptionKey}\"";
+
+                    process.StartInfo.Arguments = arguments;
+
+                    // Démarrage du processus
+                    process.Start();
+                    process.WaitForExit(); // Attendre que le processus externe se termine
+
+                    // Vérifier le code de sortie du processus
+                    if (process.ExitCode == 0)
+                    {
+                        Console.WriteLine("Programme externe exécuté avec succès.");
+                    }
+                    else
+                    {
+                        Console.WriteLine(
+                            $"Erreur lors de l'exécution du programme externe. Code de sortie : {process.ExitCode}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erreur : {ex.Message}");
+            }
         }
 
         protected bool ShouldCopyFile(string sourceFile, string destinationFile)
