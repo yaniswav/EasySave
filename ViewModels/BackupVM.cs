@@ -1,9 +1,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using EasySave; // Make sure this namespace is correct
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 
 namespace EasySave.ViewModels
@@ -123,8 +121,7 @@ namespace EasySave.ViewModels
         {
             return _configModel.DeleteBackupJob(jobName);
         }
-
-        // Additional methods to manage backup jobs (e.g., start, stop) could be added here
+        
 
         protected void OnPropertyChanged(string propertyName)
         {
