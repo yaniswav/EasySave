@@ -67,7 +67,7 @@ public partial class ConfigModel
         Console.WriteLine($"CryptoSoft Path: {CryptoSoftPath}");
         Console.WriteLine($"Business Software: {BusinessSoftware}");
     }
-    
+
     public void UpdateAppSettings(string key, string value)
     {
         try
