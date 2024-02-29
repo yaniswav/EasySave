@@ -8,27 +8,17 @@ namespace EasySave.ViewModels
 {
     public class BackupVM : INotifyPropertyChanged
     {
-        private ObservableCollection<BackupJob> _backupJobs;
         public ConfigModel _configModel = ConfigModel.Instance;
+        public ObservableCollection<BackupJobConfig> BackupJobs { get; set; }
 
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public BackupVM()
         {
-            _backupJobs = new ObservableCollection<BackupJob>();
-            // Initialize with existing backup jobs if necessary
+            BackupJobs = new ObservableCollection<BackupJobConfig>(_configModel.GetBackupJobs());
         }
-
-        public ObservableCollection<BackupJob> BackupJobs
-        {
-            get => _backupJobs;
-            set
-            {
-                _backupJobs = value;
-                OnPropertyChanged(nameof(BackupJobs));
-            }
-        }
+        
         
         public bool TryCreateBackup(string name, string sourceDir, string destinationDir, string type)
         {
