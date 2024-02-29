@@ -1,104 +1,99 @@
+// FilePath: ViewModel/SettingsViewModel.cs
+
 using System;
 using System.ComponentModel;
-using System.Windows.Input;
-using EasySave; // Ensure this namespace is correct for access to Models
+using System.Collections.Generic;
+using System.Linq;
+using EasySave;
 
-namespace EasySave.ViewModels
+public class SettingsViewModel : INotifyPropertyChanged
 {
-    public class SettingsVM : INotifyPropertyChanged
+    private ConfigModel _configModel = ConfigModel.Instance;
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    // General Application Settings from ConfigModel
+    public string CurrentLocale
     {
-        private ConfigModel _configModel = new ConfigModel();
-        private string _selectedLocale;
-        private string _logOutputFormat;
-        private ICommand _saveSettingsCommand;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public SettingsVM()
+        get => _configModel.CurrentLocale;
+        set
         {
-            // Initialize settings with current values
-            _selectedLocale = _configModel.Locale;
-            _logOutputFormat = ConfigurationHelper.GetOutputFormat();
-        }
-
-        public string SelectedLocale
-        {
-            get => _selectedLocale;
-            set
+            if (_configModel.CurrentLocale != value)
             {
-                if (_selectedLocale != value)
-                {
-                    _selectedLocale = value;
-                    OnPropertyChanged(nameof(SelectedLocale));
-                }
+                Console.WriteLine($"Updating CurrentLocale: {value}");
+                _configModel.CurrentLocale = value;
+                OnPropertyChanged(nameof(CurrentLocale));
             }
-        }
-
-        public string LogOutputFormat
-        {
-            get => _logOutputFormat;
-            set
-            {
-                if (_logOutputFormat != value)
-                {
-                    _logOutputFormat = value;
-                    OnPropertyChanged(nameof(LogOutputFormat));
-                }
-            }
-        }
-
-        public ICommand SaveSettingsCommand
-        {
-            get
-            {
-                return _saveSettingsCommand ?? (_saveSettingsCommand = new RelayCommand(param => SaveSettings(), param => CanSaveSettings()));
-            }
-        }
-
-        private bool CanSaveSettings()
-        {
-            // Add logic here if there are conditions that must be met before saving
-            return true;
-        }
-
-        private void SaveSettings()
-        {
-            try
-            {
-                // Save locale setting
-                _configModel.SetLocale(SelectedLocale);
-
-                // Save log output format
-                ConfigurationHelper.SetOutputFormat(LogOutputFormat);
-
-                // Potential additional settings save operations can be performed here
-
-                Console.WriteLine("Settings have been successfully saved.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving settings: {ex.Message}");
-            }
-        }
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
-    public class ConfigurationHelper
-    {
-        public static void SetOutputFormat(string logOutputFormat)
-        {
-            throw new NotImplementedException();
-        }
+    // BackupJobConfig integration
+    public List<BackupJobConfig> BackupJobs => _configModel.LoadBackupJobs();
 
-        public static string? GetOutputFormat()
+    // FilesConfig integration
+    public int MaxBackupFileSize
+    {
+        get => _configModel.MaxBackupFileSize;
+        set
         {
-            throw new NotImplementedException();
+            if (_configModel.MaxBackupFileSize != value)
+            {
+                _configModel.MaxBackupFileSize = value;
+                OnPropertyChanged(nameof(MaxBackupFileSize));
+            }
         }
     }
 
-    // Assuming RelayCommand is implemented elsewhere in the project
+
+    public int MaxBackupSize
+    {
+        get => _configModel.MaxBackupFileSize;
+        set
+        {
+            if (_configModel.MaxBackupFileSize != value)
+            {
+                Console.WriteLine($"Updating MaxBackupSize: {value}");
+                _configModel.MaxBackupFileSize = value;
+                OnPropertyChanged(nameof(MaxBackupSize));
+            }
+        }
+    }
+
+    public List<string> ExtToEncrypt
+    {
+        get => _configModel.ExtToEncrypt;
+        set
+        {
+            if (!_configModel.ExtToEncrypt.SequenceEqual(value))
+            {
+                Console.WriteLine($"Updating ExtToEncrypt: {String.Join(", ", value)}");
+                _configModel.ExtToEncrypt = value;
+                OnPropertyChanged(nameof(ExtToEncrypt));
+            }
+        }
+    }
+
+    public List<string> ExtPrio
+    {
+        get => _configModel.ExtPrio;
+        set
+        {
+            if (!_configModel.ExtPrio.SequenceEqual(value))
+            {
+                Console.WriteLine($"Updating ExtPrio: {String.Join(", ", value)}");
+                _configModel.ExtPrio = value;
+                OnPropertyChanged(nameof(ExtPrio));
+            }
+        }
+    }
+
+    public SettingsViewModel()
+    {
+        _configModel = ConfigModel.Instance;
+    }
+
+    protected virtual void OnPropertyChanged(string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }
