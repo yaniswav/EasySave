@@ -8,23 +8,23 @@ namespace EasySave
     {
         public Dictionary<string, double> GetBackupProgress()
         {
-            return _backupJobs
+            // Filter backup jobs to include only those with active threads
+            var activeJobs = _backupJobs.Where(job =>
+                _backupThreads.ContainsKey(job.Name) && _backupThreads[job.Name].IsAlive);
+
+            return activeJobs
                 .GroupBy(job => job.Name)
                 .ToDictionary(group => group.Key, group => group.Average(job => job.Progression));
         }
-        
+
         public void ListActiveThreads()
         {
             Console.WriteLine("Listing Active Threads:");
             foreach (var entry in _backupThreads)
             {
-                Console.WriteLine($"entry key: {entry.Key} entry value: {entry.Value}");
                 string threadStatus = entry.Value.IsAlive ? "Active" : "Not Active";
                 Console.WriteLine($"Job: {entry.Key}, Thread Status: {threadStatus}");
             }
         }
-
-
-        
     }
 }
