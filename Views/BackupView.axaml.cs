@@ -2,7 +2,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using EasySave.ViewModels;
 using System.Threading.Tasks;
-using EasySave.Assets;
 
 namespace EasySave.Views;
 

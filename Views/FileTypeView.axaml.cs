@@ -1,6 +1,4 @@
 ﻿using Avalonia.Controls;
-using System.Threading.Tasks;
-using Avalonia.VisualTree;
 
 
 namespace EasySave
