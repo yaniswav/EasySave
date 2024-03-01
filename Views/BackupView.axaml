@@ -73,7 +73,8 @@
                 <Image Source="/Assets/pictures/trash.png" Width="20" Height="20"/>
             </Button>
             <Image Source="/Assets/pictures/separator3.png" Grid.Column="3" Width="150" Height="100"/>
-            <TextBlock x:Name="ExecutionSuccessMessage" Grid.Column="4" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" Text="{x:Static assets:Resources.BackupCreated}" IsVisible="False"/>
+            <TextBlock x:Name="ExecutionErrorMessage" Grid.Column="4" Foreground="Red" TextAlignment="Center" VerticalAlignment="Top" Text="" IsVisible="False"/>
+            <TextBlock x:Name="ExecutionSuccessMessage" Grid.Column="4" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" Text="" IsVisible="False"/>
             <TextBlock x:Name="SuccessMessageCreate" Grid.Column="4" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" Text="{x:Static assets:Resources.BackupCreated}" IsVisible="False"/>
             <TextBlock x:Name="SuccessMessageEdit" Grid.Column="4" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" Text="{x:Static assets:Resources.BackupEdited}" IsVisible="False"/>
             <TextBlock x:Name="SuccessMessageDelete" Grid.Column="4" Foreground="Green" TextAlignment="Center" VerticalAlignment="Top" Text="{x:Static assets:Resources.BackupDeleted}" IsVisible="False"/>

@@ -28,6 +28,7 @@ namespace EasySave.Views
             UpdateButtonColor(activeButton: "Settings");
         }
 
+
         public void UpdateButtonColor(string activeButton = "")
         {
             var activeColor = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#857DFF"));
