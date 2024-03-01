@@ -5,7 +5,6 @@
         Title="EasySave"
         Width="1280" Height="720"
         Background="#e3e0ff"
-        CanResize="False"
         Icon="/Assets/pictures/logo-easy-save.ico">
         
     

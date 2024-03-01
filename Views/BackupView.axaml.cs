@@ -175,6 +175,17 @@ public partial class BackupView : UserControl
                 ExecutionSuccessMessage.IsVisible = false; // Masquer le message après 3 secondes
             }
         }
+        else
+        {
+            // Construction du message de succès avec les noms des tâches sélectionnées
+            string errorMessage = "Sélectionner au moins un travail";
+            ExecutionErrorMessage.Text = errorMessage;
+            ExecutionErrorMessage.IsVisible = true; // Afficher le message
+
+            // Attendre 3 secondes avant de masquer le message
+            await Task.Delay(3000);
+            ExecutionErrorMessage.IsVisible = false; // Masquer le message après 3 secondes
+        }
     }
     
     private async void OnPauseButtonClick(object sender, RoutedEventArgs e)
