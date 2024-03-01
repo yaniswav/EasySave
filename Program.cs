@@ -2,27 +2,32 @@
 using Avalonia.ReactiveUI;
 using System;
 using System.Threading.Tasks;
+using Avalonia.Controls.ApplicationLifetimes;
 
 namespace EasySave;
 
 sealed class Program
 {
-    // Initialization code. Don't use any Avalonia, third-party APIs or any
-    // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-    // yet and stuff might break.
+    private static Server server;
+    private static Task? serverTask;
+
     [STAThread]
     public static async Task Main(string[] args)
     {
         var configModel = ConfigModel.Instance;
+        server = new Server(8080);
+        serverTask = Task.Run(() => server.Start());
 
-        Server server = new Server(8080);
-        Task serverTask = Task.Run(() => server.Start());
+        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+    }
 
-
-        BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
-
-        await serverTask;
+    public static void ShutdownServer()
+    {
+        if (server != null)
+        {
+            server.Stop(); // Stop the server
+            serverTask?.Wait(); // Ensure the task completes
+        }
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.

@@ -4,7 +4,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading;
 using EasySave;
+
 
 public class Server
 {
@@ -12,6 +14,9 @@ public class Server
     private readonly int port;
     private BackupManager backupManager;
     private ConfigModel config = ConfigModel.Instance;
+
+    private bool isRunning = false;
+    private CancellationTokenSource cts = new CancellationTokenSource();
 
     public Server(int port)
     {
@@ -24,15 +29,43 @@ public class Server
     {
         listener = new TcpListener(IPAddress.Any, port);
         listener.Start();
+        isRunning = true;
         Console.WriteLine($"Server started on port {port}. Waiting for connections...");
 
-        while (true)
+        try
         {
-            TcpClient client = await listener.AcceptTcpClientAsync();
-            Console.WriteLine("Client connected.");
-            HandleClient(client);
+            while (!cts.Token.IsCancellationRequested)
+            {
+                if (listener.Pending())
+                {
+                    TcpClient client = await listener.AcceptTcpClientAsync(cts.Token);
+                    Console.WriteLine("Client connected.");
+                    HandleClient(client);
+                }
+                else
+                {
+                    await Task.Delay(100); // Reduce CPU usage
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected when the cancellation is requested
+            Console.WriteLine("Server stopping...");
+        }
+        finally
+        {
+            listener.Stop();
+            isRunning = false;
         }
     }
+
+    public void Stop()
+    {
+        cts.Cancel();
+        listener?.Stop(); // Ensure listener is stopped to break out of the waiting state
+    }
+
 
     private async void HandleClient(TcpClient client)
     {

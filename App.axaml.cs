@@ -16,17 +16,20 @@ namespace EasySave
 
         public override void OnFrameworkInitializationCompleted()
         {
-            Assets.Resources.Culture = new CultureInfo("en");
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var mainWindow = new MainWindow();
-
-                mainWindow.Show();
+                desktop.MainWindow = new MainWindow();
+                desktop.MainWindow.Show();
+                desktop.Exit += OnExit; // Subscribe to Exit event
             }
-
-
 
             base.OnFrameworkInitializationCompleted();
         }
+
+        private void OnExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
+        {
+            Program.ShutdownServer(); // Method to stop the server
+        }
+
     }
 }
